@@ -1,0 +1,625 @@
+/*
+  Copyright 2017 Esri
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.​
+*/
+
+$font-path: "../app/calcite-web/dist/fonts";
+$image-path: "../app/calcite-web/dist/img";
+$calcite-green: #338033;
+$calcite-blue: #0079c1;
+$background-color: #5a9359;
+$button-green: #9bc19c;
+$default-app-background: #fff;
+$detail-panel-color: #595959;
+$body-background: #f8f8f8;
+$vw-ratio: 1;
+$container-width: 2000px;
+$scrollable-container-height: calc(100% - 160px);
+@import "./app/calcite-web/dist/sass/calcite-web";
+@import "./app/components/Share/Share/css/Share";
+
+/* overwrite calcite styles that mess with the map height on ios */
+body {
+  display: initial;
+  flex-direction: unset;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: $body-background;
+}
+
+.grid-container,
+.column-14,
+.column-10 {
+  height: 100%;
+}
+
+.top-nav-title {
+  color: inherit;
+  font-size: 1.6rem;
+  white-space: nowrap;
+  overflow: hidden;
+  padding-left: 16px;
+  padding-bottom: 10px;
+  max-width: 100%;
+  margin: 0;
+}
+
+.top-nav,
+.top-nav-flex {
+  overflow: hidden;
+  border-bottom: none;
+}
+
+.configurable-application__view-container {
+  height: 100%;
+  width: 100%;
+}
+
+.mini-map-panel>.configurable-application__view-container {
+  position: absolute;
+  top: 0;
+  height: 100%;
+}
+
+.esri-view {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.configurable-application--loading {
+  text-align: center;
+  display: block;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background-color: $default-app-background;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-image: url(../assets/loader-ie9.gif);
+
+  .configurable-application__view-container {
+    display: none;
+  }
+}
+
+.app-error {
+  background-position: top center;
+  width: auto;
+  position: absolute;
+  z-index: 2;
+  margin: 0;
+  top: 30%;
+  text-align: center;
+  height: 100%;
+}
+
+.app-error>.grid-container {
+  display: block;
+  margin: 1em;
+}
+
+.app-error-content {
+  margin: 4em;
+}
+
+/* Header content (Search and Title)*/
+.panel.app-header {
+  height: 115px;
+}
+
+.esri-search {
+  width: auto;
+  height: 42px;
+  margin-left: 16px;
+  margin-right: 16px;
+}
+
+/*Search placeholder text*/
+.esri-search__input::-moz-placeholder {
+  color: #595959;
+  opacity: 1;
+}
+
+.esri-search__input:-ms-input-placeholder {
+  color: #595959;
+}
+
+.esri-search__input::-webkit-input-placeholder {
+  color: #595959;
+}
+
+.esri-search__suggestions-menu {
+  background: #f4f4f4;
+}
+
+.esri-search__submit-button,
+.esri-search__sources-button {
+  height: 42px;
+  width: 42px;
+}
+
+.esri-search__clear-button .esri-widget--button .esri-icon-close,
+.esri-icon-search {
+  font-size: 1.25rem;
+}
+
+.esri-icon-search {
+  color: $calcite-blue;
+}
+
+.esri-search__form .esri-input[type="text"],
+.esri-input[type="number"] {
+  padding-left: 12px;
+}
+
+.esri-search__form .esri-input[type="text"],
+.esri-input[type="number"],
+.esri-search__clear-button {
+  height: 42px;
+}
+
+/*Accordion customizations*/
+.accordion-icon,
+.accordion-section>.accordion-title>.accordion-icon>svg {
+  vertical-align: text-top;
+  line-height: 1.2em;
+}
+
+.accordion-title {
+  background-color: $body-background;
+  font-weight: 500;
+  min-height: 1.5em;
+}
+
+.accordion-content {
+  padding: 0.3em 1em 1em 1em;
+  background: $default-app-background;
+  color: #6e6e6e;
+  cursor: pointer;
+}
+
+.accordion {
+  border: none;
+  background: transparent;
+}
+
+.accordion-section {
+  border: 1px solid #efefef;
+  margin-top: 0.25em;
+  margin-bottom: 0.25rem;
+}
+
+.accordion-section-selected .accordion-section {
+  box-shadow: inset 0 0 0 8px $calcite-blue;
+  padding: 1px;
+  margin-top: 0;
+}
+
+.accordion-section-selected .accordion-title {
+  margin-top: 0;
+}
+
+.accordion-title {
+  border-top: none;
+  margin-top: 1px;
+  background: $default-app-background;
+}
+
+.accordion-icon,
+.accordion-section>.accordion-title>.accordion-icon>svg {
+  color: #323232;
+}
+
+.accordion-title:focus,
+.accordion-title:hover {
+  outline: auto 2px Highlight;
+  outline: auto 5px -webkit-focus-ring-color;
+}
+
+p:empty {
+  padding: 0;
+}
+
+// hide title within the feature panel since we show on accordion
+.esri-feature__title {
+  display: none;
+}
+
+.btn-open-map {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 11.5px;
+  width: 100%;
+
+  &.btn-green {
+    background-color: $button-green;
+    border-color: $button-green;
+  }
+
+  &:hover {
+    filter: brightness(120%);
+  }
+}
+
+/* App is configured to not include a map */
+.no-map {
+  .btn-open-map {
+    display: none;
+  }
+
+  /*make this equal col-24*/
+  .column-10 {
+    max-width: 1000px;
+  }
+
+  .column-24 {
+    max-width: 1000px;
+  }
+
+  .grid-container {
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  #mapPanel {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+}
+
+/* Mobile map */
+.mini-map-panel {
+  position: absolute;
+  top: 98px;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  border: none;
+}
+
+.mini-map-panel>.btn-fill {
+  position: fixed;
+  bottom: 0;
+}
+
+/* Map Widget customizations */
+.esri-legend--stacked .esri-legend--card__section,
+.esri-legend--card {
+  height: auto;
+}
+
+.esri-legend--card__label-container {
+  margin-bottom: 32px;
+}
+
+// hide map navigation buttons ( just zoom) on small screen sizes
+.mini-map-panel .esri-zoom .esri-widget--button {
+  display: none;
+}
+
+/*Decrease margin between buttons and +/- to match zoom controls based on design doc*/
+.esri-ui-top-right .esri-component,
+.esri-ui-top-left .esri-component {
+  margin-bottom: 1px;
+}
+
+/* Side panel styles */
+.scrollable-content {
+  max-height: calc(100% - 155px);
+  overflow: auto;
+  overflow-y: overlay;
+}
+
+/* Detail Panel styles includes collapse all / open all links*/
+.toggle-content-tools {
+  width: 100%;
+  height: 32px;
+  background: inherit;
+}
+
+.top-nav .btn-transparent,
+.top-nav .btn-clear {
+  color: inherit;
+}
+
+.btn-transparent.btn-detail {
+  vertical-align: baseline;
+}
+
+#detailPanel {
+  background-color: $default-app-background;
+  color: $detail-panel-color;
+  max-height: 100%;
+  overflow: auto;
+}
+
+#detailPanel .svg-icon {
+  background: transparent;
+}
+
+#detailPanel {
+
+  &.collapse {
+    height: 44px;
+    overflow: hidden;
+    filter: drop-shadow(5px 5px 5px rgba(255, 255, 255, 0.3));
+  }
+
+  &.collapse .esri-share,
+  &.collapse .details-content,
+  &.collapse .details-title {
+    display: none;
+  }
+
+  &.collapse>button>svg {
+    transform: rotate(180deg);
+  }
+
+  button.detail {
+    transition: all 0.5s;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+      filter: brightness(140%);
+    }
+  }
+
+  .details-title {
+    margin: 0;
+    font-weight: 900;
+    font-style: normal;
+    font-size: 1.125rem;
+    line-height: 1.5;
+    letter-spacing: 0.019rem;
+  }
+
+  .details-title,
+  .details-content,
+  .esri-share {
+    padding-top: 8px;
+    padding-right: 16px;
+    padding-left: 16px;
+    padding-bottom: 4px;
+  }
+
+  .details-content {
+    margin-bottom: 0;
+  }
+
+  .panel {
+    border-color: #a9a9a9;
+  }
+
+  .btn-transparent {
+    font-size: 1.6rem;
+    line-height: 1.6rem;
+    color: $calcite-green;
+    cursor: pointer;
+    margin: 1%;
+    width: 98%;
+    padding: 3px;
+  }
+}
+
+.btn-clear {
+  border-color: $calcite-green;
+}
+
+/*  Range input slider customizations */
+.distance,
+.slider-label {
+  font-style: italic;
+  font-size: smaller;
+}
+
+input[type=range] {
+  height: 38px;
+  -webkit-appearance: none;
+  margin: 10px 0;
+  width: 100%;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 10px;
+  cursor: pointer;
+  background: #f2f2f2;
+  border-radius: 5px;
+  border: 1px solid #cccccc;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  height: 30px;
+  width: 15px;
+  border-radius: 5px;
+  background: $calcite-green;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -11px;
+  box-shadow: none;
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: #f2f2f2;
+}
+
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 10px;
+  cursor: pointer;
+  background: $default-app-background;
+  border-radius: 5px;
+  border: 1px solid #cccccc;
+}
+
+input[type=range]::-moz-range-thumb {
+  box-shadow: none;
+  height: 30px;
+  width: 15px;
+  border-radius: 5px;
+  background: $calcite-green;
+  cursor: pointer;
+}
+
+input[type=range]::-ms-track {
+  width: 100%;
+  height: 10px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+
+input[type=range]::-ms-fill-lower {
+  background: $default-app-background;
+  border: 1px solid #cccccc;
+  border-radius: 10px;
+}
+
+input[type=range]::-ms-fill-upper {
+  background: $default-app-background;
+  border: 1px solid #cccccc;
+  border-radius: 10px;
+}
+
+input[type=range]::-ms-thumb {
+  box-shadow: none;
+  margin-top: 1px;
+  height: 30px;
+  width: 15px;
+  border-radius: 5px;
+  background: $calcite-green;
+  cursor: pointer;
+}
+
+input[type=range]:focus::-ms-fill-lower {
+  background: #f2f2f2;
+}
+
+input[type=range]:focus::-ms-fill-upper {
+  background: #f2f2f2;
+}
+
+/* Mobile map messages */
+.alert.is-active {
+  bottom: 0;
+  position: absolute;
+  right: 0;
+  left: 0;
+  max-width: 100%;
+}
+
+.alert-green {
+  background-color: #fff;
+  border-color: #ccc;
+}
+
+.alert span {
+  margin-right: 0.25em;
+}
+
+.alert-close {
+  top: 0px;
+  right: 5px;
+  height: 44px;
+  width: 44px;
+  font-size: 1.24rem;
+}
+
+.message-text {
+  padding: 0 0.5em 0 0.5em;
+}
+
+
+@media screen and (max-width: 859px) {
+  #infoPanel {
+    padding: 10px;
+  }
+
+  #detailPanel .details-content,
+  #detailPanel .details-title {
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 15px;
+  }
+
+  .no-map .column-10 {
+    max-width: 100vw;
+  }
+
+  .mini-map-panel {
+    height: calc(100% - 177px);
+  }
+
+  .scrollable-content {
+    max-height: $scrollable-container-height;
+  }
+
+  .panel.app-header {
+    height: 98px;
+  }
+
+  .top-nav-title {
+    padding-left: 10px;
+  }
+
+  .esri-search {
+    height: 35px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .esri-search__submit-button,
+  .esri-search__sources-button {
+    height: 35px;
+    width: 35px;
+  }
+
+  .esri-search__clear-button .esri-widget--button .esri-icon-close,
+  .esri-icon-search,
+  .esri-search__sources-button--down {
+    font-size: 1.125rem;
+  }
+
+  .esri-search__form .esri-input[type="text"],
+  .esri-input[type="number"] {
+    padding-left: 10px;
+  }
+
+  .esri-search__form .esri-input[type="text"],
+  .esri-input[type="number"],
+  .esri-search__clear-button {
+    height: 35px;
+  }
+}
+
+@supports (-webkit-overflow-scrolling: touch) {
+
+  /* CSS specific to iOS devices - used here to apply different height on ios
+  and also to add momentum scroll to results panel*/
+  .scrollable-content {
+    max-height: $scrollable-container-height;
+    -webkit-overflow-scrolling: touch;
+  }
+}

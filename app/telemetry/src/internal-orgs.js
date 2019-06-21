@@ -1,0 +1,23 @@
+export default [
+  'esri.com',
+  'esriuk.com',
+  'esri.de',
+  'esri.ca',
+  'esrifrance.fr',
+  'esri.nl',
+  'esri-portugal.pt',
+  'esribulgaria.com',
+  'esri.fi',
+  'esri.kr',
+  'esrimalaysia.com.my',
+  'esri.es',
+  'esriaustralia.com.au',
+  'esri-southafrica.com',
+  'esri.cl',
+  'esrichina.com.cn',
+  'esri.co',
+  'esriturkey.com.tr',
+  'geodata.no',
+  'esriitalia.it',
+  'esri.pl'
+]

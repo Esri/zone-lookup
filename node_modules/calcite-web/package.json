@@ -1,0 +1,132 @@
+{
+  "_from": "github:Esri/calcite-web#v1.2.5",
+  "_id": "calcite-web@1.2.5",
+  "_inBundle": false,
+  "_integrity": "",
+  "_location": "/calcite-web",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "Esri/calcite-web#v1.2.5",
+    "rawSpec": "Esri/calcite-web#v1.2.5",
+    "saveSpec": "github:Esri/calcite-web#v1.2.5",
+    "fetchSpec": null,
+    "gitCommittish": "v1.2.5"
+  },
+  "_requiredBy": [
+    "#DEV:/",
+    "#USER"
+  ],
+  "_resolved": "github:Esri/calcite-web#152e2c81304e3526dec7d20fadadafdd73fbdc53",
+  "_spec": "Esri/calcite-web#v1.2.5",
+  "_where": "/Users/kell3008/Sites/GitHub/arcgis-portal-app-templates/Lookup",
+  "author": {
+    "name": "Esri Portland R&D Center",
+    "email": "<portland@esri.com",
+    "url": "http://pdx.esri.com/"
+  },
+  "bugs": {
+    "url": "https://github.com/esri/calcite-web/issues"
+  },
+  "bundleDependencies": false,
+  "contributors": [
+    {
+      "name": "Paul C. Pederson",
+      "email": "ppederson@esri.com"
+    },
+    {
+      "name": "Nikolas Wise",
+      "email": "nwise@esri.com"
+    }
+  ],
+  "deprecated": false,
+  "description": "SASS & CSS Framework for Esri websites",
+  "devDependencies": {
+    "acetate": "^2.0.0",
+    "acetate-cli": "^1.0.1",
+    "cssstats-cli": "^1.0.0-beta.2",
+    "gh-pages": "^0.11.0",
+    "gh-release": "^2.0.1",
+    "glob": "^7.0.5",
+    "live-server": "^1.0.0",
+    "minifier": "^0.8.0",
+    "ncp": "^2.0.0",
+    "node-sass": "^4.9.0",
+    "npm-run-series": "^1.0.1",
+    "parallelshell": "^3.0.0",
+    "rerun-script": "^0.6.0",
+    "rimraf": "^2.6.2",
+    "rollup": "^0.56.5",
+    "rollup-plugin-babel-minify": "^4.0.0",
+    "rollup-plugin-buble": "^0.15.0",
+    "s3": "^4.4.0",
+    "scss-to-json": "^2.0.0",
+    "semistandard": "*",
+    "sqwish": "^0.2.2"
+  },
+  "files": [
+    "dist/",
+    "es6.js",
+    "lib/js/"
+  ],
+  "homepage": "https://github.com/esri/calcite-web",
+  "js-next:main": "es6.js",
+  "license": "Apache 2.0",
+  "main": "dist/js/calcite-web.js",
+  "module": "es6.js",
+  "name": "calcite-web",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/esri/calcite-web.git"
+  },
+  "scripts": {
+    "acetate": "acetate build --input source --config docs/acetate.config.js",
+    "deploy": "npm run prestart && gh-pages -d docs/build -o upstream",
+    "dist": "npm-run-series stat sass:dist font:dist img:dist rollup js:dist minify",
+    "font": "ncp lib/fonts docs/build/assets/fonts",
+    "font:dist": "ncp lib/fonts dist/fonts",
+    "gh-release": "gh-release",
+    "icons": "svgo -f lib/img/icons/ui/",
+    "img": "ncp lib/img/ docs/source/assets/img/ && ncp lib/img/ docs/build/assets/img/",
+    "img:dist": "ncp lib/img dist/img",
+    "img:docs": "ncp docs/source/assets/img/ docs/build/assets/img/",
+    "js": "ncp docs/source/assets/js/ docs/build/assets/js/",
+    "js:dist": "ncp docs/build/assets/js/libs/ dist/js/",
+    "minify": "node bin/minify.js",
+    "poststat": "rimraf dist/css/temp.css",
+    "predist": "rimraf dist/",
+    "prestart": "npm-run-series stat sass rollup img img:docs font js acetate",
+    "prestat": "node-sass lib/sass/calcite-web.scss dist/css/temp.css",
+    "release": "npm-run-series s3 gh-release",
+    "rollup": "rollup -c lib/js/rollup.config.js",
+    "s3": "node bin/s3.js",
+    "sass": "node-sass docs/source/assets/css/ --source-map-embed -q -o docs/build/assets/css/ --include-path lib/sass",
+    "sass:dist": "node-sass lib/sass/ -q -o dist/css/ && ncp lib/sass dist/sass",
+    "start": "parallelshell \"rerun-script\" \"live-server docs/build --port=8888 --no-browser\"",
+    "stat": "cssstats dist/css/temp.css docs/source/data/stats.json",
+    "test": "semistandard"
+  },
+  "semistandard": {
+    "ignore": [
+      "bin/",
+      "docs/",
+      "dist/"
+    ]
+  },
+  "version": "1.2.5",
+  "watches": {
+    "js": "docs/source/assets/js/**/*",
+    "rollup": "lib/js/**/*.js",
+    "img": "lib/img/**/*",
+    "img:docs": "docs/source/assets/img/docs/**/*",
+    "sass": [
+      "lib/sass/**/*",
+      "docs/source/assets/css/**/*"
+    ],
+    "acetate": [
+      "docs/source/**/*.{html,md,js,yml}",
+      "docs/source/assets/img/docs/**"
+    ]
+  }
+}

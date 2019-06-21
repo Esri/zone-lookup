@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <!-- Responsive -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title></title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="assets/favicon.ico" sizes="32x32" type="image/vnd.microsoft.icon">
+
+  <link rel="stylesheet" href="https://js.arcgis.com/4.12/esri/css/main.css">
+  <link rel="stylesheet" href="styles/main.css">
+
+
+  <script src="./app/es6-promise.auto.min.js"></script>
+  <script src="./app/dojo.js"></script>
+  <script src="https://js.arcgis.com/4.12/"></script>
+  <script>
+    require(["Application/init"]);
+
+  </script>
+</head>
+
+<body class="configurable-application--loading">
+
+  <!-- content of page -->
+  <div id="appMain" class="grid-container leader-0 trailer-0 padding-left-0 padding-right-0">
+    <div id="mapDescription" aria-live="polite" class="hide"></div>
+    <div id="sidePanel" class="side-panel phone-column-6 tablet-column-12 column-10 padding-left-0 padding-right-0">
+      <!-- header -->
+
+      <header class="panel panel-no-padding  panel-no-border app-header">
+        <div id="header"></div>
+        <div id="search"></div>
+      </header>
+      <div id="infoPanel" role="main" class="panel main-map-content  panel-no-border scrollable-content">
+        <div id="detailPanel" role="complementary"></div>
+        <div id="distanceOptions" class="main-map-content"></div>
+        <div id="resultsPanel"></div>
+      </div>
+      <div id="bottomNav"></div>
+    </div>
+    <div id="mapPanel" tabindex="0"></div>
+  </div>
+
+</body>
+
+</html>
