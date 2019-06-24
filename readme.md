@@ -1,10 +1,24 @@
 
+# Zone Lookup
+Zone Lookup is a configurable app template that allows users to look up information based on their location or a searched location 
 
-# Configuration Options
-Test apps
-* Congressional districts:521fa0defa054c389097e685328d4bc3
-* School districts web map: "80a6a6c21574452b961001b8d08f2607"
-* Evacuation zones: d0feeb5963f7468d85a79f540adf3cea
+## Use Cases  
+* 'Know your zone' applications for hurricane evacuations.
+* School attendance area maps
+
+## Supported Devices
+This application is responsively designed to support use in browsers on desktops, mobile phones, and tablets.
+
+## Data Requirements
+This web app includes the capability to edit a hosted feature service or an ArcGIS Server feature service. Creating hosted feature services requires an ArcGIS Online organizational subscription or an ArcGIS Developer account. 
+
+## Deploy
+ Copy the code to your web server then from a terminal run npm install to install project dependencies. 
+
+ The package.json file has a few scripts setup to make it easy to make modifications to the TypeScript and SASS files. You can use **npm run start** to watch the .ts and .sass files and when changes are made the commands to convert the typescript to javascript and sass to css will be run. 
+
+
+## Configuration Options
 ## General options
 * **appid**: Application id that contains configured app properties
 
@@ -31,22 +45,13 @@ Test apps
 
 ## Lookup settings
 
-* **lookupType**: Specify the type of lookup app you want to create. The following options are valid: "distance", "closest", "geometry"
-  * **distance**: This option will find features within the specified distances and units of the input location. Distance is specifed using **distance** and units is specified using **units**. 
-  * **geometry**: Determine if the input location is within a search geometry. The search geometries are defined using the **lookupLayers** and the **relationship** defines the spatial relationship between the features.
-
-* **lookupLayers**: Layers to use for location based searching. By default will search all feature layers in the map.  if **hideSearchLayerFeatures** is enabled features in these layers will only be visible when part of search results.
-* **relationship**: Define the spatial relationship used to filter features. Default value is intersects. Valid values are *intersects|contains|crosses|envelope-intersects|index-intersects|overlaps|touches|within*
+* **lookupLayers**: Layers to use for location based searching. By default will search all feature layers in the map.  if **hideLookupLayers** is enabled features in these layers will only be visible when part of search results.
 * **noResultsMessage**: Define message that displays when no search results are found.
 * **displayUnmatchedResults**: How do the features that don't match the requirements appear. Options are grayscale, sepia or hide
-* **includeDistance**: When true and when the lookup type is distance include a distance from the lookup location option. 
-* **showDirections**: Add an option to display directions. 
-* **zoomScale**: Define the scale to zoom in to show results  
+
 * **autoZoomFirstResult**: When true the map will automatically zoom to the first result
 
 ## Theme
-* **bodyBackground**: Default value is empty. If a shared theme is set in the organization the body.background color will be used. Users can specify a color via the configuration process. This color will be used for the splash and description panel background color.
-* **bodyColor**: Default value is empty. If a shared theme is set in the organization the body.text color will be used. Users can specify a color via the configuration process. This color will be used for the splash and description panel text color.
 * **headerBackground**: Default value is white (#fff). If a shared theme is set in the organization the header.background color will be used. Users can specify a color via the configuration process. This color will be used for the header/footer background color.
 * **headerColor**: Default value is dark gray (#4c4c4c). If a shared theme is set in the organization the header.text color will be used. Users can specify a color via the configuration process. This color will be used for the header/footer text color and the color of any tools that are displayed in the header/footer area.
 * **buttonBackground**: Default value is empty. If a shared theme is set in the organization the button.background color will be used. Users can specify a color via the configuration process. This color will be used for the splash screen button background color. Note: This value is not applied to map buttons.
@@ -54,12 +59,40 @@ Test apps
 
 ## Tools
 * **legend**: Default value is false. When true a legend button is added to the map.
-* **legendPosition**: Location on the map where the legend button is displayed. Valid values are *top-left|top-center|top-right|bottom-left|bottom-center|bottom-right*
 * **zoom**: Default value is false. When true a zoom (+/-) button is added to the maps.
-* **zoomPosition**: Location on the map where the zoom tool is placed.  Default value is *top-left*. Valid values are *top-left|top-center|top-right|bottom-left|bottom-center|bottom-right*
 * **home**: "Default value is false. When true the home button is added to the map enabling users to go back to the initial map extent with one click.
-* **homePosition**: Location on the map where the home extent tool is placed.  Default value is *top-left*. Valid values are *top-left|top-center|top-right|bottom-left|bottom-center|bottom-right*
 * **scalebar**: Default value is false. When true a scalebar is added to the map.
-* **scalebarPosition**:Location on the map where the scalebar is placed.  Valid values are *top-left|top-center|top-right|bottom-left|bottom-center|bottom-right*
+* **basemapToggle**: Default value is false. When true a basemap switcher is added to the map. This will let you switch between your web map's basemap and a basemap you define with the **altBasemap** option. 
 
 
+## Resources
+
+- [ArcGIS for JavaScript API Resource Center](http://help.arcgis.com/en/webapi/javascript/arcgis/index.html)
+- [ArcGIS Blog](http://blogs.esri.com/esri/arcgis/)
+- [twitter@esri](http://twitter.com/esri)
+
+## Issues
+
+Find a bug or want to request a new feature? Please let us know by submitting an issue.
+
+## Contributing
+
+Esri welcomes contributions from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
+
+## Licensing
+
+Copyright 2019 Esri
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+A copy of the license is available in the repository's [license.md](License.md) file.
