@@ -1,3 +1,15 @@
+/*
+  Copyright 2019 Esri
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.​
+*/
 /// <amd-dependency path="esri/core/tsSupport/declareExtendsHelper" name="__extends" />
 /// <amd-dependency path="esri/core/tsSupport/decorateHelper" name="__decorate" />
 var __extends = (this && this.__extends) || (function () {
@@ -29,10 +41,10 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
         Object.defineProperty(ShareFeatures.prototype, "copyToClipboard", {
             set: function (value) {
                 if (!this.shareServices) {
-                    console.error("ERROR: Unable to toggle both Share Item AND Copy URL features off.");
+                    console.error('ERROR: Unable to toggle both Share Item AND Copy URL features off.');
                     return;
                 }
-                this._set("copyToClipboard", value);
+                this._set('copyToClipboard', value);
             },
             enumerable: true,
             configurable: true
@@ -40,10 +52,10 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
         Object.defineProperty(ShareFeatures.prototype, "shareServices", {
             set: function (value) {
                 if (!this.copyToClipboard) {
-                    console.error("ERROR: Unable to toggle both Share Item AND Copy URL features off.");
+                    console.error('ERROR: Unable to toggle both Share Item AND Copy URL features off.');
                     return;
                 }
-                this._set("shareServices", value);
+                this._set('shareServices', value);
             },
             enumerable: true,
             configurable: true
@@ -61,7 +73,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
             decorators_1.property()
         ], ShareFeatures.prototype, "shortenLink", void 0);
         ShareFeatures = __decorate([
-            decorators_1.subclass("ShareFeatures")
+            decorators_1.subclass('ShareFeatures')
         ], ShareFeatures);
         return ShareFeatures;
     }(decorators_1.declared(Accessor)));
