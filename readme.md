@@ -6,10 +6,9 @@ Zone Lookup is a configurable app template that allows users to look up informat
 
 * 'Know your zone' applications for hurricane evacuations.
 * School attendance area maps
-* 
-* **appid**: Application id that contains configured app properties
 
 `Map options`
+* **appid**: Application id that contains configured app properties
 * **webmap**: Web map to display
 * **includeAddressGraphic**: Include a graphic on the map showing the search location. The graphic is a map pin,
 * **includeAddressText**: Include address text on the map showing the clicked location. 

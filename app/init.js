@@ -1,5 +1,5 @@
 /*
-  Copyright 2017 Esri
+  Copyright 2019 Esri
 
   Licensed under the Apache License, Version 2.0 (the "License");
 
@@ -37,7 +37,7 @@ define(["require", "exports", "dojo/text!config/applicationBase.json", "dojo/tex
     })
         .load()
         .then(function (base) { return Main.init(base); }, function (message) {
-        if (message === "identity-manager:not-authorized") {
+        if (message === 'identity-manager:not-authorized') {
             errorUtils.displayError({
                 title: i18n.licenseError.title,
                 message: i18n.licenseError.message

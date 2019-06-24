@@ -1,9 +1,24 @@
+/*
+  Copyright 2019 Esri
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.​
+*/
 /// <amd-dependency path="esri/core/tsSupport/declareExtendsHelper" name="__extends" />
 /// <amd-dependency path="esri/core/tsSupport/decorateHelper" name="__decorate" />
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -30,21 +45,21 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
     //
     //----------------------------------
     var FACEBOOK_ITEM = new ShareItem({
-        id: "facebook",
-        name: "Facebook",
-        urlTemplate: "https://www.facebook.com/sharer/sharer.php?s=100&p[url]={url}"
+        id: 'facebook',
+        name: 'Facebook',
+        urlTemplate: 'https://www.facebook.com/sharer/sharer.php?s=100&p[url]={url}'
     });
     var TWITTER_ITEM = new ShareItem({
-        id: "twitter",
-        name: "Twitter",
-        urlTemplate: "https://twitter.com/intent/tweet?text={summary}&url={url}"
+        id: 'twitter',
+        name: 'Twitter',
+        urlTemplate: 'https://twitter.com/intent/tweet?text={summary}&url={url}'
     });
     //----------------------------------
     //
     //  Shorten URL API
     //
     //----------------------------------
-    var SHORTEN_API = "https://arcg.is/prod/shorten";
+    var SHORTEN_API = 'https://arcg.is/prod/shorten';
     var ShareViewModel = /** @class */ (function (_super) {
         __extends(ShareViewModel, _super);
         function ShareViewModel() {
@@ -98,10 +113,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
             //  shareItems
             //
             //----------------------------------
-            _this.shareItems = new ShareItemCollection([
-                FACEBOOK_ITEM,
-                TWITTER_ITEM
-            ]);
+            _this.shareItems = new ShareItemCollection([FACEBOOK_ITEM, TWITTER_ITEM]);
             //----------------------------------
             //
             //  shareFeatures
@@ -132,16 +144,10 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
             //
             //----------------------------------
             get: function () {
-                var ready = this.get("view.ready");
+                var ready = this.get('view.ready');
                 return ready
-                    ? this._projectionPromise
-                        ? "projecting"
-                        : this._shortenPromise
-                            ? "shortening"
-                            : "ready"
-                    : this.view
-                        ? "loading"
-                        : "disabled";
+                    ? this._projectionPromise ? 'projecting' : this._shortenPromise ? 'shortening' : 'ready'
+                    : this.view ? 'loading' : 'disabled';
             },
             enumerable: true,
             configurable: true
@@ -153,7 +159,8 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
             //
             //----------------------------------
             get: function () {
-                return "<iframe src=\"" + this.shareUrl + "\" width=\"600\" height=\"450\" frameborder=\"0\" style=\"border:0\" allowfullscreen></iframe>";
+                return "<iframe src=\"" + this
+                    .shareUrl + "\" width=\"600\" height=\"450\" frameborder=\"0\" style=\"border:0\" allowfullscreen></iframe>";
             },
             enumerable: true,
             configurable: true
@@ -161,7 +168,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
         ShareViewModel.prototype.initialize = function () {
             var _this = this;
             this._handles.add([
-                watchUtils.watch(this, ["defaultObjectId", "attachmentIndex"], function () {
+                watchUtils.watch(this, ['defaultObjectId', 'attachmentIndex'], function () {
                     if (!_this.isDefault) {
                         _this.generateUrl();
                     }
@@ -181,12 +188,12 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
                     if (shortenLink) {
                         return _this._shorten(url).then(function (shortenedUrl) {
                             _this._shortenPromise = null;
-                            _this.notifyChange("state");
-                            _this._set("shareUrl", shortenedUrl);
+                            _this.notifyChange('state');
+                            _this._set('shareUrl', shortenedUrl);
                             return promiseUtils.resolve(shortenedUrl);
                         });
                     }
-                    _this._set("shareUrl", url);
+                    _this._set('shareUrl', url);
                     return promiseUtils.resolve(url);
                 });
             }
@@ -196,8 +203,8 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
                     var href = window.location.href;
                     return this._shorten(href).then(function (shortenedUrl) {
                         _this._shortenPromise = null;
-                        _this.notifyChange("state");
-                        _this._set("shareUrl", shortenedUrl);
+                        _this.notifyChange('state');
+                        _this._set('shareUrl', shortenedUrl);
                         return promiseUtils.resolve(shortenedUrl);
                     });
                 }
@@ -212,7 +219,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
             var _this = this;
             var href = window.location.href;
             // If view is not ready
-            if (!this.get("view.ready")) {
+            if (!this.get('view.ready')) {
                 return promiseUtils.resolve(href);
             }
             // Use x/y values and the spatial reference of the view to instantiate a geometry point
@@ -226,7 +233,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
             // Use pointToConvert to project point. Once projected, pass point to generate the share URL parameters
             return this._processPoint(centerPoint).then(function (point) {
                 _this._projectionPromise = null;
-                _this.notifyChange("state");
+                _this.notifyChange('state');
                 return _this._generateShareUrlParams(point);
             });
         };
@@ -237,10 +244,10 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
                 return promiseUtils.resolve(point);
             }
             this._projectionPromise = requireUtils.when(moduleRequire, [
-                "esri/geometry/projection",
-                "esri/geometry/SpatialReference"
+                'esri/geometry/projection',
+                'esri/geometry/SpatialReference'
             ]);
-            this.notifyChange("state");
+            this.notifyChange('state');
             return this._projectionPromise.then(function (_a) {
                 var projection = _a[0], SpatialReference = _a[1];
                 var outputSpatialReference = new SpatialReference({
@@ -270,23 +277,15 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
             var roundedLat = this._roundValue(latitude);
             var zoom = this.view.zoom;
             var roundedZoom = this._roundValue(zoom);
-            var path = href.split("center")[0];
+            var path = href.split('center')[0];
             // If no "?", then append "?". Otherwise, check for "?" and "="
-            var sep = path.indexOf("?") === -1
-                ? "?"
-                : path.indexOf("?") !== -1 && path.indexOf("=") !== -1
-                    ? "&"
-                    : "";
-            var defaultObjectId = this.defaultObjectId !== null
-                ? "&defaultObjectId=" + this.defaultObjectId
-                : "";
-            var attachmentIndex = this.attachmentIndex !== null
-                ? "&attachmentIndex=" + this.attachmentIndex
-                : "";
+            var sep = path.indexOf('?') === -1 ? '?' : path.indexOf('?') !== -1 && path.indexOf('=') !== -1 ? '&' : '';
+            var defaultObjectId = this.defaultObjectId !== null ? "&defaultObjectId=" + this.defaultObjectId : '';
+            var attachmentIndex = this.attachmentIndex !== null ? "&attachmentIndex=" + this.attachmentIndex : '';
             var shareParams = "" + path + sep + "center=" + roundedLon + "," + roundedLat + "&level=" + roundedZoom + defaultObjectId + attachmentIndex;
-            var type = this.get("view.type");
+            var type = this.get('view.type');
             // Checks if view.type is 3D, if so add, 3D url parameters
-            if (type === "3d") {
+            if (type === '3d') {
                 var camera = this.view.camera;
                 var heading = camera.heading, fov = camera.fov, tilt = camera.tilt;
                 var roundedHeading = this._roundValue(heading);
@@ -299,14 +298,14 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
         };
         ShareViewModel.prototype._shorten = function (url) {
             var requestOptions = {
-                callbackParamName: "callback",
+                callbackParamName: 'callback',
                 query: {
                     longUrl: url,
-                    f: "json"
+                    f: 'json'
                 }
             };
             this._shortenPromise = esriRequest(SHORTEN_API, requestOptions);
-            this.notifyChange("state");
+            this.notifyChange('state');
             return this._shortenPromise
                 .catch(function (res) {
                 return res;
@@ -323,13 +322,13 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
         };
         __decorate([
             decorators_1.property({
-                dependsOn: ["view.ready"],
+                dependsOn: ['view.ready'],
                 readOnly: true
             })
         ], ShareViewModel.prototype, "state", null);
         __decorate([
             decorators_1.property({
-                dependsOn: ["shareUrl"],
+                dependsOn: ['shareUrl'],
                 readOnly: true
             })
         ], ShareViewModel.prototype, "embedCode", null);
@@ -362,7 +361,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
             decorators_1.property({ readOnly: true })
         ], ShareViewModel.prototype, "shareUrl", void 0);
         ShareViewModel = __decorate([
-            decorators_1.subclass("ShareViewModel")
+            decorators_1.subclass('ShareViewModel')
         ], ShareViewModel);
         return ShareViewModel;
     }(decorators_1.declared(Accessor)));
