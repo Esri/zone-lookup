@@ -1,10 +1,22 @@
+/*
+  Copyright 2019 Esri
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.​
+*/
 export default class Google {
-  constructor (options = {}) {
+  constructor(options = {}) {
     this.name = 'google'
     Object.assign(this, options)
   }
 
-  logPageView (page, options) {
+  logPageView(page, options) {
     const pageviewObj = buildPageViewObject(page, options, this.dimensions, this.metrics)
     getTrackers((trackers) => {
       trackers.forEach((tracker) => {
@@ -13,7 +25,7 @@ export default class Google {
     })
   }
 
-  logEvent (event) {
+  logEvent(event) {
     const eventObject = buildEventObject(event, this.dimensions, this.metrics)
     getTrackers(trackers => {
       trackers.forEach(tracker => {
@@ -23,7 +35,7 @@ export default class Google {
   }
 }
 
-function getTrackers (callback) {
+function getTrackers(callback) {
   if (window.ga) {
     window.ga(() => {
       callback(window.ga.getAll())
@@ -33,7 +45,7 @@ function getTrackers (callback) {
   }
 }
 
-function buildPageViewObject (page, options, dimensions = {}, metrics = {}) {
+function buildPageViewObject(page, options, dimensions = {}, metrics = {}) {
   const pageviewObject = {
     hitType: 'pageview',
     page: page || window.location.pathname
@@ -42,7 +54,7 @@ function buildPageViewObject (page, options, dimensions = {}, metrics = {}) {
   return mapMetricsAndDimensions(pageviewObject, options, dimensions, metrics)
 }
 
-function buildEventObject (event, dimensions = {}, metrics = {}) {
+function buildEventObject(event, dimensions = {}, metrics = {}) {
   const eventObject = {
     hitType: 'event',
     eventCategory: event.category || 'none',
@@ -53,7 +65,7 @@ function buildEventObject (event, dimensions = {}, metrics = {}) {
   return mapMetricsAndDimensions(eventObject, event, dimensions, metrics)
 }
 
-function mapMetricsAndDimensions (inputObject, options, dimensions, metrics) {
+function mapMetricsAndDimensions(inputObject, options, dimensions, metrics) {
   let mappedObject = inputObject
 
   Object.keys(dimensions).forEach(dimension => {

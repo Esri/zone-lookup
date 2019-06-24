@@ -1,5 +1,5 @@
 /*
-  Copyright 2017 Esri
+  Copyright 2019 Esri
 
   Licensed under the Apache License, Version 2.0 (the "License");
 
@@ -20,26 +20,29 @@
   limitations under the License.​
 */
 
-import applicationBaseConfig = require("dojo/text!config/applicationBase.json");
-import applicationConfig = require("dojo/text!config/application.json");
+import applicationBaseConfig = require('dojo/text!config/applicationBase.json');
+import applicationConfig = require('dojo/text!config/application.json');
 
-import ApplicationBase = require("ApplicationBase/ApplicationBase");
+import ApplicationBase = require('ApplicationBase/ApplicationBase');
 
-import Application = require("./Main");
-import i18n = require("dojo/i18n!./nls/resources");
+import Application = require('./Main');
+import i18n = require('dojo/i18n!./nls/resources');
 import * as errorUtils from './utilites/errorUtils';
 
 const Main = new Application();
 new ApplicationBase({
-  config: applicationConfig,
-  settings: applicationBaseConfig
+	config: applicationConfig,
+	settings: applicationBaseConfig
 })
-  .load()
-  .then(base => Main.init(base), (message) => {
-    if (message === "identity-manager:not-authorized") {
-      errorUtils.displayError({
-        title: i18n.licenseError.title,
-        message: i18n.licenseError.message
-      });
-    }
-  });
+	.load()
+	.then(
+		(base) => Main.init(base),
+		(message) => {
+			if (message === 'identity-manager:not-authorized') {
+				errorUtils.displayError({
+					title: i18n.licenseError.title,
+					message: i18n.licenseError.message
+				});
+			}
+		}
+	);

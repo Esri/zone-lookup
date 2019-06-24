@@ -1,3 +1,15 @@
+/*
+  Copyright 2019 Esri
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.​
+*/
 import Amazon from './amazon'
 import Google from './google'
 import anonymize from './anonymize'
@@ -5,7 +17,7 @@ import internalOrgs from './internal-orgs'
 import telemetryEnabled from './telemetry-enabled'
 
 export default class Telemetry {
-  constructor (options) {
+  constructor(options) {
     // Make sure failure to init this library cannot have side-effects
     try {
       this.trackers = []
@@ -33,7 +45,7 @@ export default class Telemetry {
     }
   }
 
-  _initTrackers (options) {
+  _initTrackers(options) {
     if (options.amazon) {
       const amazon = new Amazon(options.amazon)
       this.trackers.push(amazon)
@@ -46,8 +58,10 @@ export default class Telemetry {
     if (!this.trackers.length) console.error(new Error('No trackers configured'))
   }
 
-  setUser (user = {}, orgType = 'Public') {
-    user = typeof user === 'string' ? { username: user } : user
+  setUser(user = {}, orgType = 'Public') {
+    user = typeof user === 'string' ? {
+      username: user
+    } : user
     this.user = user
     this.user.accountType = orgType
     let internalDomain
@@ -64,7 +78,7 @@ export default class Telemetry {
     }
   }
 
-  logPageView (page, options = {}) {
+  logPageView(page, options = {}) {
     const attributes = this.preProcess(options)
     if (this.debug) console.log('Tracking page view', JSON.stringify(attributes))
     else if (this.test && !this.disabled) return attributes
@@ -84,7 +98,7 @@ export default class Telemetry {
     }
   }
 
-  logEvent (options = {}) {
+  logEvent(options = {}) {
     const event = this.preProcess(options)
 
     if (this.debug) console.log('Tracking event', JSON.stringify(event))
@@ -105,12 +119,14 @@ export default class Telemetry {
     }
   }
 
-  logError (options = {}) {
-    const event = Object.assign({ eventType: 'error' }, options)
+  logError(options = {}) {
+    const event = Object.assign({
+      eventType: 'error'
+    }, options)
     this.logEvent(event)
   }
 
-  startWorkflow (name, attributes = {}) {
+  startWorkflow(name, attributes = {}) {
     const workflow = {
       name,
       start: Date.now(),
@@ -118,30 +134,43 @@ export default class Telemetry {
       workflowId: Math.floor((1 + Math.random()) * 0x100000000000).toString(16)
     }
     this.workflows[name] = workflow
-    const workflowObj = Object.assign({ name, step: 'start' }, attributes)
+    const workflowObj = Object.assign({
+      name,
+      step: 'start'
+    }, attributes)
     this._logWorkflow(workflowObj)
     return workflow
   }
 
-  stepWorkflow (name, step, attributes = {}) {
+  stepWorkflow(name, step, attributes = {}) {
     const details = typeof options === 'string' ? attributes : attributes.details
-    const workflowObj = Object.assign({ name, step, details }, attributes)
+    const workflowObj = Object.assign({
+      name,
+      step,
+      details
+    }, attributes)
     this._logWorkflow(workflowObj)
   }
 
-  endWorkflow (name, attributes = {}) {
-    const workflowObj = Object.assign({ name, step: 'finish' }, attributes)
+  endWorkflow(name, attributes = {}) {
+    const workflowObj = Object.assign({
+      name,
+      step: 'finish'
+    }, attributes)
     this._logWorkflow(workflowObj)
     delete this.workflows[name]
   }
 
-  cancelWorkflow (name, attributes = {}) {
-    const workflowObj = Object.assign({ name, step: 'cancel' }, attributes)
+  cancelWorkflow(name, attributes = {}) {
+    const workflowObj = Object.assign({
+      name,
+      step: 'cancel'
+    }, attributes)
     this._logWorkflow(workflowObj)
     delete this.workflows[name]
   }
 
-  _logWorkflow (options = {}) {
+  _logWorkflow(options = {}) {
     /*
     const workflow = {
       name: 'add layer to map',
@@ -170,7 +199,7 @@ export default class Telemetry {
     this.logEvent(track)
   }
 
-  preProcess (options = {}) {
+  preProcess(options = {}) {
     let userOptions = {}
     if (this.user) {
       userOptions = {
