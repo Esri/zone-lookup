@@ -36,103 +36,123 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-define(["require", "exports", "esri/core/Collection", "esri/views/layers/support/FeatureFilter", "esri/core/promiseUtils", "esri/Graphic", "esri/symbols"], function (require, exports, Collection, FeatureFilter_1, promiseUilts, Graphic_1, symbols_1) {
+define(["require", "exports", "esri/core/Collection", "esri/views/layers/support/FeatureFilter", "esri/core/promiseUtils", "esri/Graphic", "esri/symbols", "esri/views/layers/support/FeatureEffect"], function (require, exports, Collection, FeatureFilter_1, promiseUtils, Graphic_1, symbols_1, FeatureEffect) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     FeatureFilter_1 = __importDefault(FeatureFilter_1);
     Graphic_1 = __importDefault(Graphic_1);
     function getSearchLayer(props) {
         return __awaiter(this, void 0, void 0, function () {
-            var view, searchLayer, layer, lv, _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        view = props.view, searchLayer = props.searchLayer;
-                        layer = searchLayer && searchLayer.id ? view.map.findLayerById(searchLayer.id) : null;
-                        if (!(layer && layer.type === 'feature')) return [3 /*break*/, 2];
-                        return [4 /*yield*/, view.whenLayerView(layer)];
-                    case 1:
-                        lv = (_b.sent());
-                        if (props.hideFeaturesOnLoad)
-                            hideLookuplayers([lv]);
-                        return [2 /*return*/, lv];
-                    case 2: return [2 /*return*/, null];
-                    case 3:
-                        if (!(layer && layer.type === 'feature')) return [3 /*break*/, 5];
-                        return [4 /*yield*/, view.whenLayerView(layer)];
-                    case 4:
-                        _a = (_b.sent());
-                        return [3 /*break*/, 6];
-                    case 5:
-                        _a = null;
-                        _b.label = 6;
-                    case 6: return [2 /*return*/, _a];
+            var view, searchLayer, layer, lastunderscore, layerId;
+            return __generator(this, function (_a) {
+                view = props.view, searchLayer = props.searchLayer;
+                layer = null;
+                if (searchLayer && searchLayer.id) {
+                    layer = view.map.findLayerById(searchLayer.id);
+                    if (!layer) {
+                        lastunderscore = searchLayer.id.lastIndexOf("_");
+                        if (lastunderscore !== -1) {
+                            layerId = searchLayer.id.substr(0, lastunderscore);
+                            //	const subLayerId = searchLayer.id.substr(lastunderscore + 1, searchLayer.id.length);
+                            layer = view.map.findLayerById(layerId);
+                        }
+                    }
                 }
+                if (layer && layer.type === 'feature') {
+                    if (props.hideFeaturesOnLoad)
+                        hideLookuplayers([layer], props.view);
+                    return [2 /*return*/, layer];
+                }
+                else {
+                    return [2 /*return*/, null];
+                }
+                return [2 /*return*/];
             });
         });
     }
     exports.getSearchLayer = getSearchLayer;
     function getLookupLayers(props) {
         return __awaiter(this, void 0, void 0, function () {
-            var view, hideFeaturesOnLoad, lookupLayers, searchableLayers, returnLayers, promises, results;
+            var view, hideFeaturesOnLoad, lookupLayers, searchableLayers, returnLayers, promises;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        view = props.view, hideFeaturesOnLoad = props.hideFeaturesOnLoad, lookupLayers = props.lookupLayers;
-                        searchableLayers = !lookupLayers ? view.map.layers : new Collection();
-                        returnLayers = [];
-                        // Check to see if the user has specified a search layer
-                        // otherwise just get the layers from the map
-                        if (lookupLayers) {
-                            lookupLayers.forEach(function (layerItem) {
-                                if (layerItem.id) {
-                                    var layer = view.map.findLayerById(layerItem.id);
-                                    if (!layer) {
-                                        //maybe its a feature collection
-                                        var sublayerId = layerItem.id.lastIndexOf('_');
-                                        if (sublayerId !== -1) {
-                                            layerItem.id = layerItem.id.slice(0, sublayerId);
-                                            layer = view.map.findLayerById(layerItem.id);
-                                        }
+                view = props.view, hideFeaturesOnLoad = props.hideFeaturesOnLoad, lookupLayers = props.lookupLayers;
+                searchableLayers = !lookupLayers ? view.map.layers : new Collection();
+                returnLayers = [];
+                promises = [];
+                if (lookupLayers) {
+                    // get any predefined layers otherwise we'll use all map layers
+                    lookupLayers.forEach(function (layerItem) {
+                        if (layerItem.id) {
+                            if (layerItem.type === 'DynamicLayer') {
+                                var sublayerId = layerItem.id.lastIndexOf('.');
+                                if (sublayerId !== -1) {
+                                    var id = layerItem.id.slice(0, sublayerId);
+                                    var layer = view.map.findLayerById(id);
+                                    if (layer && searchableLayers.indexOf(layer) === -1) {
+                                        searchableLayers.add(layer);
                                     }
-                                    layer && searchableLayers.add(layer);
-                                }
-                            });
-                        }
-                        promises = [];
-                        // Include the search layer in the lookup layers if specified
-                        searchableLayers.forEach(function (layer) {
-                            if (layer && layer.type) {
-                                if (layer.type === 'feature') {
-                                    var flayer = layer;
-                                    if (flayer.popupEnabled) {
-                                        promises.push(view.whenLayerView(layer));
-                                    }
-                                }
-                                else if (layer.type === 'map-image') {
-                                    var mapLayer = layer;
-                                    mapLayer.sublayers.forEach(function (sublayer) {
-                                        if (sublayer.popupEnabled) {
-                                            sublayer.createFeatureLayer().then(function (l) {
-                                                view.map.add(l);
-                                                promises.push(view.whenLayerView(l));
-                                            });
-                                        }
-                                    });
                                 }
                             }
-                        });
-                        return [4 /*yield*/, promiseUilts.eachAlways(promises)];
-                    case 1:
-                        results = _a.sent();
-                        results.forEach(function (result) {
-                            if (result && result.value)
-                                returnLayers.push(result.value);
-                        });
-                        if (hideFeaturesOnLoad)
-                            hideLookuplayers(returnLayers);
-                        return [2 /*return*/, returnLayers];
+                            else {
+                                // feature layer
+                                var layer = view.map.findLayerById(layerItem.id);
+                                if (!layer) {
+                                    //maybe its a feature collection
+                                    var sublayerId = layerItem.id.lastIndexOf('_');
+                                    if (sublayerId !== -1) {
+                                        var id = layerItem.id.slice(0, sublayerId);
+                                        layer = view.map.findLayerById(id);
+                                    }
+                                }
+                                layer && searchableLayers.add(layer);
+                            }
+                        }
+                    });
                 }
+                // Include the search layer in the lookup layers if specified
+                searchableLayers.forEach(function (layer) {
+                    if (layer && layer.type) {
+                        if (layer.type === 'feature') {
+                            var flayer = layer;
+                            if (flayer.popupEnabled) {
+                                flayer.outFields = ["*"];
+                                returnLayers.push(flayer);
+                                //promises.push(view.whenLayerView(flayer));
+                            }
+                        }
+                        else if (layer.type === 'map-image') {
+                            // if sub layers have been enabled during config
+                            // only add those. Otherwise add all dynamic sub layers
+                            var mapLayer = layer;
+                            var checkSubLayer_1 = lookupLayers && lookupLayers.length && lookupLayers.length > 0 ? true : false;
+                            mapLayer.sublayers &&
+                                mapLayer.sublayers.forEach(function (sublayer) {
+                                    if (checkSubLayer_1) {
+                                        var configId_1 = sublayer.layer.id + "." + sublayer.id;
+                                        lookupLayers.forEach(function (l) {
+                                            if (l.id && l.id === configId_1) {
+                                                sublayer.createFeatureLayer().then(function (l) {
+                                                    view.map.add(l);
+                                                    returnLayers.push(l);
+                                                    //promises.push(view.whenLayerView(l));
+                                                });
+                                            }
+                                        });
+                                    }
+                                    else {
+                                        sublayer.createFeatureLayer().then(function (l) {
+                                            view.map.add(l);
+                                            returnLayers.push(l);
+                                            //promises.push(view.whenLayerView(l));
+                                        });
+                                    }
+                                });
+                        }
+                    }
+                });
+                if (hideFeaturesOnLoad)
+                    hideLookuplayers(returnLayers, props.view);
+                return [2 /*return*/, promiseUtils.resolve(returnLayers)];
             });
         });
     }
@@ -153,17 +173,17 @@ define(["require", "exports", "esri/core/Collection", "esri/views/layers/support
                         if (graphic.geometry && graphic.geometry.type && graphic.geometry.type === 'polygon') {
                             returnGraphic = new Graphic_1.default({ geometry: graphic.geometry.extent.center, attributes: graphic.attributes });
                         }
-                        return [2 /*return*/, promiseUilts.resolve(returnGraphic)];
+                        return [2 /*return*/, promiseUtils.resolve(returnGraphic)];
                     case 1:
                         sourceLayerGraphic = graphic && graphic.hasOwnProperty('sourceLayer') ? graphic : null;
                         if (sourceLayerGraphic.sourceLayer && sourceLayerGraphic.sourceLayer.id) {
-                            if (sourceLayerGraphic.sourceLayer.id === searchLayer.layer.id) {
+                            if (sourceLayerGraphic.sourceLayer.id === searchLayer.id) {
                                 // Is the search geometry from the search layer? If so use it
-                                return [2 /*return*/, promiseUilts.resolve(graphic)];
+                                return [2 /*return*/, promiseUtils.resolve(graphic)];
                             }
                         }
                         searchGeometry = graphic.geometry;
-                        query = searchLayer.layer.createQuery();
+                        query = searchLayer.createQuery();
                         query.geometry = searchGeometry;
                         if (searchGeometry && searchGeometry.type === 'point') {
                             query.spatialRelationship = 'within';
@@ -171,10 +191,10 @@ define(["require", "exports", "esri/core/Collection", "esri/views/layers/support
                         else {
                             query.spatialRelationship = 'intersects';
                         }
-                        return [4 /*yield*/, searchLayer.layer.queryFeatures(query)];
+                        return [4 /*yield*/, searchLayer.queryFeatures(query)];
                     case 2:
                         results_1 = _a.sent();
-                        return [2 /*return*/, promiseUilts.resolve(results_1 && results_1.features && results_1.features.length && results_1.features.length > 0
+                        return [2 /*return*/, promiseUtils.resolve(results_1 && results_1.features && results_1.features.length && results_1.features.length > 0
                                 ? results_1.features[0]
                                 : null)];
                 }
@@ -189,11 +209,13 @@ define(["require", "exports", "esri/core/Collection", "esri/views/layers/support
             var geometry = graphic.geometry && graphic.geometry.type === 'point' ? graphic.geometry : graphic.geometry.extent.center;
             //view.goTo(geometry);
             var displayText_1 = null;
-            if (graphic && graphic.attributes && includeAddressText) {
-                // TODO: At 7.3 add config option for display field
-                if (graphic.attributes.Match_addr) {
+            if (graphic && includeAddressText) {
+                if (graphic.attributes && graphic.attributes.Match_addr) {
                     // replace first comma with a new line character
                     displayText_1 = graphic.attributes.Match_addr.replace(',', '\n');
+                }
+                else if (graphic.attributes && graphic.attributes.name) {
+                    displayText_1 = graphic.attributes.name;
                 }
                 else if (graphic.layer && graphic.layer.displayField && graphic.layer.displayField !== '') {
                     displayText_1 = graphic.attributes[graphic.layer.displayField] || null;
@@ -244,6 +266,9 @@ define(["require", "exports", "esri/core/Collection", "esri/views/layers/support
             return searchResults.results.some(function (r) {
                 if (r.feature) {
                     feature = r.feature;
+                    if (r.name && feature.attributes) {
+                        feature.attributes.name = r.name;
+                    }
                     return true;
                 }
                 else {
@@ -253,10 +278,18 @@ define(["require", "exports", "esri/core/Collection", "esri/views/layers/support
         });
         return feature;
     }
-    function hideLookuplayers(layers) {
+    function hideLookuplayers(layers, view) {
+        var noMap = document.body.classList.contains('no-map');
+        if (noMap) {
+            return;
+        }
         layers.forEach(function (layer) {
-            layer.filter = new FeatureFilter_1.default({
-                where: '1=0'
+            view.whenLayerView(layer).then(function (layerView) {
+                //hide layers
+                layerView.effect = new FeatureEffect({
+                    excludedEffect: "opacity(0%)",
+                    filter: new FeatureFilter_1.default({ where: '1=0' })
+                });
             });
         });
     }

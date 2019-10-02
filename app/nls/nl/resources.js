@@ -1,4 +1,7 @@
 define({
+  "load": {
+    "label": "Laden"
+  },
   "onboarding": {
     "title": "Welkom!",
     "content": "Zoek naar een adres om meer te weten te komen over de locatie en omgeving.</br>Als u het adres niet kent, kunt u een van de volgende zoekmethoden gebruiken: <ul><li>Klik op het zoekvak en typ een adres of kies <b>Gebruik huidige locatie</b></li><li>Klik op de kaart</li></ul></br> De resultaten omvatten informatie over interessante objecten."

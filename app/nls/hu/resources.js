@@ -1,4 +1,7 @@
 define({
+  "load": {
+    "label": "Betöltés"
+  },
   "onboarding": {
     "title": "Üdvözöljük!",
     "content": "A hely és a környező terület jobb megismeréséhez keressen ki egy címet.</br>Ha nem ismeri a címet, akkor használja az alábbi keresési módok egyikét: <ul><li>Kattintson a keresési mezőbe és írja be a címet, vagy válassza az <b>Aktuális hely használata</b></li><li>Kattintson a térképre</li></ul>lehetőséget.</br> A megjelenő eredmények tartalmazzák a vizsgált vektoros elemek információit."

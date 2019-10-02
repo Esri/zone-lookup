@@ -1,4 +1,7 @@
 define({
+  "load": {
+    "label": "Chargement"
+  },
   "onboarding": {
     "title": "Bienvenue !",
     "content": "Recherchez une adresse pour en savoir plus sur sa localisation et son environnement.</br>Si vous ne connaissez pas l’adresse, utilisez une de ces méthodes de recherche : <ul><li>Cliquez sur la zone de recherche et saisissez une adresse ou choisissez <b>Utilisez la localisation actuelle</b></li><li>Cliquez sur la carte</li></ul></br> Les résultats comprendront des informations sur les entités d’intérêt."

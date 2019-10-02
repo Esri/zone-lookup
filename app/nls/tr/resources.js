@@ -1,4 +1,7 @@
 define({
+  "load": {
+    "label": "Yükleniyor"
+  },
   "onboarding": {
     "title": "Hoş Geldiniz!",
     "content": "Konumu ve çevresi hakkında daha fazla bilgi edinmek için bir adres arayın.</br>Adresi bilmiyorsanız, aşağıdaki arama yöntemlerinden birini kullanın: <ul><li>Arama kutusuna tıklayın ve bir adres yazın veya <b>Mevcut konumu kullan</b> seçeneğini seçin.</li><li>Haritaya tıklayın</li></ul></br> Sonuçlar ilgili detaylar hakkında bilgiler içerecektir."

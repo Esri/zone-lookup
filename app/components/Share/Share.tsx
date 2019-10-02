@@ -238,7 +238,7 @@ class Share extends declared(Widget) {
 	//
 	//----------------------------------
 
-	@renderable([ 'viewModel.state', 'viewModel.embedCode', 'viewModel.shareFeatures' ])
+	@renderable(['viewModel.state', 'viewModel.embedCode', 'viewModel.shareFeatures'])
 	@property({
 		type: ShareViewModel
 	})
@@ -259,7 +259,7 @@ class Share extends declared(Widget) {
 					})
 				]);
 			}),
-			watchUtils.watch(this, [ 'defaultObjectId', 'attachmentIndex' ], () => {
+			watchUtils.watch(this, ['defaultObjectId', 'attachmentIndex'], () => {
 				this._removeCopyTooltips();
 			})
 		]);
@@ -312,8 +312,8 @@ class Share extends declared(Widget) {
 				const shareItem = node['data-share-item'] as ShareItem;
 				const { urlTemplate } = shareItem;
 				const portalItem = this.get<PortalItem>('view.map.portalItem');
-				const title = portalItem ? replace(i18n.urlTitle, { title: portalItem.title }) : null;
-				const summary = portalItem ? replace(i18n.urlSummary, { summary: portalItem.snippet }) : null;
+				const title = portalItem && portalItem.title ? replace(i18n.urlTitle, { title: portalItem.title }) : replace(i18n.urlTitle, { title: "" });
+				const summary = portalItem && portalItem.snippet ? replace(i18n.urlSummary, { summary: portalItem.snippet }) : replace(i18n.urlSummary, { summary: "" });
 				this._openUrl(this.shareUrl, title, summary, urlTemplate);
 			}),
 			shareKey
@@ -391,7 +391,7 @@ class Share extends declared(Widget) {
 	private _renderShareItemContainer(): any {
 		const { shareServices } = this.shareFeatures;
 		const shareItemNodes = shareServices ? this._renderShareItems() : null;
-		const shareItemNode = shareServices ? (shareItemNodes.length ? [ shareItemNodes ] : null) : null;
+		const shareItemNode = shareServices ? (shareItemNodes.length ? [shareItemNodes] : null) : null;
 		const shareLink = this._renderShareLinkNode();
 		return (
 			<div>

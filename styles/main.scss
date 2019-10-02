@@ -1,5 +1,5 @@
 /*
-  Copyright 2019 Esri
+  Copyright 2017 Esri
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -22,7 +22,8 @@ $detail-panel-color: #595959;
 $body-background: #f8f8f8;
 $vw-ratio: 1;
 $container-width: 2000px;
-$scrollable-container-height: calc(100% - 160px);
+$scrollable-container-height: calc(100vh - 160px);
+$scrollable-container-height-mobile: calc(100% - 160px);
 @import "./app/calcite-web/dist/sass/calcite-web";
 @import "./app/components/Share/Share/css/Share";
 
@@ -48,15 +49,26 @@ body {
   height: 100%;
 }
 
+.no-map .side-panel {
+  width: 100%;
+  margin: auto;
+}
+
 .top-nav-title {
   color: inherit;
   font-size: 1.6rem;
   white-space: nowrap;
   overflow: hidden;
   padding-left: 16px;
+  padding-top: 10px;
   padding-bottom: 10px;
   max-width: 100%;
   margin: 0;
+}
+
+html[dir="rtl"] .top-nav-title {
+  margin-right: 1.5rem;
+  margin-left: 0;
 }
 
 .top-nav,
@@ -121,14 +133,17 @@ body {
 
 /* Header content (Search and Title)*/
 .panel.app-header {
-  height: 115px;
+  height: 88px;
 }
 
 .esri-search {
   width: auto;
-  height: 42px;
-  margin-left: 16px;
-  margin-right: 16px;
+  height: 44px;
+}
+
+.esri-search__container {
+  border-top: solid 1px rgba(169, 169, 169, 0.2);
+  border-bottom: solid 1px rgba(169, 169, 169, 0.2);
 }
 
 /*Search placeholder text*/
@@ -175,7 +190,7 @@ body {
   height: 42px;
 }
 
-/*Accordion customizations*/
+
 .accordion-icon,
 .accordion-section>.accordion-title>.accordion-icon>svg {
   vertical-align: text-top;
@@ -188,11 +203,58 @@ body {
   min-height: 1.5em;
 }
 
+.group-accordion-count {
+  float: left;
+  padding: 0 0.5em;
+  font-size: smaller;
+  border: solid 1px #ccc;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
+
+.accordion-count {
+  float: right;
+}
+
 .accordion-content {
   padding: 0.3em 1em 1em 1em;
   background: $default-app-background;
   color: #6e6e6e;
   cursor: pointer;
+}
+
+.group-accordion-content {
+  background: #f7f7f7;
+  padding: 0 0.5em;
+}
+
+/* Styles for grouped features*/
+.feature-group {
+  background: #fff;
+  padding: 0.25em;
+}
+
+.group-accordion-section.accordion-section {
+  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.2);
+  border: none;
+}
+
+ul.accordion-content {
+  list-style-type: none;
+}
+
+.group-accordion-icon {
+  float: right;
+}
+
+.no-content>.accordion-title>.accordion-icon,
+.no-content>.accordion-content,
+.no-content.is-active>.accordion-content {
+  display: none;
+}
+
+.single .accordion-title>.accordion-icon {
+  display: none;
 }
 
 .accordion {
@@ -207,7 +269,7 @@ body {
 }
 
 .accordion-section-selected .accordion-section {
-  box-shadow: inset 0 0 0 8px $calcite-blue;
+  box-shadow: inset 0 0 0 4px #ccc;
   padding: 1px;
   margin-top: 0;
 }
@@ -237,10 +299,16 @@ p:empty {
   padding: 0;
 }
 
-// hide title within the feature panel since we show on accordion
-.esri-feature__title {
-  display: none;
+.esri-feature a {
+  color: #0079c1;
+  text-decoration: underline;
 }
+
+.esri-feature a:hover,
+.esri-feature a:focus {
+  color: #0079c1;
+}
+
 
 .btn-open-map {
   position: fixed;
@@ -291,7 +359,7 @@ p:empty {
 /* Mobile map */
 .mini-map-panel {
   position: absolute;
-  top: 98px;
+  top: 90px;
   bottom: 0;
   right: 0;
   left: 0;
@@ -328,7 +396,6 @@ p:empty {
 .scrollable-content {
   max-height: calc(100% - 155px);
   overflow: auto;
-  overflow-y: overlay;
 }
 
 /* Detail Panel styles includes collapse all / open all links*/
@@ -336,6 +403,10 @@ p:empty {
   width: 100%;
   height: 32px;
   background: inherit;
+}
+
+.toggle-content-tools .btn-transparent {
+  color: #005e95;
 }
 
 .top-nav .btn-transparent,
@@ -528,6 +599,8 @@ input[type=range]:focus::-ms-fill-upper {
   right: 0;
   left: 0;
   max-width: 100%;
+  max-height: 50%;
+  overflow: auto;
 }
 
 .alert-green {
@@ -536,14 +609,13 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 .alert span {
-  margin-right: 0.25em;
+  max-width: calc(100% - 35px);
 }
 
 .alert-close {
-  top: 0px;
-  right: 5px;
-  height: 44px;
-  width: 44px;
+  position: absolute;
+  top: 0;
+  right: 0;
   font-size: 1.24rem;
 }
 
@@ -569,15 +641,15 @@ input[type=range]:focus::-ms-fill-upper {
   }
 
   .mini-map-panel {
-    height: calc(100% - 177px);
+    height: calc(100% - 171px);
   }
 
-  .scrollable-content {
+  /*.scrollable-content {
     max-height: $scrollable-container-height;
-  }
+  }*/
 
   .panel.app-header {
-    height: 98px;
+    height: 85px;
   }
 
   .top-nav-title {
@@ -585,15 +657,18 @@ input[type=range]:focus::-ms-fill-upper {
   }
 
   .esri-search {
-    height: 35px;
-    margin-left: 10px;
-    margin-right: 10px;
+    height: 42px;
   }
 
   .esri-search__submit-button,
   .esri-search__sources-button {
-    height: 35px;
-    width: 35px;
+    height: 42px;
+    width: 42px;
+  }
+
+  .esri-search__clear-button .esri-widget--button .esri-icon-close,
+  .esri-icon-search {
+    font-size: 1.25rem;
   }
 
   .esri-search__clear-button .esri-widget--button .esri-icon-close,
@@ -610,7 +685,7 @@ input[type=range]:focus::-ms-fill-upper {
   .esri-search__form .esri-input[type="text"],
   .esri-input[type="number"],
   .esri-search__clear-button {
-    height: 35px;
+    height: 42px;
   }
 }
 
@@ -619,7 +694,11 @@ input[type=range]:focus::-ms-fill-upper {
   /* CSS specific to iOS devices - used here to apply different height on ios
   and also to add momentum scroll to results panel*/
   .scrollable-content {
-    max-height: $scrollable-container-height;
+    max-height: $scrollable-container-height-mobile;
     -webkit-overflow-scrolling: touch;
+  }
+
+  .accordion {
+    width: 100%;
   }
 }

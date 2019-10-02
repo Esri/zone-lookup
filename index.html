@@ -9,16 +9,36 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title></title>
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="./manifest.json">
   <link rel="icon" href="assets/favicon.ico" sizes="32x32" type="image/vnd.microsoft.icon">
+  <meta name="description" content="Zone Lookup">
+  <meta name="theme-color" content="#0079c1" />
+  <noscript>
+    <p>Please enable JavaScript to use this site.</p>
+  </noscript>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./serviceworker.js', {
+          scope: './sw-test/'
+        })
+        .then(function (reg) {
+          // registration worked
+          console.log('Registration succeeded. Scope is ' + reg.scope);
+        }).catch(function (error) {
+          // registration failed
+          console.log('Registration failed with ' + error);
+        });
+    }
 
-  <link rel="stylesheet" href="https://js.arcgis.com/4.12/esri/css/main.css">
-  <link rel="stylesheet" href="styles/main.css">
-
+  </script>
+  <!--Testing: https://www.filamentgroup.com/lab/load-css-simpler/-->
+  <link rel="stylesheet" href="https://js.arcgis.com/4.13/esri/css/main.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="styles/main.css" media="print" onload="this.media='all'">
 
   <script src="./app/es6-promise.auto.min.js"></script>
+
   <script src="./app/dojo.js"></script>
-  <script src="https://js.arcgis.com/4.12/"></script>
+  <script src="https://js.arcgis.com/4.13/"></script>
   <script>
     require(["Application/init"]);
 
@@ -33,7 +53,7 @@
     <div id="sidePanel" class="side-panel phone-column-6 tablet-column-12 column-10 padding-left-0 padding-right-0">
       <!-- header -->
 
-      <header class="panel panel-no-padding  panel-no-border app-header">
+      <header class="panel panel-no-padding app-header  panel-no-border">
         <div id="header"></div>
         <div id="search"></div>
       </header>

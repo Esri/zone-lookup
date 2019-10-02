@@ -1,4 +1,7 @@
 define({
+  "load": {
+    "label": "Učitavanje"
+  },
   "onboarding": {
     "title": "Dobro došli!",
     "content": "Pretražite adresu da biste saznali više o lokaciji i okolnoj oblasti.</br>Ako ne znate adresu, koristite jednu od ovih metoda pretraživanja: <ul><li>Kliknite na polje za pretragu i unesite adresu ili odaberite <b>Koristi trenutnu lokaciju</b></li><li>Kliknite u okviru mape </li></ul></br> Rezultati će sadržati informacije od geoobjektima od interesa."

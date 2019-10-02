@@ -1,4 +1,7 @@
 define({
+  "load": {
+    "label": "Se încarcă"
+  },
   "onboarding": {
     "title": "Bine ați venit!",
     "content": "Căutați o adresă pentru a afla mai multe despre locație și zona înconjurătoare.</br>Dacă nu cunoașteți adresa, utilizați una dintre aceste metode de căutare: <ul><li>Faceți clic pe caseta de căutare și introduceți o adresă sau selectați <b>Utilizare locaţie curentă</b></li><li>Faceți clic pe hartă</li></ul></br> Rezultatele vor include informații despre obiectele spațiale de interes."

@@ -1,4 +1,7 @@
 define({
+  "load": {
+    "label": "Cargando"
+  },
   "onboarding": {
     "title": "Le damos la bienvenida",
     "content": "Busque una dirección para obtener más información sobre la ubicación y el área circundante.</br>Si no conoce la dirección, utilice uno de estos métodos de búsqueda: <ul><li>Haga clic en el cuadro de búsqueda y escriba una dirección o elija <b>Usar ubicación actual</b></li><li>Haga clic dentro del mapa</li></ul></br> Los resultados contendrán información sobre entidades de interés."

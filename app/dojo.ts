@@ -1,5 +1,5 @@
 /*
-  Copyright 2019 Esri
+  Copyright 2017 Esri
 
   Licensed under the Apache License, Version 2.0 (the "License");
 
@@ -28,7 +28,7 @@
 
 	const config = {
 		async: true,
-		has: { 'esri-promise-compatibility': 1, 'esri-promise-compatibility-deprecation-warnings': 1 },
+		//has: { 'esri-native-promise': true },
 		locale: dojoLocale,
 		packages: [
 			{ name: 'Application', location: `${distPath}/app`, main: 'Main' },

@@ -1,4 +1,7 @@
 define({
+  "load": {
+    "label": "Caricamento"
+  },
   "onboarding": {
     "title": "Benvenuti",
     "content": "Cercare un indirizzo per ulteriori informazioni sulla posizione e l'area circostante.</br>Se non si conosce l'indirizzo, utilizzare uno di questi metodi di ricerca: <ul><li>Fare clic sulla casella di ricerca e digitare un indirizzo o scegliere <b>Usa posizione corrente</b></li><li>Fare clic sulla mappa</li></ul></br> I risultati includeranno informazioni sulle feature di interesse."

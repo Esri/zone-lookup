@@ -10,16 +10,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.​
 */
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
 };
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -66,7 +63,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
-define(["require", "exports", "telemetry/telemetry.dojo", "esri/widgets/Search", "esri/Graphic", "esri/core/Handles", "./utilites/lookupLayerUtils", "./utilites/esriWidgetUtils", "./utilites/errorUtils", "./components/DisplayLookupResults", "./components/Header", "./components/MapPanel", "dojo/i18n!./nls/resources", "ApplicationBase/support/domHelper", "esri/layers/FeatureLayer", "./components/DetailPanel"], function (require, exports, telemetry_dojo_1, Search_1, Graphic_1, Handles_1, lookupLayerUtils, esriWidgetUtils, errorUtils, DisplayLookupResults_1, Header_1, MapPanel_1, i18n, domHelper_1, FeatureLayer, DetailPanel_1) {
+define(["require", "exports", "telemetry/telemetry.dojo", "esri/widgets/Search", "esri/Graphic", "esri/core/Handles", "./utilites/lookupLayerUtils", "./utilites/esriWidgetUtils", "./utilites/errorUtils", "esri/core/watchUtils", "./components/DisplayLookupResults", "./components/Header", "./components/MapPanel", "dojo/i18n!./nls/resources", "ApplicationBase/support/domHelper", "esri/layers/FeatureLayer", "./components/DetailPanel"], function (require, exports, telemetry_dojo_1, Search_1, Graphic_1, Handles_1, lookupLayerUtils, esriWidgetUtils, errorUtils, watchUtils, DisplayLookupResults_1, Header_1, MapPanel_1, i18n, domHelper_1, FeatureLayer, DetailPanel_1) {
     "use strict";
     telemetry_dojo_1 = __importDefault(telemetry_dojo_1);
     Search_1 = __importDefault(Search_1);
@@ -181,15 +178,25 @@ define(["require", "exports", "telemetry/telemetry.dojo", "esri/widgets/Search",
             // Add a page header
             config.title = config.title || item.title;
             domHelper_1.setPageTitle(config.title);
-            var detailTitle = config.detailTitle || i18n.onboarding.title;
-            var detailContent = config.detailContent || i18n.onboarding.content;
-            this._detailPanel = new DetailPanel_1.default({
-                title: detailTitle || null,
-                content: detailContent,
-                view: this.view,
-                sharing: config.socialSharing,
-                container: document.getElementById('detailPanel')
-            });
+            var detailTitle = config.detailTitle;
+            var detailContent = config.detailContent;
+            if (config.appid === '') {
+                if (!detailTitle) {
+                    detailTitle = i18n.onboarding.title;
+                }
+                if (!detailContent) {
+                    detailContent = i18n.onboarding.content;
+                }
+            }
+            if (detailTitle || detailContent || config.socialSharing) {
+                this._detailPanel = new DetailPanel_1.default({
+                    title: detailTitle || null,
+                    content: detailContent,
+                    view: this.view,
+                    sharing: config.socialSharing,
+                    container: document.getElementById('detailPanel')
+                });
+            }
             var header = new Header_1.default({
                 title: config.title,
                 titleLink: config.titleLink,
@@ -239,7 +246,7 @@ define(["require", "exports", "telemetry/telemetry.dojo", "esri/widgets/Search",
                                 maxDistance: maxDistance,
                                 container: 'distanceOptions'
                             });
-                            key = 'distane-slider';
+                            key = 'distance-slider';
                             this._handles.remove(key);
                             this._handles.add(distanceSlider_1.watch('currentValue', function () {
                                 _this.base.config.distance = distanceSlider_1.currentValue;
@@ -273,10 +280,18 @@ define(["require", "exports", "telemetry/telemetry.dojo", "esri/widgets/Search",
                                 mapPanel: this.mapPanel,
                                 container: 'resultsPanel'
                             });
+                            this._addSearchWidget();
                             //Add open map button
                             if (!config.noMap) {
                                 openMapButton = document.createElement('button');
-                                openMapButton.classList.add('icon-ui-maps', 'btn', 'btn-fill', 'btn-green', 'btn-open-map', 'app-button', 'tablet-show');
+                                //Unable to add multiple classes in IE11
+                                openMapButton.classList.add("icon-ui-maps");
+                                openMapButton.classList.add("btn");
+                                openMapButton.classList.add("btn-fill");
+                                openMapButton.classList.add("btn-green");
+                                openMapButton.classList.add("btn-open-map");
+                                openMapButton.classList.add("app-button");
+                                openMapButton.classList.add("tablet-show");
                                 openMapButton.innerHTML = i18n.map.label;
                                 document.getElementById('bottomNav').appendChild(openMapButton);
                                 openMapButton.addEventListener('click', function () {
@@ -284,21 +299,18 @@ define(["require", "exports", "telemetry/telemetry.dojo", "esri/widgets/Search",
                                     _this.view.container.classList.remove('tablet-hide');
                                     //update the maps describedby item
                                     document.getElementById('mapDescription').innerHTML = i18n.map.miniMapDescription;
-                                    // if view size increases to greater than tablet close button if not already closed
-                                    var key = 'width-breakpoint';
-                                    _this._handles.add(_this.view.watch('widthBreakpoint', function (breakpoint) {
-                                        if (breakpoint !== 'small' || breakpoint !== 'xsmall') {
-                                            _this._handles.remove(key);
-                                            _this.mapPanel.closeMap();
-                                        }
-                                    }), key);
                                     var mainNodes = document.getElementsByClassName('main-map-content');
                                     for (var j = 0; j < mainNodes.length; j++) {
                                         mainNodes[j].classList.add('hide');
                                     }
+                                    // if view size increases to greater than tablet close button if not already closed
+                                    var resizeListener = function () {
+                                        _this.mapPanel.closeMap();
+                                        window.removeEventListener("resize", resizeListener);
+                                    };
+                                    window.addEventListener("resize", resizeListener);
                                 });
                             }
-                            this._addSearchWidget();
                             return [2 /*return*/];
                     }
                 });
@@ -315,8 +327,8 @@ define(["require", "exports", "telemetry/telemetry.dojo", "esri/widgets/Search",
                 container: 'search'
             };
             if (searchConfig) {
-                if (this.base.config.searchConfig.sources) {
-                    var sources = this.base.config.searchConfig.sources;
+                var sources = searchConfig.sources, activeSourceIndex = searchConfig.activeSourceIndex, enableSearchingAll = searchConfig.enableSearchingAll;
+                if (sources) {
                     searchProperties.sources = sources.filter(function (source) {
                         if (source.flayerId && source.url) {
                             var layer = _this.view.map.findLayerById(source.flayerId);
@@ -335,17 +347,17 @@ define(["require", "exports", "telemetry/telemetry.dojo", "esri/widgets/Search",
                     searchProperties.includeDefaultSources = false;
                 }
                 searchProperties.searchAllEnabled =
-                    this.base.config.searchConfig.enableSearchingAll === false ? false : true;
-                if (this.base.config.searchConfig.activeSourceIndex &&
+                    enableSearchingAll && enableSearchingAll === false ? false : true;
+                if (activeSourceIndex &&
                     searchProperties.sources &&
-                    searchProperties.sources.length >= this.base.config.searchConfig.activeSourceIndex) {
-                    searchProperties.activeSourceIndex = this.base.config.searchConfig.activeSourceIndex;
+                    searchProperties.sources.length >= activeSourceIndex) {
+                    searchProperties.activeSourceIndex = activeSourceIndex;
                 }
             }
             this.searchWidget = new Search_1.default(searchProperties);
             // If there's a find url param search for it
             if (find) {
-                this.view.when(function () {
+                watchUtils.whenFalseOnce(this.view, "updating", function () {
                     _this.searchWidget.viewModel.searchTerm = decodeURIComponent(find);
                     if (findSource) {
                         _this.searchWidget.activeSourceIndex = findSource;
@@ -425,7 +437,9 @@ define(["require", "exports", "telemetry/telemetry.dojo", "esri/widgets/Search",
                 var distance;
                 return __generator(this, function (_a) {
                     // collapse the detail panel when results are found
-                    this._detailPanel.collapse();
+                    if (this._detailPanel) {
+                        this._detailPanel.collapse();
+                    }
                     distance = (this.base.config && this.base.config.distance) || 0;
                     this.lookupResults && this.lookupResults.queryFeatures(location, distance);
                     return [2 /*return*/];

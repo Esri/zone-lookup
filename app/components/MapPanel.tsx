@@ -1,24 +1,3 @@
-/*
-  Copyright 2019 Esri
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-
-  you may not use this file except in compliance with the License.
-
-  You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-
-  distributed under the License is distributed on an "AS IS" BASIS,
-
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-
-  See the License for the specific language governing permissions and
-
-  limitations under the License.​
-*/
 /// <amd-dependency path="esri/core/tsSupport/declareExtendsHelper" name="__extends" />
 /// <amd-dependency path="esri/core/tsSupport/decorateHelper" name="__decorate" />
 import { subclass, declared, property } from 'esri/core/accessorSupport/decorators';
@@ -123,8 +102,8 @@ class MapPanel extends declared(Widget, Accessor) {
 			CSS.calciteStyles.leader,
 			CSS.calciteStyles.trailer
 		];
-		const mainMapClasses = [ CSS.calciteStyles.column14 ];
-		const miniMapClasses = [ CSS.miniMap.panel, CSS.calciteStyles.panel ];
+		const mainMapClasses = [CSS.calciteStyles.column14];
+		const miniMapClasses = [CSS.miniMap.panel, CSS.calciteStyles.panel];
 		const mapPositionClasses = this.isMobileView
 			? this.classes(...allClasses, ...miniMapClasses)
 			: this.classes(...mainMapClasses, ...allClasses);
@@ -143,7 +122,7 @@ class MapPanel extends declared(Widget, Accessor) {
 					CSS.calciteStyles.iconDesc
 				)}
 			>
-				Info
+				{i18n.tools.info}
 			</button>
 		) : null;
 
@@ -191,8 +170,11 @@ class MapPanel extends declared(Widget, Accessor) {
 	private async _createMap(container) {
 		const portalItem: esri.PortalItem = this.base.results.applicationItem.value;
 		const appProxies = portalItem && portalItem.applicationProxies ? portalItem.applicationProxies : null;
-
+		if (!this.config.zoom) {
+			this.config.components = "attribution";
+		}
 		const defaultViewProperties = getConfigViewProperties(this.config);
+
 		const mapContainer = {
 			container
 		};
@@ -239,7 +221,7 @@ class MapPanel extends declared(Widget, Accessor) {
 		this.message = null;
 	}
 	public resetExtent() {
-		this.view.extent = this._initialExtent;
+		this.view.goTo(this._initialExtent);
 	}
 }
 export = MapPanel;

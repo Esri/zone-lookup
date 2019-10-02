@@ -1,5 +1,8 @@
 define({
   root: ({
+    "load": {
+      "label": "Loading"
+    },
     "onboarding": {
       "title": "Welcome!",
       "content": "Search for an address to learn more about the location and its surrounding area.</br>If you don't know the address, use one of these search methods: <ul><li>Click the search box and type in an address or choose <b>Use current location</b></li><li>Click within the map</li></ul></br> Results will include information about features of interest."

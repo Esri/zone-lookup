@@ -1,5 +1,5 @@
 /*
-  Copyright 2019 Esri
+  Copyright 2017 Esri
 
   Licensed under the Apache License, Version 2.0 (the "License");
 
@@ -22,7 +22,7 @@
 import Graphic from 'esri/Graphic';
 import Color from 'esri/Color';
 import SpatialReference from 'esri/geometry/SpatialReference';
-import geometryEngine from 'esri/geometry/geometryEngineAsync';
+import geometryEngine from 'esri/geometry/geometryEngine';
 import esri = __esri;
 
 interface BufferParams {
@@ -36,20 +36,14 @@ interface DistanceParams extends BufferParams {
 }
 export function getDistances(params: DistanceParams) {
 	const { location, unit } = params;
-	const promises = [];
-	params.features.forEach((feature) => {
-		promises.push(geometryEngine.distance(location, feature.geometry, unit));
-	});
-	return Promise.all(promises).then((results) => {
-		results.map((result, index) => {
-			const f = params.features[index];
-			if (f && f.attributes) {
-				f.attributes.lookupDistance = result.toFixed(2);
-			}
-		});
+	params.features.forEach(feature => {
+		const distance = geometryEngine.distance(location, feature.geometry, unit);
+		if (feature && feature.attributes) {
+			feature.attributes.lookupDistance = distance !== null ? distance.toFixed(2) : null;
+		}
 	});
 }
-export async function bufferGeometry(params: BufferParams) {
+export function bufferGeometry(params: BufferParams) {
 	const { location, distance, unit } = params;
 	const spatialReference =
 		location.spatialReference ||

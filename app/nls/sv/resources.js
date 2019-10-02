@@ -1,4 +1,7 @@
 define({
+  "load": {
+    "label": "Laddar"
+  },
   "onboarding": {
     "title": "Välkommen!",
     "content": "Sök efter en adress om du vill veta mer om platsen och dess omgivningar.</br>Om du inte vet adressen kan du använda någon av följande sökmetoder: <ul><li>Klicka i sökrutan och skriv en adress eller välj <b>Använd aktuell plats</b></li><li>Klicka i kartan</li></ul></br> Resultaten innehåller information om intressanta geoobjekt."

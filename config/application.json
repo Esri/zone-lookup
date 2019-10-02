@@ -9,7 +9,6 @@
   "detailTitle": null,
   "detailContent": null,
   "socialSharing": true,
-
   "zoom": true,
   "zoomPosition": "top-right",
   "home": true,
@@ -28,32 +27,23 @@
   "lookupType": "geometry",
   "zoomScale": null,
   "autoZoomFirstResult": true,
-
-
   "includeAddressGraphic": true,
   "includeAddressText": false,
   "addressGraphicColor": "#828282",
-
   "distance": 0,
   "units": "miles",
   "minDistance": 0,
   "maxDistance": 10,
-
   "includeDistance": false,
   "showDirections": false,
   "drawBuffer": false,
   "bufferSymbolColor": "#a9a9a9",
-
-
   "relationship": "intersects",
-
   "resultsPanelPreText": null,
   "resultsPanelPostText": null,
-
   "noResultsMessage": null,
-
+  "groupResultsByLayer": false,
   "noMap": false,
-
   "headerBackground": "#5a9359",
   "headerColor": "#fff",
   "buttonBackground": "#338033",
@@ -95,7 +85,6 @@
         }
       }
     }
-
   },
   "helperServices": {
     "geometry": {

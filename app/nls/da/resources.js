@@ -1,4 +1,7 @@
 define({
+  "load": {
+    "label": "Indlæser"
+  },
   "onboarding": {
     "title": "Velkommen!",
     "content": "Søg efter en adresse for at få mere at vide om stedet og det omgivende område.</br>Hvis du ikke kender adressen, kan du bruge en af disse søgemetoder: <ul><li>Klik på søgefeltet, og skriv adressen, eller vælg <b>Brug nuværende position</b></li><li>Klik inde på kortet</li></ul></br> Resultaterne vil omfatte oplysninger om interessante objekter."

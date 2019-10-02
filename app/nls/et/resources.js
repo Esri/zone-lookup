@@ -1,4 +1,7 @@
 define({
+  "load": {
+    "label": "Laadimine"
+  },
   "onboarding": {
     "title": "Tere tulemast!",
     "content": "Otsige mõnda aadressi, et õppida asukohta ja seda ümbritsevat ala paremini tundma.</br>Kui te aadressi ei tea, kasutage mõnda neist otsingumeetoditest: <ul><li>Klõpsake otsinguruudul ja sisestage aadress või valige <b>Kasutage praegust asukohta</b></li><li>Klõpsa kaardil </li></ul></br> Tulemused sisaldavad teavet huvipakkuvate objektide kohta."

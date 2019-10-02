@@ -1,39 +1,16 @@
-/*
-  Copyright 2019 Esri
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-
-  you may not use this file except in compliance with the License.
-
-  You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-
-  distributed under the License is distributed on an "AS IS" BASIS,
-
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-
-  See the License for the specific language governing permissions and
-
-  limitations under the License.​
-*/
 /// <amd-dependency path="esri/core/tsSupport/declareExtendsHelper" name="__extends" />
 /// <amd-dependency path="esri/core/tsSupport/decorateHelper" name="__decorate" />
 import { subclass, declared, property } from 'esri/core/accessorSupport/decorators';
-import Widget from 'esri/widgets/Widget';
-import Accessor from 'esri/core/Accessor';
 import { tsx } from 'esri/widgets/support/widget';
 import Feature from 'esri/widgets/Feature';
 import Handles from 'esri/core/Handles';
-import { accordion } from 'calcite-web/dist/js/calcite-web';
 import esri = __esri;
-import { ApplicationConfig } from 'ApplicationBase/interfaces';
+import Accordion, { ActionButton, AccordionProps } from './Accordion';
 
 const CSS = {
 	base: 'accordion',
 	basejs: 'js-accordion',
+	single: 'single',
 	section: 'accordion-section',
 	active: 'is-active',
 	title: 'accordion-title',
@@ -41,14 +18,13 @@ const CSS = {
 	content: 'accordion-content',
 	button: 'btn',
 	transparentButton: 'btn-transparent',
-	smallButton: 'btn-small',
 	accordionIcon: 'accordion-icon',
 	paddingTrailer: 'padding-right-quarter',
 	right: 'right',
 	actions: 'accordion-actions',
 	templateContent: 'template',
-	actionBar: 'action-bar',
-	distance: 'distance'
+	scrollable: "scrollable-content",
+	actionBar: 'action-bar'
 };
 export interface ActionButton {
 	icon: string;
@@ -57,36 +33,28 @@ export interface ActionButton {
 	class?: string;
 	handleClick: (name: string, graphic: esri.Graphic) => void;
 }
-interface FeatureAccordionProps extends esri.WidgetProperties {
+interface FeatureAccordionProps extends AccordionProps {
 	features: esri.Graphic[];
-	view: esri.MapView;
-	actionBarItems?: ActionButton[];
-	config: ApplicationConfig;
 }
 
 @subclass('app.FeatureAccordion')
-class FeatureAccordion extends declared(Widget, Accessor) {
+class FeatureAccordion extends declared(Accordion) {
 	//--------------------------------------------------------------------------
 	//
 	//  Properties
 	//
 	//--------------------------------------------------------------------------
 
-	@property() selectedItem: esri.Graphic = null;
-	@property() actionBarItems: ActionButton[];
-
 	@property() features: esri.Graphic[];
 
-	@property() view: esri.MapView;
-
-	@property() config: ApplicationConfig;
+	@property() sectionCount: number;
 
 	//--------------------------------------------------------------------------
 	//
 	// Variables
 	//
 	//--------------------------------------------------------------------------
-	_calciteLoaded: boolean = false;
+
 	_handles: Handles = new Handles();
 	//--------------------------------------------------------------------------
 	//
@@ -98,7 +66,7 @@ class FeatureAccordion extends declared(Widget, Accessor) {
 	}
 	render() {
 		return (
-			<div afterCreate={this._updateCalcite} class={this.classes(CSS.base, CSS.basejs)}>
+			<div afterCreate={this.updateCalcite} class={this.classes(CSS.base, CSS.basejs, CSS.scrollable)}>
 				{this.features &&
 					this.features.map((graphic, i) => this._renderFeatureWidget(graphic, this.features.length, i))}
 			</div>
@@ -115,7 +83,7 @@ class FeatureAccordion extends declared(Widget, Accessor) {
 					afterCreate={this._createFeature}
 					bind={this}
 					key={`section${index}`}
-					class={this.classes(CSS.section, count <= 2 || (count > 2 && index === 0) ? CSS.active : null)}
+					class={this.classes(CSS.section, count <= 2 || (count > 2 && index === 0) ? CSS.active : null, count === 1 ? CSS.single : null)}
 				>
 					<h4 class={CSS.title}>
 						<span class={this.classes(CSS.accordionIcon, CSS.paddingTrailer)}>
@@ -132,7 +100,7 @@ class FeatureAccordion extends declared(Widget, Accessor) {
 						<span class={CSS.titleArea} />
 					</h4>
 
-					<div key={`btn${index}`} class={CSS.content}>
+					<div key={`btn${index}`} class={this.classes(CSS.content)}>
 						<nav class={this.classes(CSS.actionBar)}>
 							{this.actionBarItems &&
 								this.actionBarItems.length > 0 &&
@@ -151,8 +119,8 @@ class FeatureAccordion extends declared(Widget, Accessor) {
 
 			titleNode &&
 				titleNode.parentElement &&
-				titleNode.parentElement.addEventListener('click', () => this.__selectAccordionSection(node, graphic));
-			container && container.addEventListener('click', () => this.__selectAccordionSection(node, graphic));
+				titleNode.parentElement.addEventListener('click', () => this._selectAccordionSection(node, graphic));
+			container && container.addEventListener('click', () => this._selectAccordionSection(node, graphic));
 			const graphic = node['data-feature'];
 
 			const feature = new Feature({
@@ -160,14 +128,26 @@ class FeatureAccordion extends declared(Widget, Accessor) {
 				defaultPopupTemplateEnabled: true,
 				map: this.view.map,
 				spatialReference: this.view.spatialReference,
+				visibleElements: {
+					title: false
+				},
 				container
 			});
 
+			const handleContent = feature.viewModel.watch("content", () => {
+				handleContent.remove();
+				const empty = this.checkContent(feature);
+				if (empty) {
+					if (container.parentElement && container.parentElement.parentElement) {
+						container.parentElement.parentElement.classList.add("no-content");
+					}
+				}
+			})
 			const handle = feature.watch('title', () => {
 				let title: string = feature.get('title');
 				handle.remove();
 				if (graphic && graphic.attributes && graphic.attributes.lookupDistance && this.config.includeDistance) {
-					title += this._convertUnitText(graphic.attributes.lookupDistance, this.config.units);
+					title += this.convertUnitText(graphic.attributes.lookupDistance, this.config.units);
 				}
 				titleNode.innerHTML = title;
 				feature.graphic.setAttribute('app-accordion-title', feature.get('title'));
@@ -175,7 +155,7 @@ class FeatureAccordion extends declared(Widget, Accessor) {
 		}
 	}
 
-	__selectAccordionSection(node: HTMLElement, graphic: esri.Graphic) {
+	_selectAccordionSection(node: HTMLElement, graphic: esri.Graphic) {
 		const selectedClassName = 'accordion-section-selected';
 		//only apply selection style if more than one feature is selected
 		if (this.features && this.features.length && this.features.length > 1) {
@@ -188,9 +168,6 @@ class FeatureAccordion extends declared(Widget, Accessor) {
 			}
 		}
 		this.selectedItem = graphic;
-	}
-	_convertUnitText(distance, units) {
-		return `<span class="distance right">${distance} ${units}</span>`;
 	}
 	_createActionItem(item, graphic) {
 		return (
@@ -205,12 +182,12 @@ class FeatureAccordion extends declared(Widget, Accessor) {
 	_handleActionItemClick(graphic, item) {
 		item.handleClick(item.id, graphic);
 	}
-
-	_updateCalcite() {
-		if (!this._calciteLoaded) {
-			accordion();
-			this._calciteLoaded = true;
-		}
+	clear() {
+		this.features = null;
 	}
+	showToggle(): boolean {
+		return this.features && this.features.length && this.features.length > 2;
+	}
+
 }
 export default FeatureAccordion;

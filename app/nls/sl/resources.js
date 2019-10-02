@@ -1,4 +1,7 @@
 define({
+  "load": {
+    "label": "Nalaganje"
+  },
   "onboarding": {
     "title": "Dobrodošli!",
     "content": "Poiščite naslov, da boste izvedeli več o lokaciji in okoliškem območju.</br>Če ne poznate naslova, uporabite eno izmed naslednjih metod iskanja: <ul><li>kliknite polje za iskanje ter vtipkajte ali izberite naslov; <b>uporabite trenutno lokacijo;</b></li><li>kliknite znotraj karte.</li></ul></br> Rezultati bodo vsebovali informacije o geoobjektih, ki vas zanimajo."

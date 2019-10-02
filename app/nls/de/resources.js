@@ -1,4 +1,7 @@
 define({
+  "load": {
+    "label": "Wird geladen"
+  },
   "onboarding": {
     "title": "Willkommen!",
     "content": "Suchen Sie nach einer Adresse, um mehr über die Position und deren Umgebung zu erfahren.</br>Wenn Sie die Adresse nicht kennen, stehen Ihnen folgende Suchmethoden offen: <ul><li>Klicken Sie auf das Suchfeld, und geben Sie eine Adresse ein, oder wählen Sie <b>Aktuelle Position verwenden</b> aus.</li><li>Klicken Sie auf einen Punkt in der Karte.</li></ul></br> Die Ergebnisse enthalten Informationen zu Features von Interesse."

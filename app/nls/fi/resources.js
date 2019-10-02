@@ -1,4 +1,7 @@
 define({
+  "load": {
+    "label": "Ladataan"
+  },
   "onboarding": {
     "title": "Tervetuloa!",
     "content": "Etsi osoitetta oppiaksesi lisää sijainnista ja sen ympäristöstä.</br>Jos et tiedä osoitetta, käytä jotakin seuraavista hakutavoista: <ul><li>Napsauta hakuruutua ja kirjoita osoite tai valitse <b>Käytä nykyistä sijaintia</b> -vaihtoehto</li><li>Napsauta kartassa</li></ul></br> Tulokset sisältävät tietoja kiinnostavista kohteista."

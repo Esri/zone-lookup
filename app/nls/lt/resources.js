@@ -1,4 +1,7 @@
 define({
+  "load": {
+    "label": "Kraunama"
+  },
   "onboarding": {
     "title": "Sveiki",
     "content": "Ieškokite adreso, kad sužinotumėte daugiau apie padėtį ir teritoriją aplink ją.</br>Jei nežinote adreso, naudokite vieną iš šių paieškos metodų: <ul><li>Spustelėkite paieškos lauke ir įveskite adresą arba pasirinkite <b>Naudoti esamą padėtį</b></li><li>Spustelėkite žemėlapyje</li></ul></br> Rezultatuose bus informacija apie aktualius elementus."

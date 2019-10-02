@@ -19,7 +19,7 @@ import Handles from 'esri/core/Handles';
 import * as lookupLayerUtils from './utilites/lookupLayerUtils';
 import * as esriWidgetUtils from './utilites/esriWidgetUtils';
 import * as errorUtils from './utilites/errorUtils';
-
+import watchUtils = require('esri/core/watchUtils');
 import DisplayLookupResults from './components/DisplayLookupResults';
 import Header from './components/Header';
 import MapPanel from './components/MapPanel';
@@ -79,6 +79,7 @@ class LocationApp {
 		config.helperServices = { ...base.portal.helperServices };
 
 		const { webMapItems } = results;
+
 		if (config.noMap) {
 			document.body.classList.add('no-map');
 		}
@@ -145,16 +146,27 @@ class LocationApp {
 		// Add a page header
 		config.title = config.title || item.title;
 		setPageTitle(config.title);
-		const detailTitle = config.detailTitle || i18n.onboarding.title;
-		const detailContent = config.detailContent || i18n.onboarding.content;
+		let detailTitle = config.detailTitle;
+		let detailContent = config.detailContent;
+		if (config.appid === '') {
+			if (!detailTitle) {
+				detailTitle = i18n.onboarding.title;
+			}
+			if (!detailContent) {
+				detailContent = i18n.onboarding.content;
+			}
+		}
 
-		this._detailPanel = new DetailPanel({
-			title: detailTitle || null,
-			content: detailContent,
-			view: this.view,
-			sharing: config.socialSharing,
-			container: document.getElementById('detailPanel')
-		});
+		if (detailTitle || detailContent || config.socialSharing) {
+			this._detailPanel = new DetailPanel({
+				title: detailTitle || null,
+				content: detailContent,
+				view: this.view,
+				sharing: config.socialSharing,
+				container: document.getElementById('detailPanel')
+			});
+		}
+
 		const header = new Header({
 			title: config.title,
 			titleLink: config.titleLink,
@@ -194,7 +206,7 @@ class LocationApp {
 				maxDistance,
 				container: 'distanceOptions'
 			});
-			const key = 'distane-slider';
+			const key = 'distance-slider';
 			this._handles.remove(key);
 			this._handles.add(
 				distanceSlider.watch('currentValue', () => {
@@ -221,7 +233,9 @@ class LocationApp {
 			searchLayer: config.searchLayer,
 			hideFeaturesOnLoad: config.hideLookupLayers
 		};
-		const [ lookupLayers, searchLayer ] = await Promise.all([
+
+
+		const [lookupLayers, searchLayer] = await Promise.all([
 			lookupLayerUtils.getLookupLayers(lookupProps),
 			lookupLayerUtils.getSearchLayer(lookupProps)
 		]);
@@ -233,18 +247,19 @@ class LocationApp {
 			mapPanel: this.mapPanel,
 			container: 'resultsPanel'
 		});
+		this._addSearchWidget();
 		//Add open map button
 		if (!config.noMap) {
 			const openMapButton = document.createElement('button');
-			openMapButton.classList.add(
-				'icon-ui-maps',
-				'btn',
-				'btn-fill',
-				'btn-green',
-				'btn-open-map',
-				'app-button',
-				'tablet-show'
-			);
+			//Unable to add multiple classes in IE11
+
+			openMapButton.classList.add("icon-ui-maps");
+			openMapButton.classList.add("btn");
+			openMapButton.classList.add("btn-fill");
+			openMapButton.classList.add("btn-green");
+			openMapButton.classList.add("btn-open-map");
+			openMapButton.classList.add("app-button");
+			openMapButton.classList.add("tablet-show");
 			openMapButton.innerHTML = i18n.map.label;
 			document.getElementById('bottomNav').appendChild(openMapButton);
 			openMapButton.addEventListener('click', () => {
@@ -253,26 +268,18 @@ class LocationApp {
 				this.view.container.classList.remove('tablet-hide');
 				//update the maps describedby item
 				document.getElementById('mapDescription').innerHTML = i18n.map.miniMapDescription;
-
-				// if view size increases to greater than tablet close button if not already closed
-				const key = 'width-breakpoint';
-				this._handles.add(
-					this.view.watch('widthBreakpoint', (breakpoint) => {
-						if (breakpoint !== 'small' || breakpoint !== 'xsmall') {
-							this._handles.remove(key);
-							this.mapPanel.closeMap();
-						}
-					}),
-					key
-				);
 				const mainNodes = document.getElementsByClassName('main-map-content');
 				for (let j = 0; j < mainNodes.length; j++) {
 					mainNodes[j].classList.add('hide');
 				}
+				// if view size increases to greater than tablet close button if not already closed
+				const resizeListener = () => {
+					this.mapPanel.closeMap();
+					window.removeEventListener("resize", resizeListener);
+				}
+				window.addEventListener("resize", resizeListener);
 			});
 		}
-
-		this._addSearchWidget();
 	}
 
 	_addSearchWidget() {
@@ -284,11 +291,11 @@ class LocationApp {
 			popupEnabled: false,
 			container: 'search'
 		};
-
 		if (searchConfig) {
-			if (this.base.config.searchConfig.sources) {
-				const sources = this.base.config.searchConfig.sources;
+			const { sources, activeSourceIndex, enableSearchingAll } = searchConfig;
+			if (sources) {
 				searchProperties.sources = sources.filter((source) => {
+
 					if (source.flayerId && source.url) {
 						const layer = this.view.map.findLayerById(source.flayerId);
 						source.layer = layer ? layer : new FeatureLayer(source.url);
@@ -307,19 +314,19 @@ class LocationApp {
 				searchProperties.includeDefaultSources = false;
 			}
 			searchProperties.searchAllEnabled =
-				this.base.config.searchConfig.enableSearchingAll === false ? false : true;
+				enableSearchingAll && enableSearchingAll === false ? false : true;
 			if (
-				this.base.config.searchConfig.activeSourceIndex &&
+				activeSourceIndex &&
 				searchProperties.sources &&
-				searchProperties.sources.length >= this.base.config.searchConfig.activeSourceIndex
+				searchProperties.sources.length >= activeSourceIndex
 			) {
-				searchProperties.activeSourceIndex = this.base.config.searchConfig.activeSourceIndex;
+				searchProperties.activeSourceIndex = activeSourceIndex;
 			}
 		}
 		this.searchWidget = new Search(searchProperties);
 		// If there's a find url param search for it
 		if (find) {
-			this.view.when(() => {
+			watchUtils.whenFalseOnce(this.view, "updating", () => {
 				this.searchWidget.viewModel.searchTerm = decodeURIComponent(find);
 				if (findSource) {
 					this.searchWidget.activeSourceIndex = findSource;
@@ -334,7 +341,6 @@ class LocationApp {
 				if (!this.view.container.classList.contains('tablet-show')) {
 					this.view.container.classList.add('tablet-hide');
 				}
-
 				// force search within map if nothing is configured
 				if (!searchConfig) {
 					this.searchWidget.viewModel.allSources.forEach((source) => {
@@ -389,7 +395,10 @@ class LocationApp {
 	}
 	async _generateSearchResults(location: esri.Graphic) {
 		// collapse the detail panel when results are found
-		this._detailPanel.collapse();
+		if (this._detailPanel) {
+			this._detailPanel.collapse();
+		}
+
 		const distance = (this.base.config && this.base.config.distance) || 0;
 		this.lookupResults && this.lookupResults.queryFeatures(location, distance);
 	}

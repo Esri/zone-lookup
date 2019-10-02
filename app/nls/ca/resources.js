@@ -1,4 +1,7 @@
 define({
+  "load": {
+    "label": "S'està carregant"
+  },
   "onboarding": {
     "title": "Us donem la benvinguda.",
     "content": "Cerqueu una adreça per obtenir més informació sobre la ubicació i l'àrea que l'envolta.</br>Si no sabeu l'adreça, utilitzeu un d'aquests mètodes de cerca: <ul><li>Feu clic al quadre de cerca i escriviu una adreça o seleccioneu <b>Utilitza la ubicació actual</b></li><li>Feu clic al mapa</li></ul></br> Els resultats inclouran informació sobre les entitats d'interès."

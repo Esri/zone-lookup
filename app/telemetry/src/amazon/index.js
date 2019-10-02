@@ -1,21 +1,5 @@
-/*
-  Copyright 2019 Esri
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-    http://www.apache.org/licenses/LICENSE-2.0
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.​
-*/
-import {
-  getCredentials
-} from './auth'
-import {
-  getUser
-} from './user'
+import { getCredentials } from './auth'
+import { getUser } from './user'
 import AwsSigner from './signer'
 import request from '../request'
 
@@ -23,28 +7,26 @@ const METRICS = ['size', 'duration', 'position', 'number', 'count']
 const DEFAULT_ENDPOINT = 'https://mobileanalytics.us-east-1.amazonaws.com/2014-06-05/events'
 
 export default class Amazon {
-  constructor(options) {
+  constructor (options) {
     this.name = 'amazon'
     Object.assign(this, options)
     const session = getUser().session
-    if (session.new && !options.test) this.logEvent({
-      eventType: '_session.start'
-    })
+    if (session.new && !options.test) this.logEvent({ eventType: '_session.start' })
   }
 
-  logPageView(page, options) {
+  logPageView (page, options) {
     const event = createPageView(page, this.previousPage, options)
     sendTelemetry(event, this.userPoolID, this.app)
     this.previousPage = event.attributes
   }
 
-  logEvent(event) {
+  logEvent (event) {
     const events = createEventLog(event)
     sendTelemetry(events, this.userPoolID, this.app)
   }
 }
 
-function createPageView(page, previousPage = {}, options = {}) {
+function createPageView (page, previousPage = {}, options = {}) {
   const session = getUser().session
   return {
     eventType: 'pageView',
@@ -67,7 +49,7 @@ function createPageView(page, previousPage = {}, options = {}) {
   }
 }
 
-function createEventLog(event) {
+function createEventLog (event) {
   const session = getUser().session
   return {
     eventType: event.eventType || 'other',
@@ -86,7 +68,7 @@ function createEventLog(event) {
   }
 }
 
-function extractAttributes(event) {
+function extractAttributes (event) {
   const attributes = Object.assign({}, event)
   delete attributes.workflow
   METRICS.forEach(metric => delete attributes[metric])
@@ -100,7 +82,7 @@ function extractAttributes(event) {
   return attributes
 }
 
-function extractMetrics(event) {
+function extractMetrics (event) {
   const metrics = {}
   METRICS.forEach(metric => {
     if (event[metric]) metrics[metric] = event[metric]
@@ -108,7 +90,7 @@ function extractMetrics(event) {
   return metrics
 }
 
-function createHeaders(credentials = {}, options) {
+function createHeaders (credentials = {}, options) {
   const config = {
     region: 'us-east-1',
     service: 'mobileanalytics',
@@ -121,7 +103,7 @@ function createHeaders(credentials = {}, options) {
   return signed
 }
 
-function createClientContext(clientId, app) {
+function createClientContext (clientId, app) {
   // eslint-disable-line
   return JSON.stringify({
     client: {
@@ -137,7 +119,7 @@ function createClientContext(clientId, app) {
   })
 }
 
-function sendTelemetry(events, userPoolID, app) {
+function sendTelemetry (events, userPoolID, app) {
   const user = getUser()
   events = Array.isArray(events) ? events : [events]
   const options = createTelemetryOptions(events)
@@ -157,7 +139,7 @@ function sendTelemetry(events, userPoolID, app) {
   })
 }
 
-function createTelemetryOptions(events, url = DEFAULT_ENDPOINT) {
+function createTelemetryOptions (events, url = DEFAULT_ENDPOINT) {
   return {
     url,
     method: 'POST',

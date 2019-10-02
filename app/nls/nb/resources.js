@@ -1,4 +1,7 @@
 define({
+  "load": {
+    "label": "Laster inn"
+  },
   "onboarding": {
     "title": "Velkommen!",
     "content": "Søk etter en adresse for å få mer informasjon om lokasjonen og området rundt.</br>Hvis du ikke kjenner adressen, bruker du én av disse søkemetodene: <ul><li>Klikk i søkeboksen, og skriv inn en adresse eller velg <b>Bruk gjeldende lokasjon</b></li><li>Klikk i kartet</li></ul></br> Resultatene inneholder informasjon om geoobjekter av interesse."

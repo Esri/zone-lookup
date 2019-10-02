@@ -1,4 +1,7 @@
 define({
+  "load": {
+    "label": "Đang tải"
+  },
   "onboarding": {
     "title": "Xin chào!",
     "content": "Tìm kiếm địa chỉ để tìm hiểu thêm về vị trí và khu vực xung quanh.</br>Nếu không có địa chỉ, hãy sử dụng một trong các phương pháp tìm kiếm sau: <ul><li>Bấm vào ô tìm kiếm và nhập địa chỉ hoặc chọn <b>Dùng vị trí hiện tại</b></li><li>Bấm vào bản đồ</li></ul></br> Kết quả sẽ bao gồm thông tin về các đối tượng được quan tâm."

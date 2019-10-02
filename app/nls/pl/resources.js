@@ -1,4 +1,7 @@
 define({
+  "load": {
+    "label": "Loading (Wczytywanie)"
+  },
   "onboarding": {
     "title": "Witamy!",
     "content": "Wyszukaj adres, aby dowiedzieć się więcej o tej lokalizacji i otaczającym ją obszarze.</br>Jeśli nie znasz adresu, użyj jednej z tych metod wyszukiwania: <ul><li>Kliknij pole wyszukiwania i wpisz adres lub wybierz opcję <b>Użyj bieżącej lokalizacji</b></li><li>Kliknij na mapie</li></ul></br> Wyniki będą zawierać informacje o interesujących obiektach."

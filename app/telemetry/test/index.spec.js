@@ -1,15 +1,3 @@
-/*
-  Copyright 2019 Esri
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-    http://www.apache.org/licenses/LICENSE-2.0
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.​
-*/
 const test = require('tape')
 
 const Telemetry = require('./helpers/telemetry')
@@ -29,15 +17,11 @@ const options = {
   }
 }
 
-const telemetry = new Telemetry(Object.assign({}, options, {
-  portal
-}))
+const telemetry = new Telemetry(Object.assign({}, options, { portal }))
 
 test('initiate telemetry w/ portal self and an internal user', t => {
   let telemetry
-  const opts = Object.assign({}, options, {
-    portal
-  })
+  const opts = Object.assign({}, options, { portal })
   try {
     telemetry = new Telemetry(opts)
   } catch (e) {
@@ -51,9 +35,7 @@ test('initiate telemetry w/ portal self and an internal user', t => {
 
 test('initiate telemetry w/ portal self and a public user', t => {
   let publicUser
-  const opts = Object.assign({}, options, {
-    portal: portalPublic
-  })
+  const opts = Object.assign({}, options, { portal: portalPublic })
   try {
     publicUser = new Telemetry(opts)
   } catch (e) {
@@ -67,13 +49,7 @@ test('initiate telemetry w/ portal self and a public user', t => {
 
 test('disabled with eueiEnabled: false', t => {
   let telemetry2
-  const opts = Object.assign({}, options, {
-    portal
-  }, {
-    portal: {
-      eueiEnabled: false
-    }
-  })
+  const opts = Object.assign({}, options, { portal }, { portal: { eueiEnabled: false } })
   try {
     telemetry2 = new Telemetry(opts)
   } catch (e) {
@@ -85,9 +61,7 @@ test('disabled with eueiEnabled: false', t => {
 
 test('enabled for public anonymous user', t => {
   let anonymous
-  const opts = Object.assign({}, options, {
-    portal: portalAnonymous
-  })
+  const opts = Object.assign({}, options, { portal: portalAnonymous })
   try {
     anonymous = new Telemetry(opts)
   } catch (e) {
@@ -153,19 +127,13 @@ test('start a workflow with a step', t => {
 })
 
 test('Set demo and marketing org type to internal', t => {
-  telemetry.setUser({
-    username: 'foobar',
-    email: 'foo@bar.com'
-  }, 'Demo and Marketing')
+  telemetry.setUser({ username: 'foobar', email: 'foo@bar.com' }, 'Demo and Marketing')
   t.ok(telemetry.user.internalUser, 'detected internal user')
   t.end()
 })
 
 test('Set in house org type to internal', t => {
-  telemetry.setUser({
-    username: 'foobar',
-    email: 'foo@bar.com'
-  }, 'In House')
+  telemetry.setUser({ username: 'foobar', email: 'foo@bar.com' }, 'In House')
   t.ok(telemetry.user.internalUser, 'detected internal user')
   t.end()
 })

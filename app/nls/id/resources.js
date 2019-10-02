@@ -1,4 +1,7 @@
 define({
+  "load": {
+    "label": "Memuat"
+  },
   "onboarding": {
     "title": "Selamat Datang!",
     "content": "Cari sebuah alamat untuk mempelajari selengkapnya tentang lokasi dan area di sekitarnya.</br>Jika Anda tidak tahu alamatnya, gunakan salah satu cara berikut ini: <ul><li>Klik kotak pencarian dan ketikkan alamat atau pilih <b>Gunakan lokasi saat ini</b></li><li>Klik di peta</li></ul></br> Hasil akan mencakup informasi tentang fitur yang diinginkan."

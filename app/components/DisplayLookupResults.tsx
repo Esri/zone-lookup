@@ -1,24 +1,3 @@
-/*
-  Copyright 2019 Esri
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-
-  you may not use this file except in compliance with the License.
-
-  You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-
-  distributed under the License is distributed on an "AS IS" BASIS,
-
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-
-  See the License for the specific language governing permissions and
-
-  limitations under the License.​
-*/
 /// <amd-dependency path="esri/core/tsSupport/declareExtendsHelper" name="__extends" />
 /// <amd-dependency path="esri/core/tsSupport/decorateHelper" name="__decorate" />
 import { subclass, declared, property } from 'esri/core/accessorSupport/decorators';
@@ -27,22 +6,26 @@ import Accessor from 'esri/core/Accessor';
 import Handles from 'esri/core/Handles';
 import { tsx, renderable } from 'esri/widgets/support/widget';
 import * as geometryUtils from '../utilites/geometryUtils';
-import promiseUilts = require('esri/core/promiseUtils');
+import * as promiseUtils from 'esri/core/promiseUtils';
 import Query from 'esri/tasks/support/Query';
 import FeatureFilter from 'esri/views/layers/support/FeatureFilter';
 import FeatureEffect from 'esri/views/layers/support/FeatureEffect';
-import FeatureAccordion, { ActionButton } from './FeatureAccordion';
+import FeatureAccordion from './FeatureAccordion';
+import GroupedAccordion, { FeatureResults } from './GroupedAccordion';
+import { ActionButton } from "./Accordion";
 import MapPanel from './MapPanel';
 import i18n = require('dojo/i18n!../nls/resources');
 import { ApplicationConfig } from 'ApplicationBase/interfaces';
 import esri = __esri;
+import { hideLookuplayers } from '../utilites/lookupLayerUtils';
+
 
 type State = 'init' | 'loading' | 'ready';
 
 interface DisplayLookupResultsProps extends esri.WidgetProperties {
 	view: esri.MapView;
-	lookupLayers: esri.FeatureLayerView[];
-	searchLayer: esri.FeatureLayerView;
+	lookupLayers: esri.FeatureLayer[];
+	searchLayer: esri.FeatureLayer;
 	config: ApplicationConfig;
 	mapPanel: MapPanel;
 }
@@ -79,8 +62,8 @@ class DisplayLookupResults extends declared(Widget, Accessor) {
 	@property() mapPanel: MapPanel;
 
 	@property() distance: number;
-	@property() searchLayer: esri.FeatureLayerView = null;
-	@property() lookupLayers: esri.FeatureLayerView[] = null;
+	@property() searchLayer: esri.FeatureLayer = null;
+	@property() lookupLayers: esri.FeatureLayer[] = null;
 
 	@property()
 	@renderable()
@@ -90,10 +73,12 @@ class DisplayLookupResults extends declared(Widget, Accessor) {
 	// Variables
 	//
 	//--------------------------------------------------------------------------
-	_features: esri.Graphic[] = null;
+	_featureResults: FeatureResults[] = null;
+	_empty: boolean = true;
+	//_multipleResults: number = 0;
 	_zoomFactor: number = 4;
 	_viewPoint: esri.Viewpoint = null;
-	_accordion: FeatureAccordion = null;
+	_accordion: GroupedAccordion | FeatureAccordion = null;
 	_bufferGraphic: esri.Graphic = null;
 	_handles: Handles = new Handles();
 
@@ -127,82 +112,47 @@ class DisplayLookupResults extends declared(Widget, Accessor) {
 				<div key="loader" class="loader is-active padding-leader-3 padding-trailer-3">
 					<div key="loaderBars" class="loader-bars" />
 					<div key="loaderText" class="loader-text">
-						Loading...
+						{i18n.load.label}...
 					</div>
 				</div>
 			) : null;
 		const ready = this.state === 'ready' || false;
 
 		const { resultsPanelPreText, resultsPanelPostText } = this.config;
-		const isEmpty = !Array.isArray(this._features) || this._features.length === 0 ? true : false;
+		// No Results 
 		let errorText: string = null;
-		if (isEmpty && ready) {
+		if (this._empty && ready) {
 			errorText = this.config.noResultsMessage || i18n.noFeatures;
 			if (this.mapPanel && this.mapPanel.isMobileView) {
 				// Add no results message to the map in mobile view
 				this.mapPanel.message = errorText;
 			}
 		}
-
-		const toggleContentLinks =
-			!isEmpty && ready && this._features.length > 2 ? (
-				<div key="toggleBar" class={this.classes(CSS.toggleContentTools, CSS.calciteStyles.leaderHalf)}>
-					<button
-						key="open"
-						class={this.classes(
-							CSS.calciteStyles.button,
-							CSS.calciteStyles.trailerHalf,
-							CSS.calciteStyles.right,
-							CSS.toggleContentBtn,
-							CSS.calciteStyles.clearBtn,
-							CSS.calciteStyles.smallBtn
-						)}
-						onclick={this._openItems}
-					>
-						{i18n.tools.open}
-					</button>
-					<button
-						key="close"
-						class={this.classes(
-							CSS.calciteStyles.button,
-							CSS.calciteStyles.trailerHalf,
-							CSS.calciteStyles.leaderFull,
-							CSS.calciteStyles.right,
-							CSS.toggleContentBtn,
-							CSS.calciteStyles.clearBtn,
-							CSS.calciteStyles.smallBtn
-						)}
-						onclick={this._closeItems}
-					>
-						{i18n.tools.collapse}
-					</button>
-				</div>
-			) : null;
 		const accordion = ready ? (
 			<div key="accordion">
 				<p key="errorText" class={CSS.messageText} innerHTML={errorText} />
-				<div key="detailAccordion" bind={this} afterCreate={this._addDetailAccordion} />
+				<div key="detailAccordion" bind={this} afterCreate={!this._empty ? this._addDetailAccordion : null} />
 			</div>
 		) : null;
+		const toggleLinks = this._featureResults ? this.createToggleLinks() : null;
+
+		const preText = resultsPanelPreText ? this.createPreText() : null;
+		const postText = resultsPanelPostText ? this.createPostText() : null;
 		return (
 			<div key="loader">
 				{loader}
-				{toggleContentLinks}
-				{!isEmpty && ready && resultsPanelPreText ? (
-					<p key="preText" class={CSS.messageText} innerHTML={resultsPanelPreText} />
-				) : null}
+				{toggleLinks}
+				{preText}
 				{accordion}
-				{!isEmpty && ready && resultsPanelPostText ? (
-					<p key="postText" class={CSS.messageText} innerHTML={resultsPanelPostText} />
-				) : null}
+				{postText}
 			</div>
 		);
 	}
 
 	_addDetailAccordion(container: HTMLElement) {
-		const { _features, config, view } = this;
+		const { _featureResults, config, view } = this;
 		const eventHandler = this._handleActionItem.bind(this);
-		let actionItems: ActionButton[];
+		let actionItems: ActionButton[] = [];
 		if (config.showDirections) {
 			actionItems.push({
 				icon: 'icon-ui-directions',
@@ -210,17 +160,43 @@ class DisplayLookupResults extends declared(Widget, Accessor) {
 				name: 'Directions',
 				handleClick: eventHandler
 			});
+		} if (this.config.groupResultsByLayer) {
+			this._accordion = new GroupedAccordion({
+				actionBarItems: actionItems,
+				featureResults: _featureResults,
+				config,
+				view,
+				container
+			});
+		} else if (this._featureResults && this._featureResults.length && this._featureResults.length > 0) {
+			const featureResults = _featureResults[0];
+			const features = featureResults.features ? featureResults.features : null;
+			this._accordion = new FeatureAccordion({
+				actionBarItems: actionItems,
+				features,
+				config,
+				view,
+				container
+			});
 		}
-		this._accordion = new FeatureAccordion({
-			actionBarItems: actionItems,
-			features: _features,
-			config,
-			view,
-			container
-		});
-		// Auto zoom to feature features
+		// Auto zoom to features
 		if (this.config.autoZoomFirstResult) {
-			this.mapPanel.view && this.mapPanel.view.goTo(_features);
+			let features;
+			if (this._accordion instanceof FeatureAccordion) {
+				features = this._accordion.features.length && this._accordion.features.length > 0 ? this._accordion.features : null;
+			} else if (this._accordion instanceof GroupedAccordion) {
+				this._accordion.featureResults.some(result => {
+					if (result.features && result.features.length && result.features.length > 0) {
+						features = result.features;
+						return true;
+					} else {
+						return false;
+					}
+				})
+			}
+			if (features) {
+				this.mapPanel.view && features && this.mapPanel.view.goTo(features);
+			}
 		}
 
 		this._accordion.watch('selectedItem', () => {
@@ -233,18 +209,8 @@ class DisplayLookupResults extends declared(Widget, Accessor) {
 			this._accordion.selectedItem = null;
 		});
 	}
-	_openItems() {
-		const elements = document.getElementsByClassName('accordion-section');
-		Array.from(elements).forEach((el) => {
-			el.classList.add('is-active');
-		});
-	}
-	_closeItems() {
-		const elements = document.getElementsByClassName('accordion-section');
-		Array.from(elements).forEach((el) => {
-			el.classList.remove('is-active');
-		});
-	}
+
+
 
 	_handleActionItem(name: string, selected: esri.Graphic) {
 		// TODO: Eventually we'll support directions
@@ -252,11 +218,13 @@ class DisplayLookupResults extends declared(Widget, Accessor) {
 	queryFeatures(location: esri.Graphic, distance: number) {
 		this.distance = distance;
 		this.state = 'loading';
+
+		this.location = location;
 		const promises = [];
 		if (!location) {
 			this.state = 'init';
-			this._features = null;
-			promiseUilts.resolve();
+			this._featureResults = [];
+			promiseUtils.resolve();
 		} else {
 			this._createBuffer(location.geometry);
 			// Highlight search layer
@@ -265,50 +233,85 @@ class DisplayLookupResults extends declared(Widget, Accessor) {
 				const query: esri.Query = this._createQuery(layer, location);
 				this._applyLayerEffectAndFilter(layer, query);
 
-				if (!layer.layer) {
+				if (!layer) {
 					this.state = 'init';
-					return promiseUilts.resolve();
+					return promiseUtils.resolve();
 				}
 
 				let performQuery = true;
 				// If the search geometry is from the lookup layer we don't
 				// need to query. This can happen when a feature layer locator is
 				// setup or when the search layer is included in the results layers.
-				if (layer.layer && location.layer) {
-					if (layer.layer.id === location.layer.id) {
+				if (layer && location.layer) {
+					if (layer.id === location.layer.id) {
 						performQuery = false;
 						this._applyLayerEffectAndFilter(layer, {
-							where: `${layer.layer.objectIdField} = ${location.attributes[layer.layer.objectIdField]} `
+							where: `${layer.objectIdField} = ${location.attributes[layer.objectIdField]} `
 						});
 					}
 				}
-				performQuery
-					? promises.push(layer.layer.queryFeatures(query))
-					: promises.push(promiseUilts.resolve({ features: [ location ] }));
+				if (!performQuery) {
+					this._applyLayerEffectAndFilter(layer, query);
+					promises.push(promiseUtils.resolve({ features: [location], title: layer && layer.title ? layer.title : null, id: layer && layer.id ? layer.id : null }));
+				} else {
+					this.view.whenLayerView(layer).then(layerView => {
+						if (layerView) {
+							promises.push(layerView.layer.queryFeatures(query).then(results => {
+								this._applyLayerEffectAndFilter(layer, query);
+								return {
+									features: results.features,
+									title: layer && layer.title ? layer.title : null,
+									id: layer && layer.id ? layer.id : null
+								}
+							}));
+						}
+					});
+				}
 			});
 		}
 
-		return promiseUilts.eachAlways(
-			Promise.all(promises).then((results) => {
-				let features: esri.Graphic[] = [];
-				results.forEach((queryResults) => {
-					queryResults.features.forEach((feature) => {
-						features.push(feature);
-					});
-				});
-				this._features = features;
-				this.state = 'ready';
+		return Promise.all(promises).then((results) => {
+			this._featureResults = [];
+
+			const { groupResultsByLayer } = this.config;
+			// Loop through the feaures 
+			results.forEach(result => {
+				// do we have features? 
+				if (result.features && result.features.length && result.features.length > 0) {
+					if (groupResultsByLayer) {
+						this._sortFeatures(result.features);
+						this._featureResults.push({
+							title: result.title,
+							features: result.features
+						});
+					} else {
+						// each feature is its own section 
+						let features = [];
+						results.forEach(result => { features.push(...result.features) });
+						this._sortFeatures(features);
+						this._featureResults = [{
+							features,
+							title: null,
+							grouped: false
+						}];
+					}
+				}
 			})
-		);
+			this._empty = this._featureResults ? this._featureResults.every(result => {
+				return result.features && result.features.length && result.features.length > 0 ? false : true;
+			}) : true;
+
+			this.state = 'ready';
+		})
 	}
-	private _createQuery(layer: esri.FeatureLayerView, location: esri.Graphic): esri.Query {
+	private _createQuery(layer: esri.FeatureLayer, location: esri.Graphic): esri.Query {
 		const { lookupType, relationship, units } = this.config;
 		const geometry = location.geometry;
 		const query: esri.Query =
-			layer && layer.layer && typeof layer.layer['createQuery'] === 'function'
-				? layer.layer.createQuery()
+			layer && typeof layer['createQuery'] === 'function'
+				? layer.createQuery()
 				: new Query();
-		const layerGeometryType = layer && layer.layer ? layer.layer.geometryType : null;
+		const layerGeometryType = layer && layer ? layer.geometryType : null;
 		query.geometry = geometry;
 
 		// If we don't have a search layer defined use a point lookup.
@@ -356,23 +359,29 @@ class DisplayLookupResults extends declared(Widget, Accessor) {
 		const sepia = 'sepia(100%)';
 		// Filter the displayed features
 		const { displayUnmatchedResults } = this.config;
+		if (layer && layer.type === "feature") {
+			this.view.whenLayerView(layer as esri.FeatureLayer).then(layerView => {
 
-		const filter = new FeatureFilter(props);
-		const effect = new FeatureEffect({ filter });
+				const filter = new FeatureFilter(props);
+				const effect = new FeatureEffect({ filter });
 
-		if (!displayUnmatchedResults || displayUnmatchedResults === 'hide') {
-			layer.filter = filter;
-		} else {
-			effect.excludedEffect = displayUnmatchedResults === 'gray' ? gray : sepia;
+				if (!displayUnmatchedResults || displayUnmatchedResults === 'hide') {
+					layerView.filter = filter;
+					effect.filter = filter;
+				} else {
+					effect.excludedEffect = displayUnmatchedResults === 'gray' ? gray : sepia;
+				}
+				layerView.effect = effect;
+			});
 		}
-		layer.effect = effect;
+
 	}
 	private async _createBuffer(location: esri.Geometry) {
 		// For distance type lookups draw the buffer radius if enabled via configuration
 		const { lookupType, drawBuffer, portal, units, bufferSymbolColor } = this.config;
 
 		if (lookupType === 'distance' && drawBuffer) {
-			const buffer = await geometryUtils.bufferGeometry({
+			const buffer = geometryUtils.bufferGeometry({
 				location,
 				portal,
 				distance: this.distance,
@@ -380,7 +389,7 @@ class DisplayLookupResults extends declared(Widget, Accessor) {
 			});
 
 			this._bufferGraphic = geometryUtils.createBufferGraphic(buffer as esri.Polygon, bufferSymbolColor);
-			this.view.graphics.add(this._bufferGraphic);
+			await this.view.graphics.add(this._bufferGraphic);
 		}
 	}
 	private _searchHighlight(graphic) {
@@ -388,7 +397,9 @@ class DisplayLookupResults extends declared(Widget, Accessor) {
 		if (this.searchLayer && lookupType === 'geometry') {
 			const key = 'search-layer-handle';
 			this._handles.remove(key);
-			this._handles.add(this.searchLayer.highlight(graphic), key);
+			this.view.whenLayerView(this.searchLayer).then((layerView) => {
+				this._handles.add(layerView.highlight(graphic), key);
+			});
 
 			// graphic
 			const queryFilter = {
@@ -403,12 +414,11 @@ class DisplayLookupResults extends declared(Widget, Accessor) {
 				graphic.layer &&
 				graphic.layer.id &&
 				this.searchLayer &&
-				this.searchLayer.layer &&
-				this.searchLayer.layer.id &&
-				graphic.layer.id === this.searchLayer.layer.id
+				this.searchLayer.id &&
+				graphic.layer.id === this.searchLayer.id
 			) {
-				queryFilter.where = `${this.searchLayer.layer.objectIdField} = ${graphic.attributes[
-					this.searchLayer.layer.objectIdField
+				queryFilter.where = `${this.searchLayer.objectIdField} = ${graphic.attributes[
+					this.searchLayer.objectIdField
 				]}`;
 			} else {
 				queryFilter.geometry =
@@ -419,15 +429,14 @@ class DisplayLookupResults extends declared(Widget, Accessor) {
 		}
 	}
 
-	async _sortFeatures(features) {
-		const { lookupType, includeDistance, units, portal } = this.config;
-		if (lookupType && lookupType === 'distance' && includeDistance) {
+	_sortFeatures(features) {
+		const { includeDistance, units, portal } = this.config;
+		if (includeDistance && this.location) {
 			// add distance val to the features and sort array by distance
-
-			await geometryUtils.getDistances({
+			geometryUtils.getDistances({
 				location: this.location.geometry,
 				portal,
-				distance: this.distance,
+				distance: this.distance || 0,
 				unit: units,
 				features
 			});
@@ -444,19 +453,38 @@ class DisplayLookupResults extends declared(Widget, Accessor) {
 		}
 	}
 	clearResults() {
-		const { hideLookupLayers } = this.config;
+		//const { hideLookupLayers } = this.config;
+		const hideLayers: boolean = this.config.hideLookupLayers as boolean;
+
+		this._empty = true;
 		this._bufferGraphic && this.view && this.view.graphics.remove(this._bufferGraphic);
-		if (this._accordion) {
-			this._accordion.features = null;
-		}
+		this._accordion && this._accordion.clear();
+
 		this.lookupLayers &&
 			this.lookupLayers.forEach((layer) => {
-				layer.effect = null;
-				layer.filter = hideLookupLayers ? new FeatureFilter({ where: '1=0' }) : null;
+				this.view.whenLayerView(layer).then((layerView) => {
+					layerView.effect = null;
+					layerView.filter = null;
+					if (hideLayers) {
+						layerView.effect = new FeatureEffect({
+							excludedEffect: "opacity(0%)",
+							filter: new FeatureFilter({ where: '1=0' })
+						});
+					}
+				});
+
 			});
 		if (this.searchLayer) {
-			this.searchLayer.effect = null;
-			this.searchLayer.filter = hideLookupLayers ? new FeatureFilter({ where: '1=0' }) : null;
+			this.view.whenLayerView(this.searchLayer).then((layerView) => {
+				layerView.effect = null;
+				layerView.filter = null;
+				if (hideLayers) {
+					layerView.effect = new FeatureEffect({
+						excludedEffect: "opacity(0%)",
+						filter: new FeatureFilter({ where: '1=0' })
+					});
+				}
+			});
 		}
 		this.clearHighlights();
 		this.state = 'init';
@@ -489,6 +517,68 @@ class DisplayLookupResults extends declared(Widget, Accessor) {
 		this.clearResults();
 		this.clearHighlights();
 	}
+
+	createPostText() {
+		return this.config.resultsPanelPostText && !this._empty ? (
+			<p key="postText" class={CSS.messageText} innerHTML={this.config.resultsPanelPostText} />
+		) : null;
+	}
+	createPreText() {
+		return this.config.resultsPanelPreText && !this._empty ? (
+			<p key="preText" class={CSS.messageText} innerHTML={this.config.resultsPanelPreText} />
+		) : null
+	}
+	createToggleLinks() {
+		return this._accordion && this._accordion.showToggle() ? (
+			<div key="toggleBar" class={this.classes(CSS.toggleContentTools, CSS.calciteStyles.leaderHalf)}>
+				<button
+					key="open"
+					class={this.classes(
+						CSS.calciteStyles.button,
+						CSS.calciteStyles.trailerHalf,
+						CSS.calciteStyles.right,
+						CSS.toggleContentBtn,
+						CSS.calciteStyles.clearBtn,
+						CSS.calciteStyles.smallBtn
+					)}
+					onclick={this._openItems}
+				>
+					{i18n.tools.open}
+				</button>
+				<button
+					key="close"
+					class={this.classes(
+						CSS.calciteStyles.button,
+						CSS.calciteStyles.trailerHalf,
+						CSS.calciteStyles.leaderFull,
+						CSS.calciteStyles.right,
+						CSS.toggleContentBtn,
+						CSS.calciteStyles.clearBtn,
+						CSS.calciteStyles.smallBtn
+					)}
+					onclick={this._closeItems}
+				>
+					{i18n.tools.collapse}
+				</button>
+			</div>
+		) : null;
+
+
+	}
+	_openItems() {
+		// IE 11 doesn't have support for Array.from 
+		const elements = document.getElementsByClassName('accordion-section');
+		for (let i = 0; i < elements.length; i++) {
+			elements[i].classList.add("is-active");
+		}
+	}
+	_closeItems() {
+		const elements = document.getElementsByClassName('accordion-section');
+		for (let i = 0; i < elements.length; i++) {
+			elements[i].classList.remove("is-active");
+		}
+	}
+
 }
 
 export = DisplayLookupResults;

@@ -1,4 +1,7 @@
 define({
+  "load": {
+    "label": "Carregando"
+  },
   "onboarding": {
     "title": "Bem-Vindo!",
     "content": "Procure por um endereço para obter mais informações sobre a localização e seu arredor.</br>Se você não souber o endereço, utilize um destes métodos de pesquisa: <ul><li>Clique na caixa de pesquisa e digite um endereço ou escolha <b>Utilizar localização atual</b></li><li>Clique no mapa</li></ul></br> Os resultados incluirão informações sobre as feições de interesse."

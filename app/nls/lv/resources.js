@@ -1,4 +1,7 @@
 define({
+  "load": {
+    "label": "Notiek ielāde"
+  },
   "onboarding": {
     "title": "Laipni lūdzam!",
     "content": "Sameklējiet adresi, lai uzzinātu vairāk par atrašanās vietu un tai tuvumā esošo teritoriju.</br>Ja nezināt adresi, izmantojiet kādu no šiem meklēšanas paņēmieniem: <ul><li>Noklikšķiniet uz meklēšanas lodziņa un ierakstiet adresi vai izvēlieties iespēju <b>Lietot pašreizējo atrašanās vietu</b></li><li>Noklikšķiniet kartē</li></ul></br> Rezultātos tiks iekļauta informācija par interesējošiem elementiem."
