@@ -11,18 +11,23 @@
   limitations under the License.​
 */
 
+import * as errorUtils from './utilites/errorUtils';
+import * as esriWidgetUtils from './utilites/esriWidgetUtils';
+import * as lookupLayerUtils from './utilites/lookupLayerUtils';
+
+import { setPageDirection, setPageLocale, setPageTitle } from 'ApplicationBase/support/domHelper';
+
 import ApplicationBase from 'ApplicationBase/ApplicationBase';
-import Telemetry from 'telemetry/telemetry.dojo';
-import Search from 'esri/widgets/Search';
+import DetailPanel from './components/DetailPanel';
+import DisplayLookupResults from './components/DisplayLookupResults';
 import Graphic from 'esri/Graphic';
 import Handles from 'esri/core/Handles';
-import * as lookupLayerUtils from './utilites/lookupLayerUtils';
-import * as esriWidgetUtils from './utilites/esriWidgetUtils';
-import * as errorUtils from './utilites/errorUtils';
-import watchUtils = require('esri/core/watchUtils');
-import DisplayLookupResults from './components/DisplayLookupResults';
 import Header from './components/Header';
 import MapPanel from './components/MapPanel';
+import Search from 'esri/widgets/Search';
+import Telemetry from 'telemetry/telemetry.dojo';
+
+import watchUtils = require('esri/core/watchUtils');
 
 import i18n = require('dojo/i18n!./nls/resources');
 
@@ -31,10 +36,8 @@ const CSS = {
 	loading: 'configurable-application--loading'
 };
 
-import { setPageLocale, setPageDirection, setPageTitle } from 'ApplicationBase/support/domHelper';
 
 import FeatureLayer = require('esri/layers/FeatureLayer');
-import DetailPanel from './components/DetailPanel';
 
 class LocationApp {
 	//--------------------------------------------------------------------------
@@ -295,7 +298,6 @@ class LocationApp {
 			const { sources, activeSourceIndex, enableSearchingAll } = searchConfig;
 			if (sources) {
 				searchProperties.sources = sources.filter((source) => {
-
 					if (source.flayerId && source.url) {
 						const layer = this.view.map.findLayerById(source.flayerId);
 						source.layer = layer ? layer : new FeatureLayer(source.url);
@@ -316,9 +318,8 @@ class LocationApp {
 			searchProperties.searchAllEnabled =
 				enableSearchingAll && enableSearchingAll === false ? false : true;
 			if (
-				activeSourceIndex &&
-				searchProperties.sources &&
-				searchProperties.sources.length >= activeSourceIndex
+				activeSourceIndex != null && activeSourceIndex != undefined &&
+				searchProperties?.sources.length >= activeSourceIndex
 			) {
 				searchProperties.activeSourceIndex = activeSourceIndex;
 			}
@@ -363,9 +364,9 @@ class LocationApp {
 				// Add find url param
 				const index = results && results.activeSourceIndex ? results.activeSourceIndex : null;
 				this._updateUrlParam(encodeURIComponent(this.searchWidget.searchTerm), index);
-
 				const searchLayer = (this.lookupResults && this.lookupResults.searchLayer) || null;
 				// Get search geometry and add address location to the map
+
 				const feature = await lookupLayerUtils.getSearchGeometry({
 					searchLayer,
 					config: this.base.config,
@@ -373,6 +374,7 @@ class LocationApp {
 					results
 				});
 				this._generateSearchResults(feature);
+
 			}
 		});
 		// We also want to search for locations when users click on the map

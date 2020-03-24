@@ -269,6 +269,10 @@ html[dir="ltr"] {
 }
 
 html[dir="rtl"] {
+  .esri-share__close {
+    left: 8px;
+    right: unset;
+  }
 
   .esri-share__generate,
   .esri-share__url-input,

@@ -19,8 +19,9 @@ define({
       "title": "Not Licensed"
     },
     "tools": {
-      "close": "close",
-      "info": "info",
+      "close": "Close",
+      "info": "Info",
+      "infoTip": "View more information",
       "collapse": "Collapse all",
       "open": "Open all",
       "slider": "Search distance"
@@ -38,7 +39,6 @@ define({
   "fi": 1,
   "fr": 1,
   "he": 1,
-  "hi": 1,
   "hr": 1,
   "hu": 1,
   "id": 1,

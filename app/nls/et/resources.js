@@ -18,8 +18,9 @@ define({
     "title": "Litsents puudub"
   },
   "tools": {
-    "close": "sule",
-    "info": "teave",
+    "close": "Sulge",
+    "info": "Teave",
+    "infoTip": "Kuva lisateave",
     "collapse": "Ahenda kõik",
     "open": "Ava kõik",
     "slider": "Otsitav vahemaa"

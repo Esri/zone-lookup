@@ -18,8 +18,9 @@ define({
     "title": "Ni licence"
   },
   "tools": {
-    "close": "zapri",
-    "info": "informacije",
+    "close": "Zapri",
+    "info": "Informacije",
+    "infoTip": "Ogled dodatnih informacij",
     "collapse": "Strni vse",
     "open": "Odpri vse",
     "slider": "Iskalna razdalja"

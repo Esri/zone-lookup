@@ -10,19 +10,23 @@
   See the License for the specific language governing permissions and
   limitations under the License.​
 */
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
 };
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -53,9 +57,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -63,19 +64,22 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
-define(["require", "exports", "telemetry/telemetry.dojo", "esri/widgets/Search", "esri/Graphic", "esri/core/Handles", "./utilites/lookupLayerUtils", "./utilites/esriWidgetUtils", "./utilites/errorUtils", "esri/core/watchUtils", "./components/DisplayLookupResults", "./components/Header", "./components/MapPanel", "dojo/i18n!./nls/resources", "ApplicationBase/support/domHelper", "esri/layers/FeatureLayer", "./components/DetailPanel"], function (require, exports, telemetry_dojo_1, Search_1, Graphic_1, Handles_1, lookupLayerUtils, esriWidgetUtils, errorUtils, watchUtils, DisplayLookupResults_1, Header_1, MapPanel_1, i18n, domHelper_1, FeatureLayer, DetailPanel_1) {
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+define(["require", "exports", "./utilites/errorUtils", "./utilites/esriWidgetUtils", "./utilites/lookupLayerUtils", "ApplicationBase/support/domHelper", "./components/DetailPanel", "./components/DisplayLookupResults", "esri/Graphic", "esri/core/Handles", "./components/Header", "./components/MapPanel", "esri/widgets/Search", "telemetry/telemetry.dojo", "esri/core/watchUtils", "dojo/i18n!./nls/resources", "esri/layers/FeatureLayer"], function (require, exports, errorUtils, esriWidgetUtils, lookupLayerUtils, domHelper_1, DetailPanel_1, DisplayLookupResults_1, Graphic_1, Handles_1, Header_1, MapPanel_1, Search_1, telemetry_dojo_1, watchUtils, i18n, FeatureLayer) {
     "use strict";
-    telemetry_dojo_1 = __importDefault(telemetry_dojo_1);
-    Search_1 = __importDefault(Search_1);
+    errorUtils = __importStar(errorUtils);
+    esriWidgetUtils = __importStar(esriWidgetUtils);
+    lookupLayerUtils = __importStar(lookupLayerUtils);
+    DetailPanel_1 = __importDefault(DetailPanel_1);
+    DisplayLookupResults_1 = __importDefault(DisplayLookupResults_1);
     Graphic_1 = __importDefault(Graphic_1);
     Handles_1 = __importDefault(Handles_1);
-    lookupLayerUtils = __importStar(lookupLayerUtils);
-    esriWidgetUtils = __importStar(esriWidgetUtils);
-    errorUtils = __importStar(errorUtils);
-    DisplayLookupResults_1 = __importDefault(DisplayLookupResults_1);
     Header_1 = __importDefault(Header_1);
     MapPanel_1 = __importDefault(MapPanel_1);
-    DetailPanel_1 = __importDefault(DetailPanel_1);
+    Search_1 = __importDefault(Search_1);
+    telemetry_dojo_1 = __importDefault(telemetry_dojo_1);
     var CSS = {
         loading: 'configurable-application--loading'
     };
@@ -348,9 +352,8 @@ define(["require", "exports", "telemetry/telemetry.dojo", "esri/widgets/Search",
                 }
                 searchProperties.searchAllEnabled =
                     enableSearchingAll && enableSearchingAll === false ? false : true;
-                if (activeSourceIndex &&
-                    searchProperties.sources &&
-                    searchProperties.sources.length >= activeSourceIndex) {
+                if (activeSourceIndex != null && activeSourceIndex != undefined &&
+                    (searchProperties === null || searchProperties === void 0 ? void 0 : searchProperties.sources.length) >= activeSourceIndex) {
                     searchProperties.activeSourceIndex = activeSourceIndex;
                 }
             }

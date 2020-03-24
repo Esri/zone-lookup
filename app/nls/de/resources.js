@@ -20,6 +20,7 @@ define({
   "tools": {
     "close": "Schließen",
     "info": "Info",
+    "infoTip": "Weitere Informationen anzeigen",
     "collapse": "Alle ausblenden",
     "open": "Alle öffnen",
     "slider": "Suchentfernung"

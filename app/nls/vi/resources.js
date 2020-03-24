@@ -18,8 +18,9 @@ define({
     "title": "Không được Cấp phép"
   },
   "tools": {
-    "close": "đóng",
-    "info": "thông tin",
+    "close": "Đóng",
+    "info": "Thông tin",
+    "infoTip": "Xem thêm thông tin",
     "collapse": "Thu gọn tất cả",
     "open": "Mở tất cả",
     "slider": "Khoảng cách tìm kiếm"

@@ -20,14 +20,15 @@
   limitations under the License.​
 */
 import Collection = require('esri/core/Collection');
-import FeatureFilter from 'esri/views/layers/support/FeatureFilter';
 
-import promiseUtils = require('esri/core/promiseUtils');
+import { ApplicationConfig } from 'ApplicationBase/interfaces';
+import FeatureFilter from 'esri/views/layers/support/FeatureFilter';
 import Graphic from 'esri/Graphic';
 import { TextSymbol } from 'esri/symbols';
 
+import promiseUtils = require('esri/core/promiseUtils');
+
 import esri = __esri;
-import { ApplicationConfig } from 'ApplicationBase/interfaces';
 import FeatureEffect = require('esri/views/layers/support/FeatureEffect');
 
 interface ConfigureLayerProperties {
@@ -77,7 +78,6 @@ export async function getLookupLayers(props: LookupLayerProps): Promise<__esri.F
 
 	const returnLayers = [];
 	// Get all the map layers
-	const promises = [];
 	if (lookupLayers) {
 		// get any predefined layers otherwise we'll use all map layers
 		lookupLayers.forEach((layerItem) => {
@@ -115,7 +115,6 @@ export async function getLookupLayers(props: LookupLayerProps): Promise<__esri.F
 				if (flayer.popupEnabled) {
 					flayer.outFields = ["*"];
 					returnLayers.push(flayer);
-					//promises.push(view.whenLayerView(flayer));
 				}
 			} else if (layer.type === 'map-image') {
 				// if sub layers have been enabled during config
@@ -124,6 +123,7 @@ export async function getLookupLayers(props: LookupLayerProps): Promise<__esri.F
 				const checkSubLayer = lookupLayers && lookupLayers.length && lookupLayers.length > 0 ? true : false;
 				mapLayer.sublayers &&
 					mapLayer.sublayers.forEach((sublayer) => {
+
 						if (checkSubLayer) {
 							const configId = `${sublayer.layer.id}.${sublayer.id}`;
 							lookupLayers.forEach((l) => {
@@ -131,16 +131,17 @@ export async function getLookupLayers(props: LookupLayerProps): Promise<__esri.F
 									sublayer.createFeatureLayer().then((l: esri.FeatureLayer) => {
 										view.map.add(l);
 										returnLayers.push(l);
-										//promises.push(view.whenLayerView(l));
 									});
+									sublayer.visible = false;
 								}
 							});
 						} else {
 							sublayer.createFeatureLayer().then((l: esri.FeatureLayer) => {
 								view.map.add(l);
 								returnLayers.push(l);
-								//promises.push(view.whenLayerView(l));
 							});
+							sublayer.visible = false;
+
 						}
 					});
 			}
@@ -154,8 +155,8 @@ export async function getLookupLayers(props: LookupLayerProps): Promise<__esri.F
 export async function getSearchGeometry(props: SearchGeometryProps): Promise<esri.Graphic> {
 	const { results, view, config, searchLayer } = props;
 	const { lookupType } = config;
-	let graphic = _getResultGeometries(results);
 
+	const graphic = _getResultGeometries(results);
 	// add marker to map
 	_addLocationGraphics(graphic, config, view);
 	// If it's not a geometry search or it is geometry
@@ -168,7 +169,9 @@ export async function getSearchGeometry(props: SearchGeometryProps): Promise<esr
 		return promiseUtils.resolve(returnGraphic);
 	} else {
 		// Is the source layer of the graphic equal to the search layer?
-		const sourceLayerGraphic: any = graphic && graphic.hasOwnProperty('sourceLayer') ? graphic : null;
+		const sourceLayerGraphic: any = graphic && graphic.hasOwnProperty('sourceLayer') ? graphic.clone() : null;
+
+
 		if (sourceLayerGraphic.sourceLayer && sourceLayerGraphic.sourceLayer.id) {
 			if (sourceLayerGraphic.sourceLayer.id === searchLayer.id) {
 				// Is the search geometry from the search layer? If so use it
@@ -191,16 +194,14 @@ export async function getSearchGeometry(props: SearchGeometryProps): Promise<esr
 				? results.features[0]
 				: null
 		);
-
 	}
 }
 function _addLocationGraphics(graphic, config, view) {
-	const { includeAddressText, addressGraphicColor, includeAddressGraphic } = config;
+	const { includeAddressText, addressGraphicColor, includeAddressGraphic, addMarker } = config;
 	// add a custom graphic at geocoded location if we have something to display
 	if (graphic && graphic.geometry) {
 		const geometry =
 			graphic.geometry && graphic.geometry.type === 'point' ? graphic.geometry : graphic.geometry.extent.center;
-		//view.goTo(geometry);
 		let displayText = null;
 		if (graphic && includeAddressText) {
 
@@ -221,7 +222,7 @@ function _addLocationGraphics(graphic, config, view) {
 				});
 			}
 		}
-		if (displayText) {
+		if (displayText && addMarker) {
 			view.graphics.add(
 				new Graphic({
 					geometry,
@@ -231,20 +232,19 @@ function _addLocationGraphics(graphic, config, view) {
 						},
 						text: displayText,
 						color: addressGraphicColor,
-						xoffset: 8,
-						yoffset: 4,
-						horizontalAlignment: 'left'
+						horizontalAlignment: 'center'
 					})
 				})
 			);
 		}
-		if (includeAddressGraphic) {
+		if (includeAddressGraphic && addMarker) {
 			view.graphics.add(
 				new Graphic({
 					geometry,
 					symbol: new TextSymbol({
 						color: addressGraphicColor,
 						text: '\ue61d', // esri-icon-map-pin
+						yoffset: 10,
 						font: {
 							size: 20,
 							family: 'calcite-web-icons'
@@ -261,9 +261,9 @@ function _getResultGeometries(results): esri.Graphic {
 		return searchResults.results.some((r) => {
 			if (r.feature) {
 				feature = r.feature;
-				if (r.name && feature.attributes) {
-					feature.attributes.name = r.name;
-				}
+				//if (r.name && feature.attributes && feature.attributes.Match_addr) {
+				//feature.attributes.name = r.name;
+				//}
 				return true;
 			} else {
 				return false;

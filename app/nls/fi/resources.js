@@ -18,8 +18,9 @@ define({
     "title": "Ei lisenssiä"
   },
   "tools": {
-    "close": "sulje",
-    "info": "tiedot",
+    "close": "Sulje",
+    "info": "Tiedot",
+    "infoTip": "Näytä enemmän tietoja",
     "collapse": "Tiivistä kaikki",
     "open": "Avaa kaikki",
     "slider": "Hakuetäisyys"

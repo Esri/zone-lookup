@@ -18,8 +18,9 @@ define({
     "title": "Nincs licencelve"
   },
   "tools": {
-    "close": "bezárás",
-    "info": "információ",
+    "close": "Lezárás",
+    "info": "Információ",
+    "infoTip": "További információ megtekintése",
     "collapse": "Összes összecsukása",
     "open": "Összes megnyitása",
     "slider": "Keresési távolság"

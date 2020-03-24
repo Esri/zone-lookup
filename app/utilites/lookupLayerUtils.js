@@ -1,8 +1,9 @@
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -36,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-define(["require", "exports", "esri/core/Collection", "esri/views/layers/support/FeatureFilter", "esri/core/promiseUtils", "esri/Graphic", "esri/symbols", "esri/views/layers/support/FeatureEffect"], function (require, exports, Collection, FeatureFilter_1, promiseUtils, Graphic_1, symbols_1, FeatureEffect) {
+define(["require", "exports", "esri/core/Collection", "esri/views/layers/support/FeatureFilter", "esri/Graphic", "esri/symbols", "esri/core/promiseUtils", "esri/views/layers/support/FeatureEffect"], function (require, exports, Collection, FeatureFilter_1, Graphic_1, symbols_1, promiseUtils, FeatureEffect) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     FeatureFilter_1 = __importDefault(FeatureFilter_1);
@@ -73,12 +74,12 @@ define(["require", "exports", "esri/core/Collection", "esri/views/layers/support
     exports.getSearchLayer = getSearchLayer;
     function getLookupLayers(props) {
         return __awaiter(this, void 0, void 0, function () {
-            var view, hideFeaturesOnLoad, lookupLayers, searchableLayers, returnLayers, promises;
+            var view, hideFeaturesOnLoad, lookupLayers, searchableLayers, returnLayers;
             return __generator(this, function (_a) {
                 view = props.view, hideFeaturesOnLoad = props.hideFeaturesOnLoad, lookupLayers = props.lookupLayers;
                 searchableLayers = !lookupLayers ? view.map.layers : new Collection();
                 returnLayers = [];
-                promises = [];
+                // Get all the map layers
                 if (lookupLayers) {
                     // get any predefined layers otherwise we'll use all map layers
                     lookupLayers.forEach(function (layerItem) {
@@ -117,7 +118,6 @@ define(["require", "exports", "esri/core/Collection", "esri/views/layers/support
                             if (flayer.popupEnabled) {
                                 flayer.outFields = ["*"];
                                 returnLayers.push(flayer);
-                                //promises.push(view.whenLayerView(flayer));
                             }
                         }
                         else if (layer.type === 'map-image') {
@@ -134,8 +134,8 @@ define(["require", "exports", "esri/core/Collection", "esri/views/layers/support
                                                 sublayer.createFeatureLayer().then(function (l) {
                                                     view.map.add(l);
                                                     returnLayers.push(l);
-                                                    //promises.push(view.whenLayerView(l));
                                                 });
+                                                sublayer.visible = false;
                                             }
                                         });
                                     }
@@ -143,8 +143,8 @@ define(["require", "exports", "esri/core/Collection", "esri/views/layers/support
                                         sublayer.createFeatureLayer().then(function (l) {
                                             view.map.add(l);
                                             returnLayers.push(l);
-                                            //promises.push(view.whenLayerView(l));
                                         });
+                                        sublayer.visible = false;
                                     }
                                 });
                         }
@@ -175,7 +175,7 @@ define(["require", "exports", "esri/core/Collection", "esri/views/layers/support
                         }
                         return [2 /*return*/, promiseUtils.resolve(returnGraphic)];
                     case 1:
-                        sourceLayerGraphic = graphic && graphic.hasOwnProperty('sourceLayer') ? graphic : null;
+                        sourceLayerGraphic = graphic && graphic.hasOwnProperty('sourceLayer') ? graphic.clone() : null;
                         if (sourceLayerGraphic.sourceLayer && sourceLayerGraphic.sourceLayer.id) {
                             if (sourceLayerGraphic.sourceLayer.id === searchLayer.id) {
                                 // Is the search geometry from the search layer? If so use it
@@ -203,11 +203,10 @@ define(["require", "exports", "esri/core/Collection", "esri/views/layers/support
     }
     exports.getSearchGeometry = getSearchGeometry;
     function _addLocationGraphics(graphic, config, view) {
-        var includeAddressText = config.includeAddressText, addressGraphicColor = config.addressGraphicColor, includeAddressGraphic = config.includeAddressGraphic;
+        var includeAddressText = config.includeAddressText, addressGraphicColor = config.addressGraphicColor, includeAddressGraphic = config.includeAddressGraphic, addMarker = config.addMarker;
         // add a custom graphic at geocoded location if we have something to display
         if (graphic && graphic.geometry) {
             var geometry = graphic.geometry && graphic.geometry.type === 'point' ? graphic.geometry : graphic.geometry.extent.center;
-            //view.goTo(geometry);
             var displayText_1 = null;
             if (graphic && includeAddressText) {
                 if (graphic.attributes && graphic.attributes.Match_addr) {
@@ -230,7 +229,7 @@ define(["require", "exports", "esri/core/Collection", "esri/views/layers/support
                     });
                 }
             }
-            if (displayText_1) {
+            if (displayText_1 && addMarker) {
                 view.graphics.add(new Graphic_1.default({
                     geometry: geometry,
                     symbol: new symbols_1.TextSymbol({
@@ -239,18 +238,17 @@ define(["require", "exports", "esri/core/Collection", "esri/views/layers/support
                         },
                         text: displayText_1,
                         color: addressGraphicColor,
-                        xoffset: 8,
-                        yoffset: 4,
-                        horizontalAlignment: 'left'
+                        horizontalAlignment: 'center'
                     })
                 }));
             }
-            if (includeAddressGraphic) {
+            if (includeAddressGraphic && addMarker) {
                 view.graphics.add(new Graphic_1.default({
                     geometry: geometry,
                     symbol: new symbols_1.TextSymbol({
                         color: addressGraphicColor,
                         text: '\ue61d',
+                        yoffset: 10,
                         font: {
                             size: 20,
                             family: 'calcite-web-icons'
@@ -266,9 +264,9 @@ define(["require", "exports", "esri/core/Collection", "esri/views/layers/support
             return searchResults.results.some(function (r) {
                 if (r.feature) {
                     feature = r.feature;
-                    if (r.name && feature.attributes) {
-                        feature.attributes.name = r.name;
-                    }
+                    //if (r.name && feature.attributes && feature.attributes.Match_addr) {
+                    //feature.attributes.name = r.name;
+                    //}
                     return true;
                 }
                 else {

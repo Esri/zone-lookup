@@ -18,8 +18,9 @@ define({
     "title": "Inte licensierad"
   },
   "tools": {
-    "close": "stäng",
-    "info": "info",
+    "close": "Stäng",
+    "info": "Info",
+    "infoTip": "Visa mer information",
     "collapse": "Dölj alla",
     "open": "Öppna alla",
     "slider": "Sök avstånd"

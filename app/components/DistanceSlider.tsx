@@ -23,7 +23,7 @@ interface DistanceSliderProps extends esri.WidgetProperties {
 }
 
 @subclass('app.DistanceSlider')
-class DistanceSlider extends declared(Widget, Accessor) {
+class DistanceSlider extends declared(Widget) {
 	//--------------------------------------------------------------------------
 	//
 	//  Properties

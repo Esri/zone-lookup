@@ -18,8 +18,9 @@ define({
     "title": "Ikke lisensiert"
   },
   "tools": {
-    "close": "lukk",
-    "info": "info",
+    "close": "Lukk",
+    "info": "Info",
+    "infoTip": "Vis mer informasjon",
     "collapse": "Skjul alle",
     "open": "Åpne alle",
     "slider": "Søkeavstand"

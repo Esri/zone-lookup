@@ -18,8 +18,9 @@ define({
     "title": "Nema licencu"
   },
   "tools": {
-    "close": "zatvori",
-    "info": "informacije",
+    "close": "Zatvori",
+    "info": "Informacije",
+    "infoTip": "Pregledaj još rezultata",
     "collapse": "Skupi sve",
     "open": "Otvori sve",
     "slider": "Rastojanje pretrage"

@@ -18,8 +18,9 @@ define({
     "title": "Sense llicència"
   },
   "tools": {
-    "close": "tanca",
-    "info": "informació",
+    "close": "Tanca",
+    "info": "Informació",
+    "infoTip": "Visualitza més informació",
     "collapse": "Redueix-ho tot",
     "open": "Obre-ho tot",
     "slider": "Distància de cerca"

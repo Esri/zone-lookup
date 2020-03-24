@@ -18,8 +18,9 @@ define({
     "title": "Nelicențiat"
   },
   "tools": {
-    "close": "închidere",
-    "info": "informații",
+    "close": "Închidere",
+    "info": "Informații",
+    "infoTip": "Vizualizați mai multe informații",
     "collapse": "Restrângere toate",
     "open": "Deschidere toate",
     "slider": "Căutare distanță"

@@ -18,8 +18,9 @@ define({
     "title": "Tidak Berlisensi"
   },
   "tools": {
-    "close": "tutup",
-    "info": "info",
+    "close": "Tutup",
+    "info": "Info",
+    "infoTip": "Lihat informasi selengkapnya",
     "collapse": "Tutup semua",
     "open": "Buka semua",
     "slider": "Jarak pencarian"

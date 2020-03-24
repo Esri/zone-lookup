@@ -18,8 +18,9 @@ define({
     "title": "Nav licences"
   },
   "tools": {
-    "close": "aizvērt",
-    "info": "informācija",
+    "close": "Aizvērt",
+    "info": "Informācija",
+    "infoTip": "Skatīt plašāku informāciju",
     "collapse": "Sakļaut visu",
     "open": "Atvērt visu",
     "slider": "Meklēšanas attālums"

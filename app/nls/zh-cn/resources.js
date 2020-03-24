@@ -20,6 +20,7 @@ define({
   "tools": {
     "close": "关闭",
     "info": "信息",
+    "infoTip": "查看详细信息",
     "collapse": "全部折叠",
     "open": "全部打开",
     "slider": "搜索距离"

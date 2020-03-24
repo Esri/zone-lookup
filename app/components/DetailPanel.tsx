@@ -42,7 +42,7 @@ export interface DetailPanelProps extends esri.WidgetProperties {
 }
 
 @subclass('app.DetailPanel')
-class DetailPanel extends declared(Widget, Accessor) {
+class DetailPanel extends declared(Widget) {
 	//--------------------------------------------------------------------------
 	//
 	//  Properties
@@ -62,7 +62,7 @@ class DetailPanel extends declared(Widget, Accessor) {
 	//
 	//----------------------------------
 	@property({
-		dependsOn: [ 'view.ready' ],
+		dependsOn: ['view.ready'],
 		readOnly: true
 	})
 	get state(): State {
@@ -115,7 +115,7 @@ class DetailPanel extends declared(Widget, Accessor) {
 				<button
 					bind={this}
 					aria-label={i18n.tools.info}
-					title={i18n.tools.info}
+					title={i18n.tools.close}
 					onclick={this._hidePanel}
 					class={this.classes(
 						CSS.details,
@@ -141,8 +141,10 @@ class DetailPanel extends declared(Widget, Accessor) {
 			</div>
 		);
 	}
-	private _hidePanel() {
+	private _hidePanel(e) {
 		const container = this.container as HTMLElement;
+		e.target.title = container.classList.contains("collapse") ? i18n.tools.close : i18n.tools.infoTip;
+
 		container.classList.toggle('collapse');
 	}
 	private _toggleButton() {

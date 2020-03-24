@@ -14,7 +14,8 @@
     "experimentalDecorators": true,
     "jsx": "react",
     "esModuleInterop": true,
-    "jsxFactory": "tsx"
+    "jsxFactory": "tsx",
+    "types": ["arcgis-js-api"]
   },
   "include": [
     "./**/*"

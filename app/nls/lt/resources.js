@@ -18,8 +18,9 @@ define({
     "title": "Nelicencijuota"
   },
   "tools": {
-    "close": "užverti",
-    "info": "informacija",
+    "close": "Uždaryti",
+    "info": "Informacija",
+    "infoTip": "Peržiūrėti daugiau informacijos",
     "collapse": "Sutraukti viską",
     "open": "Atverti viską",
     "slider": "Paieškos atstumas"

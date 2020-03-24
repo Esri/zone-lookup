@@ -18,8 +18,9 @@ define({
     "title": "Pas de licence"
   },
   "tools": {
-    "close": "fermer",
-    "info": "info",
+    "close": "Fermer",
+    "info": "Infos",
+    "infoTip": "Afficher plus d’informations",
     "collapse": "Tout réduire",
     "open": "Tout ouvrir",
     "slider": "Distance de recherche"

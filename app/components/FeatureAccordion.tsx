@@ -1,11 +1,13 @@
+import Accordion, { AccordionProps } from './Accordion';
 /// <amd-dependency path="esri/core/tsSupport/declareExtendsHelper" name="__extends" />
 /// <amd-dependency path="esri/core/tsSupport/decorateHelper" name="__decorate" />
-import { subclass, declared, property } from 'esri/core/accessorSupport/decorators';
-import { tsx } from 'esri/widgets/support/widget';
+import { declared, property, subclass } from 'esri/core/accessorSupport/decorators';
+
 import Feature from 'esri/widgets/Feature';
 import Handles from 'esri/core/Handles';
+import { tsx } from 'esri/widgets/support/widget';
+
 import esri = __esri;
-import Accordion, { ActionButton, AccordionProps } from './Accordion';
 
 const CSS = {
 	base: 'accordion',
@@ -133,6 +135,7 @@ class FeatureAccordion extends declared(Accordion) {
 				},
 				container
 			});
+
 
 			const handleContent = feature.viewModel.watch("content", () => {
 				handleContent.remove();

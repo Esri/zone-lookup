@@ -1,23 +1,26 @@
-/// <amd-dependency path="esri/core/tsSupport/declareExtendsHelper" name="__extends" />
-/// <amd-dependency path="esri/core/tsSupport/decorateHelper" name="__decorate" />
-import { subclass, declared, property } from 'esri/core/accessorSupport/decorators';
-import Widget from 'esri/widgets/Widget';
-import Accessor from 'esri/core/Accessor';
-import Handles from 'esri/core/Handles';
-import { tsx, renderable } from 'esri/widgets/support/widget';
 import * as geometryUtils from '../utilites/geometryUtils';
 import * as promiseUtils from 'esri/core/promiseUtils';
-import Query from 'esri/tasks/support/Query';
-import FeatureFilter from 'esri/views/layers/support/FeatureFilter';
-import FeatureEffect from 'esri/views/layers/support/FeatureEffect';
-import FeatureAccordion from './FeatureAccordion';
+
 import GroupedAccordion, { FeatureResults } from './GroupedAccordion';
+/// <amd-dependency path="esri/core/tsSupport/declareExtendsHelper" name="__extends" />
+/// <amd-dependency path="esri/core/tsSupport/decorateHelper" name="__decorate" />
+import { declared, property, subclass } from 'esri/core/accessorSupport/decorators';
+import { renderable, tsx } from 'esri/widgets/support/widget';
+
+import Accessor from 'esri/core/Accessor';
 import { ActionButton } from "./Accordion";
-import MapPanel from './MapPanel';
-import i18n = require('dojo/i18n!../nls/resources');
 import { ApplicationConfig } from 'ApplicationBase/interfaces';
-import esri = __esri;
+import FeatureAccordion from './FeatureAccordion';
+import FeatureEffect from 'esri/views/layers/support/FeatureEffect';
+import FeatureFilter from 'esri/views/layers/support/FeatureFilter';
+import Handles from 'esri/core/Handles';
+import MapPanel from './MapPanel';
+import Query from 'esri/tasks/support/Query';
+import Widget from 'esri/widgets/Widget';
 import { hideLookuplayers } from '../utilites/lookupLayerUtils';
+
+import i18n = require('dojo/i18n!../nls/resources');
+import esri = __esri;
 
 
 type State = 'init' | 'loading' | 'ready';
@@ -46,7 +49,7 @@ const CSS = {
 	toggleContentBtn: 'toggle-content-btn'
 };
 @subclass('app.DisplayLookupResults')
-class DisplayLookupResults extends declared(Widget, Accessor) {
+class DisplayLookupResults extends declared(Widget) {
 	//--------------------------------------------------------------------------
 	//
 	//  Properties
@@ -230,6 +233,7 @@ class DisplayLookupResults extends declared(Widget, Accessor) {
 			// Highlight search layer
 			this._searchHighlight(location);
 			this.lookupLayers.forEach((layer) => {
+
 				const query: esri.Query = this._createQuery(layer, location);
 				this._applyLayerEffectAndFilter(layer, query);
 
@@ -251,21 +255,17 @@ class DisplayLookupResults extends declared(Widget, Accessor) {
 					}
 				}
 				if (!performQuery) {
-					this._applyLayerEffectAndFilter(layer, query);
+					//	this._applyLayerEffectAndFilter(layer, query);
 					promises.push(promiseUtils.resolve({ features: [location], title: layer && layer.title ? layer.title : null, id: layer && layer.id ? layer.id : null }));
 				} else {
-					this.view.whenLayerView(layer).then(layerView => {
-						if (layerView) {
-							promises.push(layerView.layer.queryFeatures(query).then(results => {
-								this._applyLayerEffectAndFilter(layer, query);
-								return {
-									features: results.features,
-									title: layer && layer.title ? layer.title : null,
-									id: layer && layer.id ? layer.id : null
-								}
-							}));
-						}
-					});
+					this._applyLayerEffectAndFilter(layer, query);
+					promises.push(layer.queryFeatures(query).then(results => {
+						return promiseUtils.resolve({
+							features: results.features,
+							title: layer && layer.title ? layer.title : null,
+							id: layer && layer.id ? layer.id : null
+						});
+					}));
 				}
 			});
 		}
@@ -321,21 +321,8 @@ class DisplayLookupResults extends declared(Widget, Accessor) {
 			query.distance = this.distance;
 			query.units = units;
 		} else if (lookupType === 'geometry') {
-			let sr: string;
-			switch (layerGeometryType) {
-				case 'point':
-					sr = 'contains';
-				case 'polygon':
-					sr = 'contains';
-					break;
-				case 'polyline':
-					sr = 'intersects';
-					break;
-				default:
-					sr = 'intersects';
-					break;
-			}
-			query.spatialRelationship = sr;
+
+			query.spatialRelationship = layerGeometryType === "point" || layerGeometryType === "polygon" ? "contains" : "intersects";
 		}
 
 		return query;
@@ -431,10 +418,17 @@ class DisplayLookupResults extends declared(Widget, Accessor) {
 
 	_sortFeatures(features) {
 		const { includeDistance, units, portal } = this.config;
+		// TODO: We really want the search location here so reconfigure
+		// the app to include the searched location. 
 		if (includeDistance && this.location) {
 			// add distance val to the features and sort array by distance
+			let location = this.location.geometry;
+			if (this.location.geometry && this.location.geometry.type && this.location.geometry.type === "polygon") {
+				const g = this.location.geometry as esri.Polygon;
+				location = g.centroid;
+			}
 			geometryUtils.getDistances({
-				location: this.location.geometry,
+				location,
 				portal,
 				distance: this.distance || 0,
 				unit: units,

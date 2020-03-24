@@ -1,20 +1,26 @@
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
 };
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -23,10 +29,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -57,6 +64,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -67,10 +81,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
-define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/core/tsSupport/decorateHelper", "esri/core/accessorSupport/decorators", "esri/widgets/Widget", "esri/core/Accessor", "../utilites/errorUtils", "dojo/i18n!../nls/resources", "esri/widgets/support/widget", "ApplicationBase/support/itemUtils"], function (require, exports, __extends, __decorate, decorators_1, Widget_1, Accessor_1, errorUtils, i18n, widget_1, itemUtils_1) {
+define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/core/tsSupport/decorateHelper", "esri/core/accessorSupport/decorators", "esri/widgets/Widget", "../utilites/errorUtils", "dojo/i18n!../nls/resources", "esri/widgets/support/widget", "ApplicationBase/support/itemUtils"], function (require, exports, __extends, __decorate, decorators_1, Widget_1, errorUtils, i18n, widget_1, itemUtils_1) {
     "use strict";
     Widget_1 = __importDefault(Widget_1);
-    Accessor_1 = __importDefault(Accessor_1);
     errorUtils = __importStar(errorUtils);
     var CSS = {
         miniMap: {
@@ -131,7 +144,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
             var mainMapClasses = [CSS.calciteStyles.column14];
             var miniMapClasses = [CSS.miniMap.panel, CSS.calciteStyles.panel];
             var mapPositionClasses = this.isMobileView
-                ? this.classes.apply(this, allClasses.concat(miniMapClasses)) : this.classes.apply(this, mainMapClasses.concat(allClasses));
+                ? this.classes.apply(this, __spreadArrays(allClasses, miniMapClasses)) : this.classes.apply(this, __spreadArrays(mainMapClasses, allClasses));
             var mapTabletClass = this.isMobileView ? this.classes(CSS.tabletShow) : null;
             var mapButton = this.isMobileView ? (widget_1.tsx("button", { bind: this, onclick: this.closeMap, class: this.classes(CSS.calciteStyles.button, CSS.btnOpenMap, CSS.appButton, CSS.tabletShow, CSS.calciteStyles.buttonGreen, CSS.calciteStyles.buttonFill, CSS.calciteStyles.iconDesc) }, i18n.tools.info)) : null;
             var alertMessage = this.isMobileView && this.message ? (widget_1.tsx("div", { key: "mobile-message", class: this.isMobileView && this.message ? (this.classes(CSS.calciteStyles.alert, CSS.calciteStyles.active, CSS.calciteStyles.alertRed)) : null },
@@ -168,7 +181,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
                             mapContainer = {
                                 container: container
                             };
-                            viewProperties = __assign({}, defaultViewProperties, mapContainer);
+                            viewProperties = __assign(__assign({}, defaultViewProperties), mapContainer);
                             _b.label = 1;
                         case 1:
                             _b.trys.push([1, 4, , 5]);
@@ -176,7 +189,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
                         case 2:
                             map = (_b.sent());
                             _a = this;
-                            return [4 /*yield*/, itemUtils_1.createView(__assign({}, viewProperties, { map: map }))];
+                            return [4 /*yield*/, itemUtils_1.createView(__assign(__assign({}, viewProperties), { map: map }))];
                         case 3:
                             _a.view = (_b.sent());
                             this.view.highlightOptions.fillOpacity = 0;
@@ -246,7 +259,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
             decorators_1.subclass('app.MapPanel')
         ], MapPanel);
         return MapPanel;
-    }(decorators_1.declared(Widget_1.default, Accessor_1.default)));
+    }(decorators_1.declared(Widget_1.default)));
     return MapPanel;
 });
 //# sourceMappingURL=MapPanel.js.map

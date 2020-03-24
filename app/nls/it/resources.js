@@ -18,8 +18,9 @@ define({
     "title": "Non Licenziato"
   },
   "tools": {
-    "close": "chiudi",
-    "info": "informazioni",
+    "close": "Chiudere",
+    "info": "Informazioni",
+    "infoTip": "Visualizzare maggiori informazioni",
     "collapse": "Comprimi tutto",
     "open": "Apri tutto",
     "slider": "Distanza di ricerca"

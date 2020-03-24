@@ -18,8 +18,9 @@ define({
     "title": "Chybí licence"
   },
   "tools": {
-    "close": "zavřít",
-    "info": "info",
+    "close": "Zavřít",
+    "info": "Informace",
+    "infoTip": "Zobrazit další informace",
     "collapse": "Sbalit vše",
     "open": "Otevřít vše",
     "slider": "Vzdálenost vyhledávání"

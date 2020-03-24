@@ -18,8 +18,9 @@ define({
     "title": "Lisanslı Değil"
   },
   "tools": {
-    "close": "Kapatmak",
-    "info": "bilgi",
+    "close": "Kapat",
+    "info": "Bilgi",
+    "infoTip": "Daha fazla bilgi",
     "collapse": "Tümünü daralt",
     "open": "Tümünü aç",
     "slider": "Arama mesafesi"

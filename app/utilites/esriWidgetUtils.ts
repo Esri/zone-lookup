@@ -44,10 +44,25 @@ export async function addBasemap(props: esriWidgetProps) {
 			view
 		});
 		if (config.altBasemap) {
-			bmToggle.nextBasemap = config.altBasemap;
+			bmToggle.nextBasemap = await _getBasemap(config.altBasemap) as any;
 		}
 		view.ui.add(bmToggle, config.basemapTogglePosition);
 	}
+}
+async function _getBasemap(id: string) {
+	const Basemap = await import("esri/Basemap");
+	if (!Basemap) { return; }
+
+	let basemap = Basemap.default.fromId(id);
+
+	if (!basemap) {
+		basemap = await new Basemap.default({
+			portalItem: {
+				id
+			}
+		}).loadAll();
+	}
+	return basemap as any;
 }
 export async function addHome(props: esriWidgetProps) {
 	const { view, config } = props;
@@ -65,15 +80,18 @@ export async function addLegend(props: esriWidgetProps) {
 			style: {
 				type: 'card'
 			}
-		});
+		}) as __esri.Legend;
 		const expand = new Expand.default({
 			view,
 			group: config.legendPosition,
 			mode: 'floating',
 			content: legend
-		});
+		}) as __esri.Expand;
 
 		view.ui.add(expand, config.legendPosition);
+		if (config.legendOpenAtStart) {
+			expand.expand();
+		}
 		const container = expand.container as HTMLElement;
 		container.classList.add('legend-expand');
 	}

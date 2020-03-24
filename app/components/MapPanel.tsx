@@ -54,7 +54,7 @@ interface MapPanelProps extends esri.WidgetProperties {
 	isMobileView?: boolean;
 }
 @subclass('app.MapPanel')
-class MapPanel extends declared(Widget, Accessor) {
+class MapPanel extends declared(Widget) {
 	//--------------------------------------------------------------------------
 	//
 	//  Properties

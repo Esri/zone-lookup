@@ -1,7 +1,10 @@
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -15,10 +18,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -49,9 +53,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -59,18 +60,20 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
-define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/core/tsSupport/decorateHelper", "esri/core/accessorSupport/decorators", "esri/widgets/Widget", "esri/core/Accessor", "esri/core/Handles", "esri/widgets/support/widget", "../utilites/geometryUtils", "esri/core/promiseUtils", "esri/tasks/support/Query", "esri/views/layers/support/FeatureFilter", "esri/views/layers/support/FeatureEffect", "./FeatureAccordion", "./GroupedAccordion", "dojo/i18n!../nls/resources"], function (require, exports, __extends, __decorate, decorators_1, Widget_1, Accessor_1, Handles_1, widget_1, geometryUtils, promiseUtils, Query_1, FeatureFilter_1, FeatureEffect_1, FeatureAccordion_1, GroupedAccordion_1, i18n) {
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+define(["require", "exports", "../utilites/geometryUtils", "esri/core/promiseUtils", "./GroupedAccordion", "esri/core/accessorSupport/decorators", "esri/widgets/support/widget", "./FeatureAccordion", "esri/views/layers/support/FeatureEffect", "esri/views/layers/support/FeatureFilter", "esri/core/Handles", "esri/tasks/support/Query", "esri/widgets/Widget", "dojo/i18n!../nls/resources"], function (require, exports, geometryUtils, promiseUtils, GroupedAccordion_1, decorators_1, widget_1, FeatureAccordion_1, FeatureEffect_1, FeatureFilter_1, Handles_1, Query_1, Widget_1, i18n) {
     "use strict";
-    Widget_1 = __importDefault(Widget_1);
-    Accessor_1 = __importDefault(Accessor_1);
-    Handles_1 = __importDefault(Handles_1);
     geometryUtils = __importStar(geometryUtils);
     promiseUtils = __importStar(promiseUtils);
-    Query_1 = __importDefault(Query_1);
-    FeatureFilter_1 = __importDefault(FeatureFilter_1);
-    FeatureEffect_1 = __importDefault(FeatureEffect_1);
-    FeatureAccordion_1 = __importDefault(FeatureAccordion_1);
     GroupedAccordion_1 = __importDefault(GroupedAccordion_1);
+    FeatureAccordion_1 = __importDefault(FeatureAccordion_1);
+    FeatureEffect_1 = __importDefault(FeatureEffect_1);
+    FeatureFilter_1 = __importDefault(FeatureFilter_1);
+    Handles_1 = __importDefault(Handles_1);
+    Query_1 = __importDefault(Query_1);
+    Widget_1 = __importDefault(Widget_1);
     var CSS = {
         calciteStyles: {
             clearBtn: 'btn-transparent',
@@ -259,22 +262,18 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
                         }
                     }
                     if (!performQuery) {
-                        _this._applyLayerEffectAndFilter(layer, query);
+                        //	this._applyLayerEffectAndFilter(layer, query);
                         promises.push(promiseUtils.resolve({ features: [location], title: layer && layer.title ? layer.title : null, id: layer && layer.id ? layer.id : null }));
                     }
                     else {
-                        _this.view.whenLayerView(layer).then(function (layerView) {
-                            if (layerView) {
-                                promises.push(layerView.layer.queryFeatures(query).then(function (results) {
-                                    _this._applyLayerEffectAndFilter(layer, query);
-                                    return {
-                                        features: results.features,
-                                        title: layer && layer.title ? layer.title : null,
-                                        id: layer && layer.id ? layer.id : null
-                                    };
-                                }));
-                            }
-                        });
+                        _this._applyLayerEffectAndFilter(layer, query);
+                        promises.push(layer.queryFeatures(query).then(function (results) {
+                            return promiseUtils.resolve({
+                                features: results.features,
+                                title: layer && layer.title ? layer.title : null,
+                                id: layer && layer.id ? layer.id : null
+                            });
+                        }));
                     }
                 });
             }
@@ -327,21 +326,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
                 query.units = units;
             }
             else if (lookupType === 'geometry') {
-                var sr = void 0;
-                switch (layerGeometryType) {
-                    case 'point':
-                        sr = 'contains';
-                    case 'polygon':
-                        sr = 'contains';
-                        break;
-                    case 'polyline':
-                        sr = 'intersects';
-                        break;
-                    default:
-                        sr = 'intersects';
-                        break;
-                }
-                query.spatialRelationship = sr;
+                query.spatialRelationship = layerGeometryType === "point" || layerGeometryType === "polygon" ? "contains" : "intersects";
             }
             return query;
         };
@@ -437,10 +422,17 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
         };
         DisplayLookupResults.prototype._sortFeatures = function (features) {
             var _a = this.config, includeDistance = _a.includeDistance, units = _a.units, portal = _a.portal;
+            // TODO: We really want the search location here so reconfigure
+            // the app to include the searched location. 
             if (includeDistance && this.location) {
                 // add distance val to the features and sort array by distance
+                var location_1 = this.location.geometry;
+                if (this.location.geometry && this.location.geometry.type && this.location.geometry.type === "polygon") {
+                    var g = this.location.geometry;
+                    location_1 = g.centroid;
+                }
                 geometryUtils.getDistances({
-                    location: this.location.geometry,
+                    location: location_1,
                     portal: portal,
                     distance: this.distance || 0,
                     unit: units,
@@ -572,7 +564,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
             decorators_1.subclass('app.DisplayLookupResults')
         ], DisplayLookupResults);
         return DisplayLookupResults;
-    }(decorators_1.declared(Widget_1.default, Accessor_1.default)));
+    }(decorators_1.declared(Widget_1.default)));
     return DisplayLookupResults;
 });
 //# sourceMappingURL=DisplayLookupResults.js.map

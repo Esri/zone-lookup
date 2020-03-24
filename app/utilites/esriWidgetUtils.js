@@ -1,8 +1,9 @@
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -79,29 +80,59 @@ define(["require", "exports"], function (require, exports) {
     exports.moveComponent = moveComponent;
     function addBasemap(props) {
         return __awaiter(this, void 0, void 0, function () {
-            var view, config, BasemapToggle, bmToggle;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var view, config, BasemapToggle, bmToggle, _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         view = props.view, config = props.config;
                         return [4 /*yield*/, new Promise(function (resolve_1, reject_1) { require(['esri/widgets/BasemapToggle'], resolve_1, reject_1); }).then(__importStar)];
                     case 1:
-                        BasemapToggle = _a.sent();
-                        if (BasemapToggle) {
-                            bmToggle = new BasemapToggle.default({
-                                view: view
-                            });
-                            if (config.altBasemap) {
-                                bmToggle.nextBasemap = config.altBasemap;
-                            }
-                            view.ui.add(bmToggle, config.basemapTogglePosition);
-                        }
-                        return [2 /*return*/];
+                        BasemapToggle = _b.sent();
+                        if (!BasemapToggle) return [3 /*break*/, 4];
+                        bmToggle = new BasemapToggle.default({
+                            view: view
+                        });
+                        if (!config.altBasemap) return [3 /*break*/, 3];
+                        _a = bmToggle;
+                        return [4 /*yield*/, _getBasemap(config.altBasemap)];
+                    case 2:
+                        _a.nextBasemap = (_b.sent());
+                        _b.label = 3;
+                    case 3:
+                        view.ui.add(bmToggle, config.basemapTogglePosition);
+                        _b.label = 4;
+                    case 4: return [2 /*return*/];
                 }
             });
         });
     }
     exports.addBasemap = addBasemap;
+    function _getBasemap(id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var Basemap, basemap;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, new Promise(function (resolve_2, reject_2) { require(["esri/Basemap"], resolve_2, reject_2); }).then(__importStar)];
+                    case 1:
+                        Basemap = _a.sent();
+                        if (!Basemap) {
+                            return [2 /*return*/];
+                        }
+                        basemap = Basemap.default.fromId(id);
+                        if (!!basemap) return [3 /*break*/, 3];
+                        return [4 /*yield*/, new Basemap.default({
+                                portalItem: {
+                                    id: id
+                                }
+                            }).loadAll()];
+                    case 2:
+                        basemap = _a.sent();
+                        _a.label = 3;
+                    case 3: return [2 /*return*/, basemap];
+                }
+            });
+        });
+    }
     function addHome(props) {
         return __awaiter(this, void 0, void 0, function () {
             var view, config, Home;
@@ -109,7 +140,7 @@ define(["require", "exports"], function (require, exports) {
                 switch (_a.label) {
                     case 0:
                         view = props.view, config = props.config;
-                        return [4 /*yield*/, new Promise(function (resolve_2, reject_2) { require(['esri/widgets/Home'], resolve_2, reject_2); }).then(__importStar)];
+                        return [4 /*yield*/, new Promise(function (resolve_3, reject_3) { require(['esri/widgets/Home'], resolve_3, reject_3); }).then(__importStar)];
                     case 1:
                         Home = _a.sent();
                         if (Home) {
@@ -128,7 +159,7 @@ define(["require", "exports"], function (require, exports) {
                 switch (_b.label) {
                     case 0:
                         view = props.view, config = props.config;
-                        return [4 /*yield*/, Promise.all([new Promise(function (resolve_3, reject_3) { require(['esri/widgets/Legend'], resolve_3, reject_3); }).then(__importStar), new Promise(function (resolve_4, reject_4) { require(['esri/widgets/Expand'], resolve_4, reject_4); }).then(__importStar)])];
+                        return [4 /*yield*/, Promise.all([new Promise(function (resolve_4, reject_4) { require(['esri/widgets/Legend'], resolve_4, reject_4); }).then(__importStar), new Promise(function (resolve_5, reject_5) { require(['esri/widgets/Expand'], resolve_5, reject_5); }).then(__importStar)])];
                     case 1:
                         _a = _b.sent(), Legend = _a[0], Expand = _a[1];
                         if (Legend && Expand) {
@@ -145,6 +176,9 @@ define(["require", "exports"], function (require, exports) {
                                 content: legend
                             });
                             view.ui.add(expand, config.legendPosition);
+                            if (config.legendOpenAtStart) {
+                                expand.expand();
+                            }
                             container = expand.container;
                             container.classList.add('legend-expand');
                         }
@@ -161,7 +195,7 @@ define(["require", "exports"], function (require, exports) {
                 switch (_a.label) {
                     case 0:
                         view = props.view, portal = props.portal, config = props.config;
-                        return [4 /*yield*/, new Promise(function (resolve_5, reject_5) { require(['esri/widgets/ScaleBar'], resolve_5, reject_5); }).then(__importStar)];
+                        return [4 /*yield*/, new Promise(function (resolve_6, reject_6) { require(['esri/widgets/ScaleBar'], resolve_6, reject_6); }).then(__importStar)];
                     case 1:
                         ScaleBar = _a.sent();
                         if (ScaleBar) {

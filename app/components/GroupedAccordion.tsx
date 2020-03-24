@@ -140,9 +140,11 @@ class GroupedAccordion extends declared(Accordion) {
             defaultPopupTemplateEnabled: true,
             map: this.view.map,
             spatialReference: this.view.spatialReference,
+            visibleElements: {
+                title: false
+            },
             container
         });
-        console.log("feature", feature.get("content"));
         node.appendChild(container);
         const handle = feature.watch('title', () => {
             let title: string = feature.get('title');

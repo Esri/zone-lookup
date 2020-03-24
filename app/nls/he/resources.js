@@ -20,6 +20,7 @@ define({
   "tools": {
     "close": "סגור",
     "info": "מידע",
+    "infoTip": "הצג מידע נוסף",
     "collapse": "כווץ הכל",
     "open": "פתח הכל",
     "slider": "מרחק חיפוש"

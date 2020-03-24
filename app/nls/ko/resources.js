@@ -20,6 +20,7 @@ define({
   "tools": {
     "close": "닫기",
     "info": "정보",
+    "infoTip": "추가 정보 보기",
     "collapse": "모두 축소",
     "open": "모두 열기",
     "slider": "검색 거리"

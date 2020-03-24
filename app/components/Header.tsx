@@ -39,7 +39,7 @@ interface HeaderProps extends esri.WidgetProperties {
 }
 
 @subclass('app.Header')
-class Header extends declared(Widget, Accessor) {
+class Header extends declared(Widget) {
 	//--------------------------------------------------------------------------
 	//
 	//  Properties

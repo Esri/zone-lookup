@@ -18,8 +18,9 @@ define({
     "title": "Geen licentie"
   },
   "tools": {
-    "close": "sluiten",
-    "info": "info",
+    "close": "Sluiten",
+    "info": "Info",
+    "infoTip": "Meer informatie bekijken",
     "collapse": "Alles samenvouwen",
     "open": "Alles openen",
     "slider": "Zoekafstand"
