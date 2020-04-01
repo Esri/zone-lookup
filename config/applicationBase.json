@@ -40,6 +40,8 @@
     "oauthappid",
     "portalUrl",
     "viewpoint",
+    "legend",
+    "legendOpenAtStart",
     "webmap"
   ],
   "webMap": {
