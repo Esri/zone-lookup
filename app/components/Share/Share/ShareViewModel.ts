@@ -1,5 +1,3 @@
-/// <amd-dependency path="esri/core/tsSupport/declareExtendsHelper" name="__extends" />
-/// <amd-dependency path="esri/core/tsSupport/decorateHelper" name="__decorate" />
 
 // esri.core
 import Accessor = require("esri/core/Accessor");
@@ -8,7 +6,7 @@ import Collection = require("esri/core/Collection");
 // esri.core.accessorSupport
 import {
 	subclass,
-	declared,
+
 	property
 } from "esri/core/accessorSupport/decorators";
 
@@ -81,7 +79,7 @@ const SHORTEN_API = "https://arcg.is/prod/shorten";
 type State = "ready" | "loading" | "shortening" | "projecting" | "disabled";
 
 @subclass("ShareViewModel")
-class ShareViewModel extends declared(Accessor) {
+class ShareViewModel extends (Accessor) {
 	//----------------------------------
 	//
 	//  Lifecycle

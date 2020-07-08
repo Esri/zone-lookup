@@ -1,15 +1,12 @@
-/// <amd-dependency path="esri/core/tsSupport/declareExtendsHelper" name="__extends" />
-/// <amd-dependency path="esri/core/tsSupport/decorateHelper" name="__decorate" />
-import { subclass, declared, property } from 'esri/core/accessorSupport/decorators';
+
+import { subclass, property } from 'esri/core/accessorSupport/decorators';
 import Widget from 'esri/widgets/Widget';
-import Accessor from 'esri/core/Accessor';
 import * as errorUtils from '../utilites/errorUtils';
 import i18n = require('dojo/i18n!../nls/resources');
 import { tsx, renderable } from 'esri/widgets/support/widget';
 import { ApplicationConfig } from 'ApplicationBase/interfaces';
 import ApplicationBase from 'ApplicationBase/ApplicationBase';
 import { createMapFromItem, createView, getConfigViewProperties } from 'ApplicationBase/support/itemUtils';
-
 import esri = __esri;
 
 const CSS = {
@@ -38,7 +35,7 @@ const CSS = {
 		paddingLeft: 'padding-left-0',
 		paddingRight: 'padding-right-0',
 		button: 'btn',
-		buttonGreen: 'btn-green',
+		buttonGreen: 'btn-blue',
 		buttonFill: 'btn-fill',
 		right: 'right',
 		panel: 'panel',
@@ -54,7 +51,7 @@ interface MapPanelProps extends esri.WidgetProperties {
 	isMobileView?: boolean;
 }
 @subclass('app.MapPanel')
-class MapPanel extends declared(Widget) {
+class MapPanel extends (Widget) {
 	//--------------------------------------------------------------------------
 	//
 	//  Properties
@@ -90,7 +87,7 @@ class MapPanel extends declared(Widget) {
 	//
 	//--------------------------------------------------------------------------
 	constructor(props: MapPanelProps) {
-		super();
+		super(props);
 		const { config } = props.base;
 		this.config = config;
 	}
@@ -174,13 +171,14 @@ class MapPanel extends declared(Widget) {
 			this.config.components = "attribution";
 		}
 		const defaultViewProperties = getConfigViewProperties(this.config);
-
+		const components = ["attribution"];
 		const mapContainer = {
 			container
 		};
 
 		const viewProperties = {
 			...defaultViewProperties,
+			ui: { components },
 			...mapContainer
 		};
 		try {

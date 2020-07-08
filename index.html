@@ -19,8 +19,8 @@
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('./serviceworker.js', {
-          scope: './sw-test/'
-        })
+        scope: './sw-test/'
+      })
         .then(function (reg) {
           // registration worked
           console.log('Registration succeeded. Scope is ' + reg.scope);
@@ -31,37 +31,32 @@
     }
 
   </script>
-  <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/css/main.css">
+  <link id="esri-stylesheet" rel="stylesheet" href="https://js.arcgis.com/4.16/esri/themes/light/main.css" />
   <link rel="stylesheet" href="styles/main.css">
 
   <script src="./app/es6-promise.auto.min.js"></script>
 
   <script src="./app/dojo.js"></script>
-  <script src="https://js.arcgis.com/4.15/"></script>
+  <script src="https://js.arcgis.com/4.16/"></script>
   <script>
     require(["Application/init"]);
 
   </script>
 </head>
 
-<body class="configurable-application--loading">
+<body class="configurable-application--loading no-map">
 
   <!-- content of page -->
   <div id="appMain" class="grid-container leader-0 trailer-0 padding-left-0 padding-right-0">
     <div id="mapDescription" aria-live="polite" class="hide"></div>
     <div id="sidePanel" class="side-panel phone-column-6 tablet-column-12 column-10 padding-left-0 padding-right-0">
-      <!-- header -->
-
-      <header class="panel panel-no-padding panel-no-border app-header">
-        <div id="header"></div>
-        <div id="search"></div>
-      </header>
+      <div id="search"></div>
       <div id="infoPanel" role="main" class="panel main-map-content  panel-no-border scrollable-content">
         <div id="detailPanel" role="complementary"></div>
         <div id="distanceOptions" class="main-map-content"></div>
         <div id="resultsPanel"></div>
       </div>
-      <div id="bottomNav"></div>
+      <!-- <div id="bottomNav"></div>-->
     </div>
     <div id="mapPanel" tabindex="0"></div>
   </div>

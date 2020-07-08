@@ -1,255 +1,162 @@
 {
-  "configurationSettings": [{
-    "category": "General",
-    "fields": [{
-      "type": "itembrowser",
-      "fieldName": "webmap",
-      "conditions": ["4x"],
-      "label": "Select",
-      "itemTypes": ["Web Map"],
-      "defaultContent": true,
-      "showOnLoad": true
-    }, {
-      "type": "appproxies"
-    }, {
-      "type": "string",
-      "fieldName": "title",
-      "tooltip": "Update app title",
-      "label": "Title"
-    }, {
-      "type": "string",
-      "fieldName": "titleLink",
-      "tooltip": "Web page URL",
-      "label": "Provide a URL to open a web page when users click the title. (optional)"
-    }, {
-      "type": "string",
-      "fieldName": "detailTitle",
-      "label": "Provide a title for a section about the app (Users can close this panel.)"
-    }, {
-      "type": "string",
-      "fieldName": "detailContent",
-      "label": "Provide details to help users understand your app.",
-      "stringFieldOption": "richtext"
-    }, {
-      "type": "boolean",
-      "fieldName": "socialSharing",
-      "label": "Add social sharing buttons"
-    }]
-  }, {
-    "category": "Lookup Results",
-    "fields": [{
-        "type": "multilayerandfieldselector",
-        "fieldName": "lookupLayers",
-        "label": "Select the layers to include in the lookup results.",
-        "layerOptions": {
-          "supportedTypes": ["FeatureLayer", "MapServiceLayer"]
-        }
-      }, {
-        "type": "paragraph",
-        "value": "Check 'Group results by layer' if you have search results from multiple layers and you want them to be grouped by layer name."
+  "about": {
+    "title": {
+      "express": true,
+      "defaultValue": ""
+    },
+    "titleLink": {
+      "express": false,
+      "defaultValue": ""
+    },
+    "introductionTitle": {
+      "express": true,
+      "defaultValue": "Welcome!"
+    },
+    "introductionContent": {
+      "express": true,
+      "defaultValue": "Search for an address to learn more about the location and its surrounding area.</br>If you don't know the address, use one of these search methods: <ul><li>Click the search box and type in an address or choose <b>Use current location </b><img alt src='./assets/search-tip.png'/></li><li>Click within the map <div><img alt src='./assets/map-tip.png'/></div></li></ul></br> Results will include information about features of interest."
+    },
+    "legend": {
+      "defaultValue": false,
+      "express": false,
+      "legendPosition": {
+        "defaultValue": "top-right"
       },
-      {
-        "type": "boolean",
-        "fieldName": "groupResultsByLayer",
-        "label": "Group results by layer"
-      }, {
-        "type": "conditional",
-        "condition": false,
-        "fieldName": "searchLayerLookup",
-        "label": "By default, the app will use a point created by clicking the map or searching for an address. If your map has a polygon layer that you want to use as the search geometry, select the layer from the list.(optional)",
-        "items": [{
-          "type": "layerandfieldselector",
-          "fieldName": "searchLayer",
-          "label": "Specify search layer",
-          "layerOptions": {
-            "supportedTypes": ["FeatureLayer", "FeatureCollection"],
-            "geometryTypes": ["esriGeometryPolygon"]
-          }
-        }]
-      }, {
-        "type": "string",
-        "label": "Add custom text before the lookup results",
-        "fieldName": "resultsPanelPreText",
-        "stringFieldOption": "richtext"
-      }, {
-        "type": "string",
-        "label": "Add custom text after the lookup results",
-        "fieldName": "resultsPanelPostText",
-        "stringFieldOption": "richtext"
-      }, {
-        "type": "string",
-        "label": "Custom text to display when no results are found",
-        "fieldName": "noResultsMessage",
-        "stringFieldOption": "richtext"
+      "legendOpenAtStart": {
+        "defaultValue": false
       }
-    ]
-  }, {
-    "category": "Search",
-    "fields": [{
-      "type": "search",
-      "fieldName": "searchConfig",
-      "label": "Modify search locators used by the app (Optional)"
-    }]
-  }, {
-    "category": "Map Options",
-    "fields": [{
-      "type": "options",
-      "fieldName": "displayUnmatchedResults",
-      "label": "Choose how to display unmatched features.  These are the features that are not included in the lookup results.",
-      "options": [{
-        "label": "Grayscale",
-        "value": "gray"
-      }, {
-        "label": "Sepia",
-        "value": "sepia"
-      }, {
-        "label": "Hide",
-        "value": "hide"
-      }]
-    }, {
-      "type": "boolean",
-      "label": "Automatically zoom to the first result",
-      "fieldName": "autoZoomFirstResult"
-    }, {
-      "type": "conditional",
-      "condition": false,
-      "label": "Add map pin and/or label at the searched location",
-      "fieldName": "addMarker",
-      "items": [{
-        "type": "boolean",
-        "fieldName": "includeAddressGraphic",
-        "label": "Include a map pin on the map to show the searched address"
-      }, {
-        "type": "boolean",
-        "fieldName": "includeAddressText",
-        "label": "Include the search address as a label on the map"
-      }, {
-        "type": "color",
-        "fieldName": "addressGraphicColor",
-        "label": "Specify the color of the map pin and label"
-      }]
-    }, {
-      "type": "boolean",
-      "fieldName": "noMap",
-      "label": "Hide map in application"
-    }, {
-      "type": "boolean",
-      "fieldName": "hideLookupLayers",
-      "label": "Hide the layers when the app loads and only show when part of lookup results."
-    }, {
-      "type": "boolean",
-      "fieldName": "home",
-      "label": "Add home button"
-    }, {
-      "type": "boolean",
-      "fieldName": "zoom",
-      "label": "Add zoom buttons"
-    }, {
-      "type": "boolean",
-      "fieldName": "scalebar",
-      "label": "Add scalebar"
-    }, {
-      "type": "conditional",
-      "condition": false,
-      "fieldName": "basemapToggle",
-      "label": "Add basemap toggle button",
-      "items": [{
-        "type": "orgBasemaps",
-        "fieldName": "altBasemap",
-        "label": "Select alternate basemap"
-      }]
-    }, {
-      "type": "conditional",
-      "condition": false,
-      "fieldName": "legend",
-      "label": "Legend",
-      "items": [{
-          "type": "string",
-          "fieldName": "legendPosition",
-          "label": "Legend position",
-          "tooltip": "Configure the position of the legend tool",
-          "options": [{
-              "label": "Bottom left",
-              "value": "bottom-left"
-            },
-            {
-              "label": "Bottom right",
-              "value": "bottom-right"
-            },
-            {
-              "label": "Top left",
-              "value": "top-left"
-            },
-            {
-              "label": "Top right",
-              "value": "top-right"
-            }
-          ]
+    }
+  },
+  "themeLayout": {
+    "theme": {
+      "applySharedTheme": {
+        "defaultValue": true,
+        "express": true
+      },
+      "theme": {
+        "defaultValue": "light",
+        "express": true
+      }
+    },
+    "hideMap": {
+      "defaultValue": false,
+      "express": true
+    }
+
+  },
+  "interactivity": {
+    "exploreNavigate": {
+      "explore": {
+        "scalebar": {
+          "defaultValue": true,
+          "express": false,
+          "scalebarPosition": {
+            "defaultValue": "bottom-right"
+          }
         },
-        {
-          "type": "boolean",
-          "fieldName": "legendOpenAtStart",
-          "label": "Open legend at start"
+        "mapZoom": {
+          "defaultValue": true,
+          "express": false,
+          "mapZoomPosition": {
+            "defaultValue": "top-right"
+          }
+        },
+        "home": {
+          "defaultValue": true,
+          "express": false,
+          "homePosition": {
+            "defaultValue": "top-right"
+          }
         }
-      ]
-    }]
-  }, {
-    "category": "Theme",
-    "fields": [{
-      "type": "subcategory",
-      "label": "Change the header background and text colors (optional)"
-    }, {
-      "type": "color",
-      "fieldName": "headerBackground",
-      "label": "Header background color",
-      "sharedThemeProperty": "header.background"
-    }, {
-      "type": "color",
-      "fieldName": "headerColor",
-      "label": "Header text color",
-      "sharedThemeProperty": "header.text"
-    }, {
-      "type": "subcategory",
-      "label": "Change the button background and text colors for the Map and Info buttons that appear on phones and tablets. (optional)"
-    }, {
-      "type": "color",
-      "fieldName": "buttonBackground",
-      "label": "Button background color",
-      "sharedThemeProperty": "button.background"
-    }, {
-      "type": "color",
-      "fieldName": "buttonColor",
-      "label": "Button icon and text color",
-      "sharedThemeProperty": "button.text"
-    }]
-  }],
-  "values": {
-    "headerBackground": "#5a9359",
-    "headerColor": "#fff",
-    "buttonBackground": "#338033",
-    "buttonColor": "#fff",
-    "mapClickLookup": true,
-    "autoZoomFirstResult": true,
-    "searchLayerLookup": false,
-    "socialSharing": true,
-    "groupResultsByLayer": false,
-    "detailTitle": "Welcome!",
-    "detailContent": "Search for an address to learn more about the location and its surrounding area.</br>If you don't know the address, use one of these search methods: <ul><li>Click the search box and type in an address or choose <b>Use current location</b></li><li>Click within the map</li></ul></br> Results will include information about features of interest.",
-    "drawBuffer": false,
-    "bufferSymbolColor": "#a9a9a9",
-    "home": true,
-    "basemapToggle": false,
-    "zoom": true,
-    "legend": false,
-    "legendOpenAtStart": false,
-    "legendPosition": "top-right",
-    "scalebar": false,
-    "hideLookupLayers": false,
-    "displayUnmatchedResults": "hide",
-    "addMarker": true,
-    "includeAddressGraphic": true,
-    "includeAddressText": false,
-    "addressGraphicColor": "#828282",
-    "noMap": false
+      }
+    },
+    "modify": {
+      "modify": {
+        "mapPin": {
+          "defaultValue": true,
+          "express": "false"
+        },
+        "mapPinLabel": {
+          "express": false,
+          "defaultValue": false
+        },
+        "hideLayers": {
+          "defaultValue": false,
+          "express": false
+        },
+        "displayUnmatchedResults": {
+          "express": false
+        },
+        "basemapToggle": {
+          "defaultValue": false,
+          "express": false,
+          "basemapTogglePosition": {
+            "defaultValue": "top-right"
+          },
+          "nextBasemap": {
+            "defaultValue": null
+          }
+        }
+      }
+    },
+    "share": {
+      "share": {
+        "defaultValue": true,
+        "express": false,
+        "shareIncludeSocial": {
+          "defaultValue": true,
+          "express": false
+        }
+      }
+    },
+    "results": {
+      "results": {
+        "lookupLayers": {
+          "express": true,
+          "config": {
+            "layerSelectionMode": "multiple",
+            "supportedLayerTypes": "*",
+            "supportedGeometryTypes": "*",
+            "supportsFieldSelection": false
+          }
+        },
+        "enableSearchLayer": {
+          "express": false,
+          "searchLayer": {
+            "express": false,
+            "config": {
+              "layerSelectionMode": "single",
+              "supportedLayerTypes": "*",
+              "supportedGeometryTypes": ["esriGeometryPolygon"],
+              "supportsFieldSelection": false
+            }
+          }
+        },
+
+        "groupResultsByLayer": {
+          "defaultValue": true,
+          "express": false
+        }
+      }
+    },
+    "search": {
+      "searchConfiguration": {
+        "express": true
+      }
+    },
+    "resultsText": {
+      "resultsText": {
+        "noResultsMessage": {
+          "express": true
+        },
+        "resultsPanelPreText": {
+          "express": false
+        },
+        "resultsPanelPostText": {
+          "express": false
+        }
+      }
+    }
   }
+
 }

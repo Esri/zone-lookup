@@ -1,14 +1,9 @@
-/// <amd-dependency path="esri/core/tsSupport/declareExtendsHelper" name="__extends" />
-/// <amd-dependency path="esri/core/tsSupport/decorateHelper" name="__decorate" />
-import Accessor from "esri/core/Accessor";
-import { subclass, declared, property } from 'esri/core/accessorSupport/decorators';
+import { subclass, property } from 'esri/core/accessorSupport/decorators';
 import { ApplicationConfig } from 'ApplicationBase/interfaces';
 import Widget from "esri/widgets/Widget";
 import { accordion } from 'calcite-web/dist/js/calcite-web';
-import i18n = require('dojo/i18n!../nls/resources');
 
 import esri = __esri;
-
 
 const CSS = {
     base: 'accordion',
@@ -42,10 +37,10 @@ export interface ActionButton {
     handleClick: (name: string, graphic: esri.Graphic) => void;
 }
 @subclass('esri.widgets.Accordion')
-abstract class Accordion extends declared(Widget) {
+abstract class Accordion extends (Widget) {
 
     constructor(params?: any, parentNode?: string | Element) {
-        super();
+        super(params);
     }
     // Variables 
     _calciteLoaded: boolean = false;
@@ -72,7 +67,7 @@ abstract class Accordion extends declared(Widget) {
                 const empty = content.every((c) => {
                     if (c.type === "fields") {
                         fieldType = c as esri.FieldsContent;
-                        return fieldType.fieldInfos.length === 0 ? true : false;
+                        return fieldType?.fieldInfos?.length === 0 ? true : false;
                     } else if (c.type === "attachments") {
                         fieldType = c as esri.AttachmentsContent;
                         return !fieldType.attachmentInfos ? true : false;

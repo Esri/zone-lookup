@@ -10,8 +10,8 @@ Test apps
 
 ## Map options
 * **webmap**: Web map to display
-* **includeAddressGraphic**: Include a graphic on the map showing the search location. The graphic is a map pin,
-* **includeAddressText**: Include address text on the map showing the clicked location. 
+* **mapPin**: Include a graphic on the map showing the search location. The graphic is a map pin,
+* **mapPinLabel**: Include address text on the map showing the clicked location. 
 * **addressGraphicColor**: The color of the graphic and address text. 
 
 ## Search results panel options
@@ -26,8 +26,8 @@ Test apps
 
 ## Info Panel 
 * **socialSharing**: When true social sharing (Facebook,email and twitter) buttons are displayed at the top of the info panel. 
-* **detailTitle**: Title text displayed in bold at the top of the info panel 
-* **detailContent**: Content that displays in the description area of the info panel. Can include HTML that is supported by ArcGIS Online. 
+* **introductionTitle**: Title text displayed in bold at the top of the info panel 
+* **introductionContent**: Content that displays in the description area of the info panel. Can include HTML that is supported by ArcGIS Online. 
 
 
 ## Lookup settings

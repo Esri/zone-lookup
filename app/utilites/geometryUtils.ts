@@ -22,6 +22,8 @@
 import Graphic from 'esri/Graphic';
 import Color from 'esri/Color';
 import SpatialReference from 'esri/geometry/SpatialReference';
+import { getBackgroundColorTheme } from 'esri/views/support/colorUtils';
+
 import geometryEngine from 'esri/geometry/geometryEngine';
 import esri = __esri;
 
@@ -29,7 +31,7 @@ interface BufferParams {
 	location: esri.Geometry;
 	portal: esri.Portal;
 	distance: number;
-	unit: string;
+	unit: __esri.BufferParameters["unit"]
 }
 interface DistanceParams extends BufferParams {
 	features: Graphic[];
@@ -45,6 +47,11 @@ export function getDistances(params: DistanceParams) {
 }
 export function bufferGeometry(params: BufferParams) {
 	const { location, distance, unit } = params;
+	const bp = {
+		geometries: [location],
+		distances: [distance],
+		unit
+	}
 	const spatialReference =
 		location.spatialReference ||
 		new SpatialReference({
@@ -73,4 +80,7 @@ export function createBufferGraphic(geometry: esri.Polygon, symbolColor: string)
 		symbol: fillSymbol
 	});
 	return bufferGraphic;
+}
+export async function getBasemapTheme(view: esri.MapView): Promise<string> {
+	return await getBackgroundColorTheme(view);
 }

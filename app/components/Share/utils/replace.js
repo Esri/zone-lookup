@@ -1,6 +1,7 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.replace = void 0;
     /*
       Copyright 2019 Esri
       Licensed under the Apache License, Version 2.0 (the "License");

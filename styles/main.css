@@ -7561,6 +7561,8 @@ html[dir="rtl"] .top-nav-title {
 
 .top-nav,
 .top-nav-flex {
+  background-color: #4a4a4a;
+  color: #fff;
   overflow: hidden;
   border-bottom: none; }
 
@@ -7611,7 +7613,7 @@ html[dir="rtl"] .top-nav-title {
 
 /* Header content (Search and Title)*/
 .panel.app-header {
-  height: 88px; }
+  height: 44px; }
 
 .esri-search {
   width: auto;
@@ -7665,6 +7667,16 @@ html[dir="rtl"] .top-nav-title {
   background-color: #f8f8f8;
   font-weight: 500;
   min-height: 1.5em; }
+
+html[dir="rtl"] .group-accordion-count {
+  float: right;
+  margin-left: 0.5rem;
+  margin-right: unset; }
+
+html[dir="rtl"] .accordion-icon {
+  padding-left: unset;
+  padding-right: 0.25rem;
+  float: left; }
 
 .group-accordion-count {
   float: left;
@@ -7736,9 +7748,10 @@ ul.accordion-content {
 .accordion-section > .accordion-title > .accordion-icon > svg {
   color: #323232; }
 
-.accordion-title:focus, .accordion-title:hover {
-  outline: auto 2px Highlight;
-  outline: auto 5px -webkit-focus-ring-color; }
+.accordion-title:focus,
+.accordion-title:hover,
+#detailPanel button.detail:focus {
+  outline: auto 5px #0079c1; }
 
 p:empty {
   padding: 0; }
@@ -7758,9 +7771,6 @@ p:empty {
   right: 0;
   padding: 11.5px;
   width: 100%; }
-  .btn-open-map.btn-green {
-    background-color: #9bc19c;
-    border-color: #9bc19c; }
   .btn-open-map:hover {
     filter: brightness(120%); }
 
@@ -7814,6 +7824,10 @@ p:empty {
 .esri-ui-top-left .esri-component {
   margin-bottom: 1px; }
 
+/*Make sure expand content is on top */
+.esri-ui-corner .esri-component .esri-expand__content {
+  z-index: 4; }
+
 /* Side panel styles */
 .scrollable-content {
   height: calc(100% - 155px);
@@ -7826,7 +7840,7 @@ p:empty {
   background: inherit; }
 
 .toggle-content-tools .btn-transparent {
-  color: #005e95; }
+  color: #0079c1; }
 
 .top-nav .btn-transparent,
 .top-nav .btn-clear {
@@ -7886,14 +7900,14 @@ p:empty {
 #detailPanel .btn-transparent {
   font-size: 1.6rem;
   line-height: 1.6rem;
-  color: #338033;
+  color: #0079c1;
   cursor: pointer;
   margin: 1%;
   width: 98%;
   padding: 3px; }
 
 .btn-clear {
-  border-color: #338033; }
+  border-color: #0079c1; }
 
 /*  Range input slider customizations */
 .distance,
@@ -7919,7 +7933,7 @@ input[type="range"]::-webkit-slider-thumb {
   height: 30px;
   width: 15px;
   border-radius: 5px;
-  background: #338033;
+  background: #0079c1;
   cursor: pointer;
   -webkit-appearance: none;
   margin-top: -11px;
@@ -7941,7 +7955,7 @@ input[type="range"]::-moz-range-thumb {
   height: 30px;
   width: 15px;
   border-radius: 5px;
-  background: #338033;
+  background: #0079c1;
   cursor: pointer; }
 
 input[type="range"]::-ms-track {
@@ -7968,7 +7982,7 @@ input[type="range"]::-ms-thumb {
   height: 30px;
   width: 15px;
   border-radius: 5px;
-  background: #338033;
+  background: #0079c1;
   cursor: pointer; }
 
 input[type=range]:focus::-ms-fill-lower {
@@ -8023,7 +8037,7 @@ input[type=range]:focus::-ms-fill-upper {
   .no-map .scrollable-content {
     height: calc(100% - 110px); }
   .panel.app-header {
-    height: 85px; }
+    height: 45px; }
   .top-nav-title {
     padding-left: 10px; }
   .esri-search {
@@ -8055,3 +8069,139 @@ input[type=range]:focus::-ms-fill-upper {
     -webkit-overflow-scrolling: touch; }
   .accordion {
     width: 100%; } }
+
+.dark .side-panel {
+  background-color: #151515;
+  color: #fff; }
+
+.dark .panel {
+  background-color: #151515;
+  color: #fff; }
+
+.dark .app-header {
+  background-color: #151515; }
+
+.dark .esri-search__suggestions-menu {
+  background-color: #585656; }
+
+.dark .esri-search__input-container {
+  border-bottom: solid 1px #4a4a4a; }
+
+.dark .esri-search__form .esri-input[type="text"],
+.dark .esri-search__clear-button {
+  background-color: #484848; }
+
+.dark .esri-input[type="number"],
+.dark .esri-search__submit-button,
+.dark .esri-search__sources-button .esri-widget--button {
+  background-color: #151515; }
+
+.dark .esri-search__input::-moz-placeholder {
+  color: #fff;
+  opacity: 1; }
+
+.dark .esri-search__input:-ms-input-placeholder {
+  color: #fff; }
+
+.dark .esri-search__input::-webkit-input-placeholder {
+  color: #fff; }
+
+.dark .accordion,
+.dark .accordion-title,
+.dark .accordion-content {
+  background-color: #323232; }
+
+.dark .accordion-content {
+  border: none; }
+
+.dark .group-accordion-section.accordion-section,
+.dark .group-accordion-content li,
+.dark .accordion-section {
+  border: solid 1px #959595; }
+
+.dark .accordion-icon.group-accordion-icon,
+.dark .accordion-section > .accordion-title > .accordion-icon.group-accordion-icon > svg {
+  color: #fff; }
+
+.dark .group-accordion-section .accordion-title {
+  background-color: #2b2b2b;
+  color: #fff; }
+
+.dark .group-accordion-count {
+  background-color: #4a4a4a;
+  color: #fff;
+  border: none; }
+
+.dark .group-accordion-content,
+.dark .esri-feature,
+.dark .feature-group {
+  background-color: #323232;
+  color: #fff; }
+
+.dark #detailPanel {
+  background-color: #323232;
+  color: #fff;
+  border: none; }
+
+.dark #detailPanel.collapse {
+  filter: none; }
+
+.dark .toggle-panel {
+  background-color: #323232;
+  color: #fff; }
+
+.dark .toggle-content-tools .btn-transparent {
+  color: #fff; }
+
+.dark .esri-slider.esri-widget {
+  background: #151515; }
+
+.dark .esri-slider__thumb {
+  background-color: #0079c1; }
+
+.text-fade {
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 96%; }
+  .text-fade:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30%;
+    height: 100%;
+    background: linear-gradient(to left, #151515 40%, transparent 90%); }
+
+html[dir="rtl"] .text-fade:after {
+  right: initial;
+  left: 40px; }
+
+.dark .text-fade:after {
+  background: linear-gradient(to left, #323232 40%, transparent 90%); }
+
+html[dir="rtl"] .dark .text-fade:after {
+  background: linear-gradient(to right, #323232 40%, transparent 90%); }
+
+.light .text-fade:after {
+  background: linear-gradient(to left, #4a4a4a 40%, transparent 90%); }
+
+html[dir="rtl"] .light .text-fade:after {
+  background: linear-gradient(to right, #4a4a4a 40%, transparent 90%); }
+
+html[dir="rtl"] .top-nav-title {
+  margin-left: unset;
+  margin-right: unset; }
+
+.esri-config-panel-unsupported-browser__browser-icon-container {
+  margin-top: 15px; }
+
+.esri-config-panel-unsupported-browser__browser-icon {
+  margin: 0 10px; }
+
+.esri-config-panel-unsupported-browser__message-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 65%; }

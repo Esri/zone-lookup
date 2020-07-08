@@ -1,31 +1,9 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-define(["require", "exports", "./Accordion", "esri/core/accessorSupport/decorators", "esri/widgets/Feature", "esri/core/Handles", "esri/widgets/support/widget"], function (require, exports, Accordion_1, decorators_1, Feature_1, Handles_1, widget_1) {
+define(["require", "exports", "tslib", "./Accordion", "esri/core/accessorSupport/decorators", "esri/widgets/Feature", "esri/core/Handles", "esri/widgets/support/widget"], function (require, exports, tslib_1, Accordion_1, decorators_1, Feature_1, Handles_1, widget_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    Accordion_1 = __importDefault(Accordion_1);
-    Feature_1 = __importDefault(Feature_1);
-    Handles_1 = __importDefault(Handles_1);
+    Accordion_1 = tslib_1.__importDefault(Accordion_1);
+    Feature_1 = tslib_1.__importDefault(Feature_1);
+    Handles_1 = tslib_1.__importDefault(Handles_1);
     var CSS = {
         base: 'accordion',
         basejs: 'js-accordion',
@@ -46,14 +24,14 @@ define(["require", "exports", "./Accordion", "esri/core/accessorSupport/decorato
         actionBar: 'action-bar'
     };
     var FeatureAccordion = /** @class */ (function (_super) {
-        __extends(FeatureAccordion, _super);
+        tslib_1.__extends(FeatureAccordion, _super);
         //--------------------------------------------------------------------------
         //
         //  Public Methods
         //
         //--------------------------------------------------------------------------
         function FeatureAccordion(props) {
-            var _this = _super.call(this) || this;
+            var _this = _super.call(this, props) || this;
             //--------------------------------------------------------------------------
             //
             // Variables
@@ -151,17 +129,17 @@ define(["require", "exports", "./Accordion", "esri/core/accessorSupport/decorato
         FeatureAccordion.prototype.showToggle = function () {
             return this.features && this.features.length && this.features.length > 2;
         };
-        __decorate([
+        tslib_1.__decorate([
             decorators_1.property()
         ], FeatureAccordion.prototype, "features", void 0);
-        __decorate([
+        tslib_1.__decorate([
             decorators_1.property()
         ], FeatureAccordion.prototype, "sectionCount", void 0);
-        FeatureAccordion = __decorate([
+        FeatureAccordion = tslib_1.__decorate([
             decorators_1.subclass('app.FeatureAccordion')
         ], FeatureAccordion);
         return FeatureAccordion;
-    }(decorators_1.declared(Accordion_1.default)));
+    }((Accordion_1.default)));
     exports.default = FeatureAccordion;
 });
 //# sourceMappingURL=FeatureAccordion.js.map

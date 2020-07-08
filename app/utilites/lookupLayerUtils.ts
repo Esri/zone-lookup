@@ -24,9 +24,8 @@ import Collection = require('esri/core/Collection');
 import { ApplicationConfig } from 'ApplicationBase/interfaces';
 import FeatureFilter from 'esri/views/layers/support/FeatureFilter';
 import Graphic from 'esri/Graphic';
-import { TextSymbol } from 'esri/symbols';
-
-import promiseUtils = require('esri/core/promiseUtils');
+import FeatureLayer from 'esri/layers/FeatureLayer';
+import { resolve } from 'esri/core/promiseUtils';
 
 import esri = __esri;
 import FeatureEffect = require('esri/views/layers/support/FeatureEffect');
@@ -39,8 +38,8 @@ interface ConfigureLayerProperties {
 }
 interface LookupLayerProps {
 	view: esri.MapView;
-	lookupLayers: ConfigureLayerProperties[];
-	searchLayer: ConfigureLayerProperties;
+	lookupLayers: esri.Collection<esri.FeatureLayer>;
+	searchLayer: any;
 	hideFeaturesOnLoad: boolean;
 }
 
@@ -48,137 +47,93 @@ interface SearchGeometryProps {
 	view: esri.MapView;
 	config: ApplicationConfig;
 	searchLayer: esri.FeatureLayer;
-	results: any;
+	results?: any;
 }
 export async function getSearchLayer(props: LookupLayerProps): Promise<esri.FeatureLayer | null> {
 	const { view, searchLayer } = props;
-	let layer = null;
-	if (searchLayer && searchLayer.id) {
-		layer = view.map.findLayerById(searchLayer.id);
-		if (!layer) {
-			// do we have a substring? 
-			const lastunderscore = searchLayer.id.lastIndexOf("_");
-			if (lastunderscore !== -1) {
-				const layerId = searchLayer.id.substr(0, lastunderscore);
-				//	const subLayerId = searchLayer.id.substr(lastunderscore + 1, searchLayer.id.length);
-				layer = view.map.findLayerById(layerId);
-			}
+	const layers = searchLayer?.layers;
+	let layer = layers?.length && layers[0] || null;
+	if (layer && layer?.id) {
+		layer = view.map.findLayerById(layer.id);
+		if (layer?.type === 'feature') {
+			if (props.hideFeaturesOnLoad) hideLookuplayers([layer as esri.FeatureLayer], props.view);
+			layer = layer as esri.FeatureLayer;
+		} else {
+			layer = null;
 		}
 	}
-	if (layer && layer.type === 'feature') {
-		if (props.hideFeaturesOnLoad) hideLookuplayers([layer as esri.FeatureLayer], props.view);
-		return layer as esri.FeatureLayer;
-	} else {
-		return null;
-	}
+	return layer;
 }
-export async function getLookupLayers(props: LookupLayerProps): Promise<__esri.FeatureLayer[]> {
-	const { view, hideFeaturesOnLoad, lookupLayers } = props;
-	const searchableLayers: Collection<esri.Layer> = !lookupLayers ? view.map.layers : new Collection();
+export function getLookupLayers(lookupLayers: esri.Collection<esri.Layer>) {
+	const returnLayers: Collection<__esri.FeatureLayer> = new Collection();
 
-	const returnLayers = [];
-	// Get all the map layers
-	if (lookupLayers) {
-		// get any predefined layers otherwise we'll use all map layers
-		lookupLayers.forEach((layerItem) => {
-			if (layerItem.id) {
-				if (layerItem.type === 'DynamicLayer') {
-					const sublayerId = layerItem.id.lastIndexOf('.');
-					if (sublayerId !== -1) {
-						const id = layerItem.id.slice(0, sublayerId);
-						const layer = view.map.findLayerById(id) as esri.MapImageLayer;
-						if (layer && searchableLayers.indexOf(layer) === -1) {
-							searchableLayers.add(layer);
-						}
-					}
-				} else {
-					// feature layer
-					let layer = view.map.findLayerById(layerItem.id) as esri.FeatureLayer;
-					if (!layer) {
-						//maybe its a feature collection
-						const sublayerId = layerItem.id.lastIndexOf('_');
-						if (sublayerId !== -1) {
-							const id = layerItem.id.slice(0, sublayerId);
-							layer = view.map.findLayerById(id) as esri.FeatureLayer;
-						}
-					}
-					layer && searchableLayers.add(layer);
-				}
-			}
-		});
-	}
-	// Include the search layer in the lookup layers if specified
-	searchableLayers.forEach((layer: esri.FeatureLayer | esri.MapImageLayer) => {
-		if (layer && layer.type) {
-			if (layer.type === 'feature') {
-				const flayer = layer as esri.FeatureLayer;
-				if (flayer.popupEnabled) {
-					flayer.outFields = ["*"];
-					returnLayers.push(flayer);
-				}
-			} else if (layer.type === 'map-image') {
-				// if sub layers have been enabled during config
-				// only add those. Otherwise add all dynamic sub layers
-				const mapLayer = layer as esri.MapImageLayer;
-				const checkSubLayer = lookupLayers && lookupLayers.length && lookupLayers.length > 0 ? true : false;
-				mapLayer.sublayers &&
-					mapLayer.sublayers.forEach((sublayer) => {
-
-						if (checkSubLayer) {
-							const configId = `${sublayer.layer.id}.${sublayer.id}`;
-							lookupLayers.forEach((l) => {
-								if (l.id && l.id === configId) {
-									sublayer.createFeatureLayer().then((l: esri.FeatureLayer) => {
-										view.map.add(l);
-										returnLayers.push(l);
-									});
-									sublayer.visible = false;
-								}
-							});
-						} else {
-							sublayer.createFeatureLayer().then((l: esri.FeatureLayer) => {
-								view.map.add(l);
-								returnLayers.push(l);
-							});
-							sublayer.visible = false;
-
-						}
-					});
+	lookupLayers.forEach(layerItem => {
+		// Add feature layers to the collection 
+		if (layerItem?.type === "feature") {
+			const featureLayer = layerItem as esri.FeatureLayer;
+			if (featureLayer.popupEnabled) {
+				returnLayers.add(featureLayer);
 			}
 		}
 	});
-
-	if (hideFeaturesOnLoad) hideLookuplayers(returnLayers, props.view);
-
-	return promiseUtils.resolve(returnLayers);
+	return returnLayers;
 }
+export async function findConfiguredLookupLayers(view: esri.MapView, config: ApplicationConfig): Promise<Collection> {
+	// Find any configured layers or return all layers in the map 
+	let lookupLayers: Collection<esri.Layer> = new Collection();
+	const configuredLayers = config.lookupLayers?.layers ? config.lookupLayers.layers : null;
+
+	if (configuredLayers) {
+		// find the layers and add to the collection 
+		configuredLayers.forEach(layerItem => {
+
+			const layer = view.map.findLayerById(layerItem.id);
+			//await view.whenLayerView(layer);
+			// Get the sub layer 
+			if (layerItem.sublayerId) {
+				const dynamicLayer = layer as __esri.MapImageLayer;
+				const createdFeatureLayer = new FeatureLayer({
+					url: dynamicLayer.url + "/" + layerItem.sublayerId
+				});
+				createdFeatureLayer.visible = false;
+				view.map.add(createdFeatureLayer)
+				lookupLayers.add(createdFeatureLayer);
+			} else {
+				lookupLayers.add(layer);
+			}
+		});
+	} else {
+		lookupLayers = view.map.layers;
+	}
+	return resolve(lookupLayers);
+}
+
 export async function getSearchGeometry(props: SearchGeometryProps): Promise<esri.Graphic> {
 	const { results, view, config, searchLayer } = props;
 	const { lookupType } = config;
-
 	const graphic = _getResultGeometries(results);
 	// add marker to map
-	_addLocationGraphics(graphic, config, view);
+	//_addLocationGraphics(graphic, config, view);
 	// If it's not a geometry search or it is geometry
 	// but we don't have a search layer defined
+
 	if (lookupType !== 'geometry' || !searchLayer) {
 		let returnGraphic = graphic;
 		if (graphic.geometry && graphic.geometry.type && graphic.geometry.type === 'polygon') {
 			returnGraphic = new Graphic({ geometry: graphic.geometry.extent.center, attributes: graphic.attributes });
 		}
-		return promiseUtils.resolve(returnGraphic);
+		return resolve(returnGraphic);
 	} else {
 		// Is the source layer of the graphic equal to the search layer?
 		const sourceLayerGraphic: any = graphic && graphic.hasOwnProperty('sourceLayer') ? graphic.clone() : null;
 
-
 		if (sourceLayerGraphic.sourceLayer && sourceLayerGraphic.sourceLayer.id) {
 			if (sourceLayerGraphic.sourceLayer.id === searchLayer.id) {
 				// Is the search geometry from the search layer? If so use it
-				return promiseUtils.resolve(graphic);
+				return resolve(graphic);
 			}
 		}
-		//else {
+
 		const searchGeometry = graphic.geometry;
 		const query = searchLayer.createQuery();
 		query.geometry = searchGeometry;
@@ -189,14 +144,14 @@ export async function getSearchGeometry(props: SearchGeometryProps): Promise<esr
 		}
 
 		const results = await searchLayer.queryFeatures(query);
-		return promiseUtils.resolve(
+		return resolve(
 			results && results.features && results.features.length && results.features.length > 0
 				? results.features[0]
 				: null
 		);
 	}
 }
-function _addLocationGraphics(graphic, config, view) {
+/*function _addLocationGraphics(graphic, config, view) {
 	const { includeAddressText, addressGraphicColor, includeAddressGraphic, addMarker } = config;
 	// add a custom graphic at geocoded location if we have something to display
 	if (graphic && graphic.geometry) {
@@ -205,14 +160,14 @@ function _addLocationGraphics(graphic, config, view) {
 		let displayText = null;
 		if (graphic && includeAddressText) {
 
-			if (graphic.attributes && graphic.attributes.Match_addr) {
+			if (graphic?.attributes?.Match_addr) {
 				// replace first comma with a new line character
 				displayText = graphic.attributes.Match_addr.replace(',', '\n');
-			} else if (graphic.attributes && graphic.attributes.name) {
+			} else if (graphic?.attributes?.name) {
 				displayText = graphic.attributes.name;
-			} else if (graphic.layer && graphic.layer.displayField && graphic.layer.displayField !== '') {
+			} else if (graphic?.layer?.displayField !== '') {
 				displayText = graphic.attributes[graphic.layer.displayField] || null;
-			} else if (graphic.layer && graphic.layer.fields) {
+			} else if (graphic?.layer?.fields) {
 				// get the first string field?
 				graphic.layer.fields.some((field) => {
 					if (field.type === 'string') {
@@ -254,7 +209,7 @@ function _addLocationGraphics(graphic, config, view) {
 			);
 		}
 	}
-}
+}*/
 function _getResultGeometries(results): esri.Graphic {
 	let feature = null;
 	results.results.some((searchResults) => {

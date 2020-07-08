@@ -1,5 +1,3 @@
-/// <amd-dependency path="esri/core/tsSupport/declareExtendsHelper" name="__extends" />
-/// <amd-dependency path="esri/core/tsSupport/decorateHelper" name="__decorate" />
 
 // dojo
 import i18n = require('dojo/i18n!./Share/nls/resources');
@@ -11,7 +9,7 @@ import watchUtils = require('esri/core/watchUtils');
 import { replace } from './utils/replace';
 
 // esri.core.accessorSupport
-import { subclass, declared, property, aliasOf } from 'esri/core/accessorSupport/decorators';
+import { subclass, property, aliasOf } from 'esri/core/accessorSupport/decorators';
 
 // esri.views
 import MapView = require('esri/views/MapView');
@@ -120,7 +118,7 @@ const CSS = {
 };
 
 @subclass('Share')
-class Share extends declared(Widget) {
+class Share extends (Widget) {
 	constructor(value?: any) {
 		super(value);
 	}

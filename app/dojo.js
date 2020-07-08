@@ -26,7 +26,6 @@
     var dojoLocale = search.match(localeUrlParamRegex) ? RegExp.$1 : undefined;
     var config = {
         async: true,
-        //has: { 'esri-native-promise': true },
         locale: dojoLocale,
         packages: [
             { name: 'Application', location: distPath + "/app", main: 'Main' },
@@ -43,6 +42,7 @@
             { name: 'calcite-web', location: distPath + "/app/calcite-web" }
         ]
     };
+    window['esriConfig'] = { locale: dojoLocale };
     window['dojoConfig'] = config;
 })();
 //# sourceMappingURL=dojo.js.map

@@ -1,29 +1,7 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/core/tsSupport/decorateHelper", "esri/core/accessorSupport/decorators", "esri/widgets/Widget", "calcite-web/dist/js/calcite-web"], function (require, exports, __extends, __decorate, decorators_1, Widget_1, calcite_web_1) {
+define(["require", "exports", "tslib", "esri/core/accessorSupport/decorators", "esri/widgets/Widget", "calcite-web/dist/js/calcite-web"], function (require, exports, tslib_1, decorators_1, Widget_1, calcite_web_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    Widget_1 = __importDefault(Widget_1);
+    Widget_1 = tslib_1.__importDefault(Widget_1);
     var CSS = {
         base: 'accordion',
         basejs: 'js-accordion',
@@ -44,9 +22,9 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
         templateContent: 'template'
     };
     var Accordion = /** @class */ (function (_super) {
-        __extends(Accordion, _super);
+        tslib_1.__extends(Accordion, _super);
         function Accordion(params, parentNode) {
-            var _this = _super.call(this) || this;
+            var _this = _super.call(this, params) || this;
             // Variables 
             _this._calciteLoaded = false;
             // Properties 
@@ -66,9 +44,10 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
                 if (content.length > 0 && content[0] && content[0].type === "fields") {
                     var fieldType_1;
                     var empty = content.every(function (c) {
+                        var _a;
                         if (c.type === "fields") {
                             fieldType_1 = c;
-                            return fieldType_1.fieldInfos.length === 0 ? true : false;
+                            return ((_a = fieldType_1 === null || fieldType_1 === void 0 ? void 0 : fieldType_1.fieldInfos) === null || _a === void 0 ? void 0 : _a.length) === 0 ? true : false;
                         }
                         else if (c.type === "attachments") {
                             fieldType_1 = c;
@@ -96,23 +75,23 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
         Accordion.prototype.convertUnitText = function (distance, units) {
             return "<span class=\"distance right\">(" + distance + " " + units + ")</span>";
         };
-        __decorate([
+        tslib_1.__decorate([
             decorators_1.property()
         ], Accordion.prototype, "selectedItem", void 0);
-        __decorate([
+        tslib_1.__decorate([
             decorators_1.property()
         ], Accordion.prototype, "actionBarItems", void 0);
-        __decorate([
+        tslib_1.__decorate([
             decorators_1.property()
         ], Accordion.prototype, "view", void 0);
-        __decorate([
+        tslib_1.__decorate([
             decorators_1.property()
         ], Accordion.prototype, "config", void 0);
-        Accordion = __decorate([
+        Accordion = tslib_1.__decorate([
             decorators_1.subclass('esri.widgets.Accordion')
         ], Accordion);
         return Accordion;
-    }(decorators_1.declared(Widget_1.default)));
+    }((Widget_1.default)));
     exports.default = Accordion;
 });
 //# sourceMappingURL=Accordion.js.map

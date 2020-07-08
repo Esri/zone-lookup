@@ -1,11 +1,14 @@
 import { ApplicationConfig } from 'ApplicationBase/interfaces';
 import esri = __esri;
-
-
+import ConfigurationSettings = require('../ConfigurationSettings');
+import { init } from "esri/core/watchUtils";
+import { eachAlways } from "esri/core/promiseUtils";
+import Handles from 'esri/core/Handles';
 interface esriWidgetProps {
-	config: ApplicationConfig;
+	config: ConfigurationSettings;
 	view: esri.MapView;
 	portal: esri.Portal;
+	propertyName?: string;
 }
 export interface esriMoveWidgetProps {
 	view: esri.MapView;
@@ -14,41 +17,83 @@ export interface esriMoveWidgetProps {
 	config: ApplicationConfig;
 }
 export async function addMapComponents(props: esriWidgetProps): Promise<void> {
-	const { config, view } = props;
+	const { config } = props;
+	this._handles = new Handles();
 
-	if (config.zoom && config.zoomPosition !== 'top-left') {
-		view.ui.move('zoom', config.zoomPosition);
+	this._handles.add([init(config, ["home", "homePosition"], (newValue, oldValue, propertyName) => {
+		props.propertyName = propertyName;
+		addHome(props);
+	}),
+	init(config, ["mapZoom", "mapZoomPosition"], (newValue, oldValue, propertyName) => {
+		props.propertyName = propertyName;
+		addZoom(props);
+	}),
+	init(config, ["legend", "legendPosition", "legendOpenAtStart"], (newValue, oldValue, propertyName) => {
+		props.propertyName = propertyName;
+		addLegend(props);
+	}),
+	init(config, ["scalebar", "scalebarPosition"], (newValue, oldValue, propertyName) => {
+		props.propertyName = propertyName;
+		addScaleBar(props);
+	}),
+	init(config, ["nextBasemap", "basemapTogglePosition", "basemapToggle"], (newValue, oldValue, propertyName) => {
+		props.propertyName = propertyName;
+		addBasemap(props);
+	})], "configuration");
+	if (!config.withinConfigurationExperience) {
+		this._handles.remove("configuration");
 	}
-	if (config.home) addHome(props);
-	if (config.legend) addLegend(props);
-	if (config.scalebar) addScaleBar(props);
-	if (config.basemapToggle) addBasemap(props);
 }
-export function moveComponent(props: esriMoveWidgetProps) {
-	const mainNodes = document.getElementsByClassName(props.className);
-	let node = null;
-	for (let j = 0; j < mainNodes.length; j++) {
-		node = mainNodes[j] as HTMLElement;
+export async function addZoom(props: esriWidgetProps) {
+	const { view, config, propertyName } = props;
+	const { mapZoom, mapZoomPosition } = config;
+
+	const Zoom = await import("esri/widgets/Zoom");
+	const node = _findNode("esri-zoom");
+	if (!mapZoom) {
+		if (node) view.ui.remove(node);
+		return;
 	}
-	if (node) {
-		const direction = props.mobile ? 'manual' : props.config.legendPosition;
-		props.mobile ? node.classList.add('mobile') : node.classList.remove('mobile');
-		props.view.ui.move(node, direction);
+	if (node && !mapZoom) view.ui.remove(node);
+
+	if (propertyName === "mapZoomPosition" && node) {
+		view.ui.move(node, mapZoomPosition);
+	} else if (propertyName === "mapZoom" && !node) {
+		view.ui.add(new Zoom.default({ view }), mapZoomPosition);
 	}
 }
 export async function addBasemap(props: esriWidgetProps) {
-	const { view, config } = props;
-	const BasemapToggle = await import('esri/widgets/BasemapToggle');
-	if (BasemapToggle) {
+
+	const { view, config, propertyName } = props;
+	const { nextBasemap, basemapTogglePosition, basemapToggle } = config;
+	const BasemapToggle = await import("esri/widgets/BasemapToggle");
+	if (!BasemapToggle) return;
+	const node = _findNode("esri-basemap-toggle");
+
+	// If basemapToggle isn't enabled remove the widget if it exists and exit 
+	if (!basemapToggle) {
+		if (node) view.ui.remove(node);
+		return;
+	}
+
+	// Move the basemap toggle widget if it exists 
+	if (propertyName === "basemapTogglePosition" && node) {
+		view.ui.move(node, basemapTogglePosition);
+	}
+	// Add the basemap toggle widget if its enabled or if a different basemap was 
+	// specified
+	if (propertyName === "basemapToggle" || (propertyName === "nextBasemap" && node)) {
+		if (node) view.ui.remove(node);
+
 		const bmToggle = new BasemapToggle.default({
 			view
 		});
-		if (config.altBasemap) {
-			bmToggle.nextBasemap = await _getBasemap(config.altBasemap) as any;
-		}
-		view.ui.add(bmToggle, config.basemapTogglePosition);
+		if (nextBasemap) bmToggle.nextBasemap = (await _getBasemap(nextBasemap)) as __esri.Basemap;
+
+		view.ui.add(bmToggle, basemapTogglePosition);
 	}
 }
+
 async function _getBasemap(id: string) {
 	const Basemap = await import("esri/Basemap");
 	if (!Basemap) { return; }
@@ -65,45 +110,88 @@ async function _getBasemap(id: string) {
 	return basemap as any;
 }
 export async function addHome(props: esriWidgetProps) {
-	const { view, config } = props;
+
+	const { view, config, propertyName } = props;
+	const { home, homePosition } = config;
 	const Home = await import('esri/widgets/Home');
-	if (Home) {
-		view.ui.add(new Home.default({ view }), config.homePosition);
+	const node = _findNode("esri-home");
+	if (!home) {
+		if (node) view.ui.remove(node);
+		return;
+	}
+	if (node && !home) view.ui.remove(node);
+
+	if (propertyName === "homePosition" && node) {
+		view.ui.move(node, homePosition);
+	} else if (propertyName === "home") {
+		view.ui.add(new Home.default({ view }), homePosition);
 	}
 }
 export async function addLegend(props: esriWidgetProps) {
-	const { view, config } = props;
-	const [Legend, Expand] = await Promise.all([import('esri/widgets/Legend'), import('esri/widgets/Expand')]);
-	if (Legend && Expand) {
-		const legend = new Legend.default({
-			view,
+
+	const { view, config, propertyName } = props;
+	const { legend, legendPosition, legendOpenAtStart } = config;
+
+	const modules = await eachAlways([import("esri/widgets/Legend"), import("esri/widgets/Expand")]);
+	const [Legend, Expand] = modules.map((module) => module.value);
+	const node = view.ui.find("legendExpand") as __esri.Expand;
+
+	if (!legend) {
+		if (node) view.ui.remove(node);
+		return;
+	}
+	// move the node if it exists 
+	if (propertyName === "legendPosition" && node) {
+		view.ui.move(node, legendPosition);
+	} else if (propertyName === "legend") {
+		// TODO: Make style configurable 
+		const content = new Legend.default({
 			style: {
 				type: 'card'
-			}
-		}) as __esri.Legend;
-		const expand = new Expand.default({
-			view,
-			group: config.legendPosition,
-			mode: 'floating',
-			content: legend
-		}) as __esri.Expand;
+			},
+			view
+		});
+		const legendExpand = new Expand.default({
+			id: "legendExpand",
+			content,
+			mode: "floating",
+			group: legendPosition,
+			view
+		});
 
-		view.ui.add(expand, config.legendPosition);
-		if (config.legendOpenAtStart) {
-			expand.expand();
-		}
-		const container = expand.container as HTMLElement;
-		container.classList.add('legend-expand');
+		view.ui.add(legendExpand, legendPosition);
+	} else if (propertyName === "legendOpenAtStart" && node) {
+		node.expanded = legendOpenAtStart;
 	}
 }
 export async function addScaleBar(props: esriWidgetProps) {
-	const { view, portal, config } = props;
-	const ScaleBar = await import('esri/widgets/ScaleBar');
-	if (ScaleBar) {
-		const scalebar = new ScaleBar.default({
-			view,
-			unit: portal.units === 'metric' ? portal.units : 'non-metric'
-		});
-		view.ui.add(scalebar, config.scalebarPosition);
+
+	const { view, portal, config, propertyName } = props;
+	const { scalebar, scalebarPosition } = config;
+	const ScaleBar = await import("esri/widgets/ScaleBar");
+	const node = _findNode("esri-scale-bar");
+	if (!scalebar) {
+		if (node) view.ui.remove(node);
+		return;
 	}
+	// move the node if it exists 
+	if (propertyName === "scalebarPosition" && node) {
+		view.ui.move(node, scalebarPosition);
+	} else if (propertyName === "scalebar") {
+		view.ui.add(new ScaleBar.default({
+			view,
+			unit: portal?.units === "metric" ? portal?.units : "non-metric"
+		}), scalebarPosition);
+	}
+}
+
+function _findNode(className: string): HTMLElement {
+
+	const mainNodes = document.getElementsByClassName(className);
+	let node = null;
+	for (let j = 0; j < mainNodes.length; j++) {
+		node = mainNodes[j] as HTMLElement;
+	}
+	return node ? node : null;
+
 }

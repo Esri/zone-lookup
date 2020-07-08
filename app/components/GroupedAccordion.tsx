@@ -1,12 +1,10 @@
-/// <amd-dependency path="esri/core/tsSupport/declareExtendsHelper" name="__extends" />
-/// <amd-dependency path="esri/core/tsSupport/decorateHelper" name="__decorate" />
-import { subclass, declared, property } from 'esri/core/accessorSupport/decorators';
+
+import { subclass, property } from 'esri/core/accessorSupport/decorators';
 import { tsx } from 'esri/widgets/support/widget';
 import Feature from 'esri/widgets/Feature';
 import Handles from 'esri/core/Handles';
 import esri = __esri;
 import Accordion, { AccordionProps } from './Accordion';
-import { normalizeColor } from 'dojox/gfx';
 
 
 const CSS = {
@@ -44,7 +42,7 @@ interface GroupedAccordionProps extends AccordionProps {
 }
 
 @subclass('app.GroupedAccordion')
-class GroupedAccordion extends declared(Accordion) {
+class GroupedAccordion extends (Accordion) {
     //--------------------------------------------------------------------------
     //
     //  Properties
@@ -66,8 +64,10 @@ class GroupedAccordion extends declared(Accordion) {
     //
     //--------------------------------------------------------------------------
     constructor(props: GroupedAccordionProps) {
-        super();
+        super(props);
+        console.log("Create Grouped Accordion")
         if (props.featureResults) {
+            console.log("Create", props.featureResults)
             props.featureResults.forEach((result) => {
                 this._featureCount += result.features && result.features.length;
             });

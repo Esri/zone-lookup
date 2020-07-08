@@ -25,21 +25,42 @@ import applicationConfig = require("dojo/text!config/application.json");
 
 import ApplicationBase = require("ApplicationBase/ApplicationBase");
 
+
 import Application = require("./Main");
 import i18n = require("dojo/i18n!./nls/resources");
 import * as errorUtils from './utilites/errorUtils';
-
+import UnsupportedBrowser from "./components/unsupported/UnsupportedBrowser";
 const Main = new Application();
 new ApplicationBase({
   config: applicationConfig,
   settings: applicationBaseConfig
 })
   .load()
-  .then(base => Main.init(base), (message) => {
-    if (message === "identity-manager:not-authorized") {
-      errorUtils.displayError({
-        title: i18n.licenseError.title,
-        message: i18n.licenseError.message
+  .then(base => {
+    if (base["isIE"]) {
+      // load unsupported browser and show message 
+      new UnsupportedBrowser({
+        isIE11: base["isIE"],
+        container: document.body
       });
+
+      const container = document.getElementById("appMain");
+      if (container) {
+        container.classList.add("hide")
+      }
+      document.body.classList.remove("no-map")
+      document.body.classList.remove("configurable-application--loading")
+      return;
     }
-  });
+    Main.init(base);
+  }
+    , (message) => {
+      if (message === "identity-manager:not-authorized") {
+        errorUtils.displayError({
+          title: i18n.licenseError.title,
+          message: i18n.licenseError.message
+        });
+      }
+    });
+
+

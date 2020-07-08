@@ -1,6 +1,7 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.displayError = void 0;
     function displayError(error) {
         document.body.classList.remove("configurable-application--loading");
         document.body.classList.add("app-error");

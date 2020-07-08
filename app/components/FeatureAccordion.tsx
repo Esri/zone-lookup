@@ -1,7 +1,5 @@
 import Accordion, { AccordionProps } from './Accordion';
-/// <amd-dependency path="esri/core/tsSupport/declareExtendsHelper" name="__extends" />
-/// <amd-dependency path="esri/core/tsSupport/decorateHelper" name="__decorate" />
-import { declared, property, subclass } from 'esri/core/accessorSupport/decorators';
+import { property, subclass } from 'esri/core/accessorSupport/decorators';
 
 import Feature from 'esri/widgets/Feature';
 import Handles from 'esri/core/Handles';
@@ -40,7 +38,7 @@ interface FeatureAccordionProps extends AccordionProps {
 }
 
 @subclass('app.FeatureAccordion')
-class FeatureAccordion extends declared(Accordion) {
+class FeatureAccordion extends (Accordion) {
 	//--------------------------------------------------------------------------
 	//
 	//  Properties
@@ -64,7 +62,7 @@ class FeatureAccordion extends declared(Accordion) {
 	//
 	//--------------------------------------------------------------------------
 	constructor(props: FeatureAccordionProps) {
-		super();
+		super(props);
 	}
 	render() {
 		return (

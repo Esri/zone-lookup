@@ -41,6 +41,7 @@
     "portalUrl",
     "viewpoint",
     "legend",
+    "locale",
     "legendOpenAtStart",
     "webmap"
   ],

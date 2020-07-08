@@ -19,24 +19,34 @@
 
   limitations under the License.​
 */
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
-define(["require", "exports", "dojo/text!config/applicationBase.json", "dojo/text!config/application.json", "ApplicationBase/ApplicationBase", "./Main", "dojo/i18n!./nls/resources", "./utilites/errorUtils"], function (require, exports, applicationBaseConfig, applicationConfig, ApplicationBase, Application, i18n, errorUtils) {
+define(["require", "exports", "tslib", "dojo/text!config/applicationBase.json", "dojo/text!config/application.json", "ApplicationBase/ApplicationBase", "./Main", "dojo/i18n!./nls/resources", "./utilites/errorUtils", "./components/unsupported/UnsupportedBrowser"], function (require, exports, tslib_1, applicationBaseConfig, applicationConfig, ApplicationBase, Application, i18n, errorUtils, UnsupportedBrowser_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    errorUtils = __importStar(errorUtils);
+    errorUtils = tslib_1.__importStar(errorUtils);
+    UnsupportedBrowser_1 = tslib_1.__importDefault(UnsupportedBrowser_1);
     var Main = new Application();
     new ApplicationBase({
         config: applicationConfig,
         settings: applicationBaseConfig
     })
         .load()
-        .then(function (base) { return Main.init(base); }, function (message) {
+        .then(function (base) {
+        if (base["isIE"]) {
+            // load unsupported browser and show message 
+            new UnsupportedBrowser_1.default({
+                isIE11: base["isIE"],
+                container: document.body
+            });
+            var container = document.getElementById("appMain");
+            if (container) {
+                container.classList.add("hide");
+            }
+            document.body.classList.remove("no-map");
+            document.body.classList.remove("configurable-application--loading");
+            return;
+        }
+        Main.init(base);
+    }, function (message) {
         if (message === "identity-manager:not-authorized") {
             errorUtils.displayError({
                 title: i18n.licenseError.title,

@@ -1,79 +1,12 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-define(["require", "exports", "../utilites/geometryUtils", "esri/core/promiseUtils", "./GroupedAccordion", "esri/core/accessorSupport/decorators", "esri/widgets/support/widget", "./FeatureAccordion", "esri/views/layers/support/FeatureEffect", "esri/views/layers/support/FeatureFilter", "esri/core/Handles", "esri/tasks/support/Query", "esri/widgets/Widget", "dojo/i18n!../nls/resources"], function (require, exports, geometryUtils, promiseUtils, GroupedAccordion_1, decorators_1, widget_1, FeatureAccordion_1, FeatureEffect_1, FeatureFilter_1, Handles_1, Query_1, Widget_1, i18n) {
+define(["require", "exports", "tslib", "esri/core/accessorSupport/decorators", "esri/widgets/support/widget", "../utilites/geometryUtils", "esri/core/promiseUtils", "./GroupedAccordion", "./FeatureAccordion", "esri/views/layers/support/FeatureEffect", "esri/views/layers/support/FeatureFilter", "esri/core/Handles", "esri/tasks/support/Query", "esri/widgets/Widget", "dojo/i18n!../nls/resources"], function (require, exports, tslib_1, decorators_1, widget_1, geometryUtils_1, promiseUtils_1, GroupedAccordion_1, FeatureAccordion_1, FeatureEffect_1, FeatureFilter_1, Handles_1, Query_1, Widget_1, i18n) {
     "use strict";
-    geometryUtils = __importStar(geometryUtils);
-    promiseUtils = __importStar(promiseUtils);
-    GroupedAccordion_1 = __importDefault(GroupedAccordion_1);
-    FeatureAccordion_1 = __importDefault(FeatureAccordion_1);
-    FeatureEffect_1 = __importDefault(FeatureEffect_1);
-    FeatureFilter_1 = __importDefault(FeatureFilter_1);
-    Handles_1 = __importDefault(Handles_1);
-    Query_1 = __importDefault(Query_1);
-    Widget_1 = __importDefault(Widget_1);
+    GroupedAccordion_1 = tslib_1.__importDefault(GroupedAccordion_1);
+    FeatureAccordion_1 = tslib_1.__importDefault(FeatureAccordion_1);
+    FeatureEffect_1 = tslib_1.__importDefault(FeatureEffect_1);
+    FeatureFilter_1 = tslib_1.__importDefault(FeatureFilter_1);
+    Handles_1 = tslib_1.__importDefault(Handles_1);
+    Query_1 = tslib_1.__importDefault(Query_1);
+    Widget_1 = tslib_1.__importDefault(Widget_1);
     var CSS = {
         calciteStyles: {
             clearBtn: 'btn-transparent',
@@ -91,14 +24,20 @@ define(["require", "exports", "../utilites/geometryUtils", "esri/core/promiseUti
         toggleContentBtn: 'toggle-content-btn'
     };
     var DisplayLookupResults = /** @class */ (function (_super) {
-        __extends(DisplayLookupResults, _super);
+        tslib_1.__extends(DisplayLookupResults, _super);
         //--------------------------------------------------------------------------
         //
         //  Public Methods
         //
         //--------------------------------------------------------------------------
         function DisplayLookupResults(props) {
-            var _this = _super.call(this) || this;
+            var _this = _super.call(this, props) || this;
+            //--------------------------------------------------------------------------
+            //
+            //  Properties
+            //
+            //--------------------------------------------------------------------------
+            _this.lookupGraphics = null;
             _this.searchLayer = null;
             _this.lookupLayers = null;
             _this.state = 'init';
@@ -109,7 +48,6 @@ define(["require", "exports", "../utilites/geometryUtils", "esri/core/promiseUti
             //--------------------------------------------------------------------------
             _this._featureResults = null;
             _this._empty = true;
-            //_multipleResults: number = 0;
             _this._zoomFactor = 4;
             _this._viewPoint = null;
             _this._accordion = null;
@@ -126,8 +64,6 @@ define(["require", "exports", "../utilites/geometryUtils", "esri/core/promiseUti
                     _this._viewPoint = props.view.viewpoint.clone();
                 }));
             }
-            var distance = props.config.distance;
-            _this.distance = distance || 0;
             return _this;
         }
         DisplayLookupResults.prototype.render = function () {
@@ -137,11 +73,11 @@ define(["require", "exports", "../utilites/geometryUtils", "esri/core/promiseUti
                     i18n.load.label,
                     "..."))) : null;
             var ready = this.state === 'ready' || false;
-            var _a = this.config, resultsPanelPreText = _a.resultsPanelPreText, resultsPanelPostText = _a.resultsPanelPostText;
+            var _a = this.config, resultsPanelPreText = _a.resultsPanelPreText, resultsPanelPostText = _a.resultsPanelPostText, noResultsMessage = _a.noResultsMessage;
             // No Results 
             var errorText = null;
             if (this._empty && ready) {
-                errorText = this.config.noResultsMessage || i18n.noFeatures;
+                errorText = noResultsMessage || i18n.noFeatures;
                 if (this.mapPanel && this.mapPanel.isMobileView) {
                     // Add no results message to the map in mobile view
                     this.mapPanel.message = errorText;
@@ -162,7 +98,8 @@ define(["require", "exports", "../utilites/geometryUtils", "esri/core/promiseUti
         };
         DisplayLookupResults.prototype._addDetailAccordion = function (container) {
             var _this = this;
-            var _a = this, _featureResults = _a._featureResults, config = _a.config, view = _a.view;
+            var _a, _b;
+            var _c = this, _featureResults = _c._featureResults, config = _c.config, view = _c.view;
             var eventHandler = this._handleActionItem.bind(this);
             var actionItems = [];
             if (config.showDirections) {
@@ -174,6 +111,7 @@ define(["require", "exports", "../utilites/geometryUtils", "esri/core/promiseUti
                 });
             }
             if (this.config.groupResultsByLayer) {
+                console.log("Grouped");
                 this._accordion = new GroupedAccordion_1.default({
                     actionBarItems: actionItems,
                     featureResults: _featureResults,
@@ -185,6 +123,7 @@ define(["require", "exports", "../utilites/geometryUtils", "esri/core/promiseUti
             else if (this._featureResults && this._featureResults.length && this._featureResults.length > 0) {
                 var featureResults = _featureResults[0];
                 var features = featureResults.features ? featureResults.features : null;
+                console.log("Not Grouped");
                 this._accordion = new FeatureAccordion_1.default({
                     actionBarItems: actionItems,
                     features: features,
@@ -197,7 +136,7 @@ define(["require", "exports", "../utilites/geometryUtils", "esri/core/promiseUti
             if (this.config.autoZoomFirstResult) {
                 var features_1;
                 if (this._accordion instanceof FeatureAccordion_1.default) {
-                    features_1 = this._accordion.features.length && this._accordion.features.length > 0 ? this._accordion.features : null;
+                    features_1 = ((_b = (_a = this._accordion) === null || _a === void 0 ? void 0 : _a.features) === null || _b === void 0 ? void 0 : _b.length) > 0 ? this._accordion.features : null;
                 }
                 else if (this._accordion instanceof GroupedAccordion_1.default) {
                     this._accordion.featureResults.some(function (result) {
@@ -232,22 +171,23 @@ define(["require", "exports", "../utilites/geometryUtils", "esri/core/promiseUti
             this.distance = distance;
             this.state = 'loading';
             this.location = location;
+            this.lookupGraphics.graphic = location;
             var promises = [];
             if (!location) {
                 this.state = 'init';
                 this._featureResults = [];
-                promiseUtils.resolve();
+                promises.push(promiseUtils_1.resolve());
             }
             else {
-                this._createBuffer(location.geometry);
                 // Highlight search layer
+                this.lookupGraphics.addGraphics();
                 this._searchHighlight(location);
                 this.lookupLayers.forEach(function (layer) {
                     var query = _this._createQuery(layer, location);
                     _this._applyLayerEffectAndFilter(layer, query);
                     if (!layer) {
                         _this.state = 'init';
-                        return promiseUtils.resolve();
+                        return promiseUtils_1.resolve();
                     }
                     var performQuery = true;
                     // If the search geometry is from the lookup layer we don't
@@ -262,17 +202,19 @@ define(["require", "exports", "../utilites/geometryUtils", "esri/core/promiseUti
                         }
                     }
                     if (!performQuery) {
-                        //	this._applyLayerEffectAndFilter(layer, query);
-                        promises.push(promiseUtils.resolve({ features: [location], title: layer && layer.title ? layer.title : null, id: layer && layer.id ? layer.id : null }));
+                        promises.push(promiseUtils_1.resolve({ features: [location], title: layer && layer.title ? layer.title : null, id: layer && layer.id ? layer.id : null }));
                     }
                     else {
                         _this._applyLayerEffectAndFilter(layer, query);
                         promises.push(layer.queryFeatures(query).then(function (results) {
-                            return promiseUtils.resolve({
+                            return promiseUtils_1.resolve({
                                 features: results.features,
                                 title: layer && layer.title ? layer.title : null,
                                 id: layer && layer.id ? layer.id : null
                             });
+                        }).catch(function (error) {
+                            console.log("Error loading layer", error);
+                            return promiseUtils_1.resolve();
                         }));
                     }
                 });
@@ -281,29 +223,36 @@ define(["require", "exports", "../utilites/geometryUtils", "esri/core/promiseUti
                 _this._featureResults = [];
                 var groupResultsByLayer = _this.config.groupResultsByLayer;
                 // Loop through the feaures 
-                results.forEach(function (result) {
-                    // do we have features? 
-                    if (result.features && result.features.length && result.features.length > 0) {
-                        if (groupResultsByLayer) {
-                            _this._sortFeatures(result.features);
-                            _this._featureResults.push({
-                                title: result.title,
-                                features: result.features
-                            });
+                if (results) {
+                    results.forEach(function (result) {
+                        // do we have features?
+                        var _a;
+                        if ((result === null || result === void 0 ? void 0 : result.features) && ((_a = result.features) === null || _a === void 0 ? void 0 : _a.length) && result.features.length > 0) {
+                            if (groupResultsByLayer) {
+                                //this._sortFeatures(result.features);
+                                _this._featureResults.push({
+                                    title: result.title,
+                                    features: result.features
+                                });
+                            }
+                            else {
+                                // each feature is its own section 
+                                var features_2 = [];
+                                results.forEach(function (result) {
+                                    if (result === null || result === void 0 ? void 0 : result.features) {
+                                        features_2.push.apply(features_2, result.features);
+                                    }
+                                });
+                                //this._sortFeatures(features);
+                                _this._featureResults = [{
+                                        features: features_2,
+                                        title: null,
+                                        grouped: false
+                                    }];
+                            }
                         }
-                        else {
-                            // each feature is its own section 
-                            var features_2 = [];
-                            results.forEach(function (result) { features_2.push.apply(features_2, result.features); });
-                            _this._sortFeatures(features_2);
-                            _this._featureResults = [{
-                                    features: features_2,
-                                    title: null,
-                                    grouped: false
-                                }];
-                        }
-                    }
-                });
+                    });
+                }
                 _this._empty = _this._featureResults ? _this._featureResults.every(function (result) {
                     return result.features && result.features.length && result.features.length > 0 ? false : true;
                 }) : true;
@@ -364,30 +313,6 @@ define(["require", "exports", "../utilites/geometryUtils", "esri/core/promiseUti
                 });
             }
         };
-        DisplayLookupResults.prototype._createBuffer = function (location) {
-            return __awaiter(this, void 0, void 0, function () {
-                var _a, lookupType, drawBuffer, portal, units, bufferSymbolColor, buffer;
-                return __generator(this, function (_b) {
-                    switch (_b.label) {
-                        case 0:
-                            _a = this.config, lookupType = _a.lookupType, drawBuffer = _a.drawBuffer, portal = _a.portal, units = _a.units, bufferSymbolColor = _a.bufferSymbolColor;
-                            if (!(lookupType === 'distance' && drawBuffer)) return [3 /*break*/, 2];
-                            buffer = geometryUtils.bufferGeometry({
-                                location: location,
-                                portal: portal,
-                                distance: this.distance,
-                                unit: units
-                            });
-                            this._bufferGraphic = geometryUtils.createBufferGraphic(buffer, bufferSymbolColor);
-                            return [4 /*yield*/, this.view.graphics.add(this._bufferGraphic)];
-                        case 1:
-                            _b.sent();
-                            _b.label = 2;
-                        case 2: return [2 /*return*/];
-                    }
-                });
-            });
-        };
         DisplayLookupResults.prototype._searchHighlight = function (graphic) {
             var _this = this;
             var lookupType = this.config.lookupType;
@@ -431,7 +356,7 @@ define(["require", "exports", "../utilites/geometryUtils", "esri/core/promiseUti
                     var g = this.location.geometry;
                     location_1 = g.centroid;
                 }
-                geometryUtils.getDistances({
+                geometryUtils_1.getDistances({
                     location: location_1,
                     portal: portal,
                     distance: this.distance || 0,
@@ -452,10 +377,10 @@ define(["require", "exports", "../utilites/geometryUtils", "esri/core/promiseUti
         };
         DisplayLookupResults.prototype.clearResults = function () {
             var _this = this;
-            //const { hideLookupLayers } = this.config;
             var hideLayers = this.config.hideLookupLayers;
             this._empty = true;
-            this._bufferGraphic && this.view && this.view.graphics.remove(this._bufferGraphic);
+            this.lookupGraphics.clearGraphics();
+            //this._bufferGraphic && this.view && this.view.graphics.remove(this._bufferGraphic);
             this._accordion && this._accordion.clear();
             this.lookupLayers &&
                 this.lookupLayers.forEach(function (layer) {
@@ -534,37 +459,43 @@ define(["require", "exports", "../utilites/geometryUtils", "esri/core/promiseUti
                 elements[i].classList.remove("is-active");
             }
         };
-        __decorate([
+        tslib_1.__decorate([
+            decorators_1.property()
+        ], DisplayLookupResults.prototype, "lookupGraphics", void 0);
+        tslib_1.__decorate([
             widget_1.renderable(),
             decorators_1.property()
         ], DisplayLookupResults.prototype, "location", void 0);
-        __decorate([
+        tslib_1.__decorate([
             decorators_1.property()
         ], DisplayLookupResults.prototype, "view", void 0);
-        __decorate([
-            decorators_1.property()
+        tslib_1.__decorate([
+            decorators_1.property(),
+            widget_1.renderable(["groupResultsByLayer", "resultsPanelPostText", "resultsPanelPreText", "noResultsMessage", "autoZoomFirstResult"])
         ], DisplayLookupResults.prototype, "config", void 0);
-        __decorate([
+        tslib_1.__decorate([
             decorators_1.property()
         ], DisplayLookupResults.prototype, "mapPanel", void 0);
-        __decorate([
+        tslib_1.__decorate([
             decorators_1.property()
         ], DisplayLookupResults.prototype, "distance", void 0);
-        __decorate([
-            decorators_1.property()
+        tslib_1.__decorate([
+            decorators_1.property(),
+            widget_1.renderable()
         ], DisplayLookupResults.prototype, "searchLayer", void 0);
-        __decorate([
-            decorators_1.property()
+        tslib_1.__decorate([
+            decorators_1.property(),
+            widget_1.renderable()
         ], DisplayLookupResults.prototype, "lookupLayers", void 0);
-        __decorate([
+        tslib_1.__decorate([
             decorators_1.property(),
             widget_1.renderable()
         ], DisplayLookupResults.prototype, "state", void 0);
-        DisplayLookupResults = __decorate([
+        DisplayLookupResults = tslib_1.__decorate([
             decorators_1.subclass('app.DisplayLookupResults')
         ], DisplayLookupResults);
         return DisplayLookupResults;
-    }(decorators_1.declared(Widget_1.default)));
+    }((Widget_1.default)));
     return DisplayLookupResults;
 });
 //# sourceMappingURL=DisplayLookupResults.js.map

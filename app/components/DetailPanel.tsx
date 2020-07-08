@@ -1,17 +1,16 @@
-/// <amd-dependency path="esri/core/tsSupport/declareExtendsHelper" name="__extends" />
-/// <amd-dependency path="esri/core/tsSupport/decorateHelper" name="__decorate" />
-import { subclass, declared, property } from 'esri/core/accessorSupport/decorators';
+
+import { subclass, property } from 'esri/core/accessorSupport/decorators';
 import Widget from 'esri/widgets/Widget';
-import Accessor from 'esri/core/Accessor';
 import Share from '../components/Share/Share';
 import ShareFeatures from '../components/Share/Share/ShareFeatures';
-import watchUtils = require('esri/core/watchUtils');
-import Handles = require('esri/core/Handles');
-import { tsx } from 'esri/widgets/support/widget';
+import { whenOnce } from "esri/core/watchUtils";
+import Handles from 'esri/core/Handles';
+import { tsx, renderable } from 'esri/widgets/support/widget';
 import i18n = require('dojo/i18n!../nls/resources');
 
 import esri = __esri;
-//todo add map support button here
+import ConfigurationSettings = require('../ConfigurationSettings');
+
 type State = 'ready' | 'loading';
 
 const CSS = {
@@ -35,23 +34,21 @@ const CSS = {
 };
 
 export interface DetailPanelProps extends esri.WidgetProperties {
-	title: string;
-	content: string;
-	sharing: boolean;
+	config: ConfigurationSettings,
 	view: esri.MapView;
 }
 
 @subclass('app.DetailPanel')
-class DetailPanel extends declared(Widget) {
+class DetailPanel extends (Widget) {
 	//--------------------------------------------------------------------------
 	//
 	//  Properties
 	//
 	//--------------------------------------------------------------------------
-	@property() title: string;
 
-	@property() content: string;
-	@property() sharing: boolean;
+	@property()
+	@renderable(["introductionTitle", "introductionContent", "socialSharing"])
+	config: ConfigurationSettings;
 	@property() shareWidget: Share = null;
 	@property() view: esri.MapView = null;
 
@@ -71,13 +68,14 @@ class DetailPanel extends declared(Widget) {
 	}
 
 	constructor(props: DetailPanelProps) {
-		super();
+		super(props);
 	}
 	initialize() {
-		if (this.sharing) {
+		const { socialSharing } = this.config;
+		if (socialSharing) {
 			const setupShare = 'setup-share';
 			this._handles.add(
-				watchUtils.whenOnce(this, 'view.ready', () => {
+				whenOnce(this, 'view.ready', () => {
 					const shareFeatures = new ShareFeatures({
 						copyToClipboard: true,
 						embedMap: false
@@ -102,8 +100,11 @@ class DetailPanel extends declared(Widget) {
 	}
 
 	render() {
+		const { socialSharing, introductionContent, introductionTitle } = this.config;
+		const show = socialSharing || introductionTitle || introductionContent ? "" : "hide";
+
 		const socialShare =
-			this.sharing && this.shareWidget ? (
+			socialSharing && this.shareWidget ? (
 				<div
 					bind={this.shareWidget.container}
 					afterCreate={this._attachToNode}
@@ -111,7 +112,7 @@ class DetailPanel extends declared(Widget) {
 				/>
 			) : null;
 		return (
-			<div bind={this} class={this.classes(CSS.calciteStyles.panel, CSS.calciteStyles.panelNoPadding)}>
+			<div bind={this} class={this.classes(show, CSS.calciteStyles.panel, CSS.calciteStyles.panelNoPadding)}>
 				<button
 					bind={this}
 					aria-label={i18n.tools.info}
@@ -135,8 +136,8 @@ class DetailPanel extends declared(Widget) {
 					</svg>
 				</button>
 
-				<h3 class={this.classes(CSS.detailsTitle)}>{this.title}</h3>
-				<p class={this.classes(CSS.detailsContent)} innerHTML={this.content} />
+				<h3 class={this.classes(CSS.detailsTitle)}>{introductionTitle}</h3>
+				<p class={this.classes(CSS.detailsContent)} innerHTML={introductionContent} />
 				{socialShare}
 			</div>
 		);
