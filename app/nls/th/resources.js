@@ -23,6 +23,8 @@ define({
     "infoTip": "ดูข้อมูลเพิ่มเติม",
     "collapse": "ยุบทั้งหมด",
     "open": "เปิดทั้งหมด",
-    "slider": "ค้นหาระยะทาง"
+    "slider": "ค้นหาระยะทาง",
+    "screenshotResults": "รวมผลลัพธ์",
+    "screenshot": "จับภาพหน้าจอ"
   }
 });

@@ -10,19 +10,18 @@
   See the License for the specific language governing permissions and
   limitations under the License.​
 */
-define(["require", "exports", "tslib", "./utilites/errorUtils", "./utilites/esriWidgetUtils", "./utilites/lookupLayerUtils", "esri/core/watchUtils", "./application-base-js/support/domHelper", "./ConfigurationSettings", "./components/DetailPanel", "./components/DisplayLookupResults", "esri/Graphic", "esri/core/Handles", "./components/Header", "./components/Footer", "./components/MapPanel", "esri/widgets/Search", "telemetry/telemetry.dojo", "./components/LookupGraphics", "esri/layers/FeatureLayer", "dojo/i18n!./nls/resources"], function (require, exports, tslib_1, errorUtils_1, esriWidgetUtils_1, lookupLayerUtils_1, watchUtils_1, domHelper_1, ConfigurationSettings_1, DetailPanel_1, DisplayLookupResults_1, Graphic_1, Handles_1, Header_1, Footer_1, MapPanel_1, Search_1, telemetry_dojo_1, LookupGraphics, FeatureLayer_1, i18n) {
+define(["require", "exports", "tslib", "./utilites/errorUtils", "./utilites/esriWidgetUtils", "./utilites/lookupLayerUtils", "esri/core/watchUtils", "ApplicationBase/support/domHelper", "./ConfigurationSettings", "./components/DetailPanel", "./components/DisplayLookupResults", "esri/core/Handles", "./components/Header", "./components/Footer", "./components/MapPanel", "esri/widgets/Search", "./components/LookupGraphics", "esri/layers/FeatureLayer", "./telemetry/telemetry", "dojo/i18n!./nls/resources", "esri/core/promiseUtils", "esri/geometry/support/jsonUtils"], function (require, exports, tslib_1, errorUtils_1, esriWidgetUtils_1, lookupLayerUtils_1, watchUtils_1, domHelper_1, ConfigurationSettings_1, DetailPanel_1, DisplayLookupResults_1, Handles_1, Header_1, Footer_1, MapPanel_1, Search_1, LookupGraphics, FeatureLayer_1, telemetry_1, i18n, promiseUtils_1, jsonUtils_1) {
     "use strict";
     ConfigurationSettings_1 = tslib_1.__importDefault(ConfigurationSettings_1);
     DetailPanel_1 = tslib_1.__importDefault(DetailPanel_1);
     DisplayLookupResults_1 = tslib_1.__importDefault(DisplayLookupResults_1);
-    Graphic_1 = tslib_1.__importDefault(Graphic_1);
     Handles_1 = tslib_1.__importDefault(Handles_1);
     Header_1 = tslib_1.__importDefault(Header_1);
     Footer_1 = tslib_1.__importDefault(Footer_1);
     MapPanel_1 = tslib_1.__importDefault(MapPanel_1);
     Search_1 = tslib_1.__importDefault(Search_1);
-    telemetry_dojo_1 = tslib_1.__importDefault(telemetry_dojo_1);
     FeatureLayer_1 = tslib_1.__importDefault(FeatureLayer_1);
+    telemetry_1 = tslib_1.__importDefault(telemetry_1);
     var CSS = {
         loading: 'configurable-application--loading'
     };
@@ -34,11 +33,12 @@ define(["require", "exports", "tslib", "./utilites/errorUtils", "./utilites/esri
             //
             //--------------------------------------------------------------------------
             this._appConfig = null;
-            this.telemetry = null;
+            this._telemetry = null;
             this.searchWidget = null;
             this.mapPanel = null;
             this._detailPanel = null;
             this._handles = new Handles_1.default();
+            this.lookupGraphics = null;
             //----------------------------------
             //  ApplicationBase
             //----------------------------------
@@ -65,28 +65,10 @@ define(["require", "exports", "tslib", "./utilites/errorUtils", "./utilites/esri
             var webMapItems = results.webMapItems;
             this._createSharedTheme();
             this._appConfig = new ConfigurationSettings_1.default(config);
+            this._handleTelemetry();
             this._handles.add(watchUtils_1.init(this._appConfig, ["theme", "applySharedTheme"], function () {
                 _this.handleThemeUpdates();
             }), "configuration");
-            // Setup Telemetry
-            if (config.telemetry) {
-                var options = config.telemetry.prod;
-                if (portal.customBaseUrl.indexOf('mapsdevext') !== -1) {
-                    // use devext credentials
-                    options = config.telemetry.devext;
-                }
-                else if (portal.customBaseUrl.indexOf('mapsqa') !== -1) {
-                    // or qa
-                    options = config.telemetry.qaext;
-                }
-                this.telemetry = new telemetry_dojo_1.default({
-                    portal: portal,
-                    disabled: options.disabled,
-                    debug: options.debug,
-                    amazon: options.amazon
-                });
-                this.telemetry.logPageView();
-            }
             // Get web map
             var allItems = webMapItems.map(function (item) {
                 return item;
@@ -105,9 +87,6 @@ define(["require", "exports", "tslib", "./utilites/errorUtils", "./utilites/esri
                     title: 'Error',
                     message: error
                 });
-                this.telemetry.logError({
-                    error: error
-                });
                 return;
             }
             this.mapPanel = new MapPanel_1.default({
@@ -125,11 +104,16 @@ define(["require", "exports", "tslib", "./utilites/errorUtils", "./utilites/esri
                         _this._displayResults(_this._results);
                     }
                 }), "configuration");
-                _this._addHeader(item);
-                _this._addDetails();
-                _this._addFooter();
-                _this.view.popup = null;
+                _this.view.when(function () {
+                    _this._addHeader(item);
+                    _this._addDetails();
+                    _this._addFooter();
+                    _this.view.popup = null;
+                });
                 document.body.classList.remove(CSS.loading);
+                _this._handles.add(watchUtils_1.init(_this._appConfig, "customCSS", function (newValue, oldValue, propertyName) {
+                    _this._handleCustomCSS();
+                }));
                 _this._addWidgets();
             });
         };
@@ -183,7 +167,7 @@ define(["require", "exports", "tslib", "./utilites/errorUtils", "./utilites/esri
             });
         };
         LocationApp.prototype._addHeader = function (item) {
-            this._appConfig.title = this._appConfig.title || item.title;
+            this._appConfig.title = this._appConfig.title || item.title || null;
             var headerComponent = new Header_1.default({
                 config: this._appConfig,
                 container: document.createElement("div")
@@ -193,220 +177,297 @@ define(["require", "exports", "tslib", "./utilites/errorUtils", "./utilites/esri
         };
         LocationApp.prototype._addWidgets = function () {
             return tslib_1.__awaiter(this, void 0, void 0, function () {
-                return tslib_1.__generator(this, function (_a) {
-                    // Add esri widgets to the app (legend, home etc)
-                    esriWidgetUtils_1.addMapComponents({
-                        view: this.view,
-                        config: this._appConfig,
-                        portal: this.base.portal
-                    });
-                    this._setupFeatureSearchType();
-                    return [2 /*return*/];
-                });
-            });
-        };
-        LocationApp.prototype._setupFeatureSearchType = function () {
-            return tslib_1.__awaiter(this, void 0, void 0, function () {
-                var config, lookupGraphics, configuredLayers, lookupLayers, lookupProps, searchLayer;
                 var _this = this;
                 return tslib_1.__generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0:
-                            config = this.base.config;
-                            // Determine search lookup type
-                            if (!config.enableSearchLayer) {
-                                this.base.config.searchLayer = null;
-                            }
-                            lookupGraphics = new LookupGraphics({
-                                view: this.view,
-                                config: this._appConfig
-                            });
-                            this._handles.add(watchUtils_1.init(this._appConfig, ["drawBuffer", "mapPinLabel", "mapPin"], function (value, oldValue, propertyName) {
-                                lookupGraphics.updateGraphics(propertyName, value);
-                            }), "configuration");
-                            return [4 /*yield*/, lookupLayerUtils_1.findConfiguredLookupLayers(this.view, config)];
+                        case 0: return [4 /*yield*/, this.view.when()];
                         case 1:
-                            configuredLayers = _a.sent();
-                            lookupLayers = lookupLayerUtils_1.getLookupLayers(configuredLayers);
-                            lookupProps = {
-                                config: config,
+                            _a.sent();
+                            // Add esri widgets to the app (legend, home etc)
+                            esriWidgetUtils_1.addMapComponents({
                                 view: this.view,
-                                lookupLayers: lookupLayers,
-                                searchLayer: this._appConfig.enableSearchLayer && this._appConfig.searchLayer ? this._appConfig.searchLayer : null,
-                                hideFeaturesOnLoad: this._appConfig.hideLookupLayers
-                            };
-                            return [4 /*yield*/, lookupLayerUtils_1.getSearchLayer(lookupProps)];
-                        case 2:
-                            searchLayer = _a.sent();
-                            this.lookupResults = new DisplayLookupResults_1.default({
-                                lookupLayers: lookupLayers,
-                                lookupGraphics: lookupGraphics,
-                                searchLayer: searchLayer,
                                 config: this._appConfig,
-                                view: this.view,
-                                mapPanel: this.mapPanel,
-                                container: 'resultsPanel'
+                                portal: this.base.portal
                             });
-                            this._handles.add(watchUtils_1.watch(this._appConfig, ["lookupLayers", "enableSearchLayer", "searchLayer"], function (value, oldValue, propertyName) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
-                                var configuredLayers_1, _a, searchLayer_1;
-                                return tslib_1.__generator(this, function (_b) {
-                                    switch (_b.label) {
-                                        case 0:
-                                            if (!(propertyName === "lookupLayers")) return [3 /*break*/, 3];
-                                            // Lookup layers have been modified. Update results to 
-                                            // only show included layers 
-                                            config.lookupLayers = value;
-                                            return [4 /*yield*/, lookupLayerUtils_1.findConfiguredLookupLayers(this.view, config)];
-                                        case 1:
-                                            configuredLayers_1 = _b.sent();
-                                            _a = this.lookupResults;
-                                            return [4 /*yield*/, lookupLayerUtils_1.getLookupLayers(configuredLayers_1)];
-                                        case 2:
-                                            _a.lookupLayers = _b.sent();
-                                            if (this._results)
-                                                this._displayResults(this._results);
-                                            _b.label = 3;
-                                        case 3:
-                                            if (!(propertyName === "searchLayer" || propertyName === "enableSearchLayer")) return [3 /*break*/, 6];
-                                            searchLayer_1 = null;
-                                            if (!(propertyName === "enableSearchLayer")) return [3 /*break*/, 5];
-                                            return [4 /*yield*/, lookupLayerUtils_1.getSearchLayer({
-                                                    view: this.view,
-                                                    lookupLayers: lookupLayers,
-                                                    searchLayer: value,
-                                                    hideFeaturesOnLoad: this._appConfig.hideLookupLayers
-                                                })];
-                                        case 4:
-                                            searchLayer_1 = _b.sent();
-                                            _b.label = 5;
-                                        case 5:
-                                            this.lookupResults.searchLayer = searchLayer_1;
-                                            if (this._results)
-                                                this._displayResults(this._results);
-                                            _b.label = 6;
-                                        case 6: return [2 /*return*/];
+                            this._handles.add(watchUtils_1.init(this._appConfig, "extentSelector, extentSelectorConfig", function (value, oldValue, propertyName) {
+                                var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+                                if (((_a = _this._appConfig) === null || _a === void 0 ? void 0 : _a.extentSelector) && ((_b = _this._appConfig) === null || _b === void 0 ? void 0 : _b.extentSelectorConfig)) {
+                                    var constraints = ((_c = _this._appConfig) === null || _c === void 0 ? void 0 : _c.extentSelectorConfig) || null;
+                                    var geometry = constraints === null || constraints === void 0 ? void 0 : constraints.geometry;
+                                    if (geometry) {
+                                        var extent_1 = jsonUtils_1.fromJSON(geometry);
+                                        if (extent_1 && ((extent_1 === null || extent_1 === void 0 ? void 0 : extent_1.type) === "extent" || (extent_1 === null || extent_1 === void 0 ? void 0 : extent_1.type) === "polygon")) {
+                                            constraints.geometry = extent_1;
+                                            _this.view.goTo(extent_1, false).catch(function () { });
+                                            (_f = (_e = (_d = _this.searchWidget) === null || _d === void 0 ? void 0 : _d.viewModel) === null || _e === void 0 ? void 0 : _e.allSources) === null || _f === void 0 ? void 0 : _f.forEach(function (source) {
+                                                source.filter = {
+                                                    geometry: extent_1
+                                                };
+                                            });
+                                        }
                                     }
-                                });
-                            }); }), "configuration");
-                            this._addSearchWidget();
-                            this._cleanUpHandles();
+                                    else {
+                                        constraints.geometry = null;
+                                        (_j = (_h = (_g = _this.searchWidget) === null || _g === void 0 ? void 0 : _g.viewModel) === null || _h === void 0 ? void 0 : _h.allSources) === null || _j === void 0 ? void 0 : _j.forEach(function (source) {
+                                            source.filter = null;
+                                        });
+                                    }
+                                    _this.view.constraints = constraints;
+                                }
+                                else {
+                                    _this.view.constraints.geometry = null;
+                                    _this.view.constraints.minZoom = -1;
+                                    _this.view.constraints.maxZoom = -1;
+                                    _this.view.constraints.minScale = 0;
+                                    _this.view.constraints.maxScale = 0;
+                                    (_k = _this === null || _this === void 0 ? void 0 : _this.mapPanel) === null || _k === void 0 ? void 0 : _k.resetExtent();
+                                }
+                            }), "configuration");
+                            this._setupFeatureSearchType();
                             return [2 /*return*/];
                     }
                 });
             });
         };
-        LocationApp.prototype._addSearchWidget = function () {
-            var _this = this;
-            var _a;
-            var _b = this._appConfig, searchConfiguration = _b.searchConfiguration, find = _b.find, findSource = _b.findSource;
-            var sources = searchConfiguration === null || searchConfiguration === void 0 ? void 0 : searchConfiguration.sources;
-            if (sources) {
-                sources.forEach(function (source) {
-                    var _a, _b;
-                    if ((_a = source === null || source === void 0 ? void 0 : source.layer) === null || _a === void 0 ? void 0 : _a.url) {
-                        source.layer = new FeatureLayer_1.default((_b = source === null || source === void 0 ? void 0 : source.layer) === null || _b === void 0 ? void 0 : _b.url);
+        LocationApp.prototype._setupFeatureSearchType = function () {
+            return tslib_1.__awaiter(this, void 0, void 0, function () {
+                var config, lookupProps, searchLayer;
+                var _this = this;
+                return tslib_1.__generator(this, function (_a) {
+                    config = this.base.config;
+                    // Determine search lookup type
+                    if (!config.enableSearchLayer) {
+                        this.base.config.searchLayer = null;
                     }
-                });
-            }
-            var searchProperties = tslib_1.__assign({
-                view: this.view,
-                resultGraphicEnabled: false,
-                autoSelect: false,
-                popupEnabled: false,
-                container: "search"
-            }, searchConfiguration);
-            if (((_a = searchProperties === null || searchProperties === void 0 ? void 0 : searchProperties.sources) === null || _a === void 0 ? void 0 : _a.length) > 0) {
-                searchProperties.includeDefaultSources = false;
-            }
-            this.searchWidget = new Search_1.default(searchProperties);
-            this._handles.add(watchUtils_1.init(this._appConfig, ["searchConfiguration.sources", "searchConfiguration.activeSourceIndex", "searchConfiguration.searchAllEnabled"], function (value, oldValue, propertyName) {
-                if (propertyName === "searchConfiguration.activeSourceIndex") {
-                    _this.searchWidget.activeSourceIndex = value;
-                }
-                if (propertyName === "searchConfiguration.searchAllEnabled") {
-                    _this.searchWidget.searchAllEnabled = value;
-                }
-                if (propertyName === "searchConfiguration.sources") {
-                    if (value) {
-                        value.forEach(function (source) {
-                            var _a, _b;
-                            if ((_a = source === null || source === void 0 ? void 0 : source.layer) === null || _a === void 0 ? void 0 : _a.url) {
-                                source.layer = new FeatureLayer_1.default((_b = source === null || source === void 0 ? void 0 : source.layer) === null || _b === void 0 ? void 0 : _b.url);
+                    this.lookupGraphics = new LookupGraphics({
+                        view: this.view,
+                        config: this._appConfig
+                    });
+                    this._handles.add(watchUtils_1.init(this._appConfig, ["drawBuffer", "mapPinLabel", "mapPin"], function (value, oldValue, propertyName) {
+                        _this.lookupGraphics.updateGraphics(propertyName, value);
+                    }), "configuration");
+                    lookupProps = {
+                        config: config,
+                        view: this.view,
+                        searchLayer: this._appConfig.enableSearchLayer && this._appConfig.searchLayer ? this._appConfig.searchLayer : null,
+                        hideFeaturesOnLoad: this._appConfig.hideLookupLayers
+                    };
+                    searchLayer = lookupLayerUtils_1.getSearchLayer(lookupProps);
+                    this.lookupResults = new DisplayLookupResults_1.default({
+                        lookupGraphics: this.lookupGraphics,
+                        searchLayer: searchLayer,
+                        config: this._appConfig,
+                        view: this.view,
+                        mapPanel: this.mapPanel,
+                        container: 'resultsPanel'
+                    });
+                    this._handles.add(watchUtils_1.init(this._appConfig, ["lookupLayers", "enableSearchLayer", "searchLayer"], function (value, oldValue, propertyName) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+                        var parsedLayers, lookupLayers, searchLayer_1;
+                        var _a;
+                        return tslib_1.__generator(this, function (_b) {
+                            switch (_b.label) {
+                                case 0:
+                                    if (!(propertyName === "lookupLayers")) return [3 /*break*/, 2];
+                                    // Lookup layers have been modified. Update results to 
+                                    // only show included layers 
+                                    config.lookupLayers = value;
+                                    parsedLayers = ((_a = this._appConfig.lookupLayers) === null || _a === void 0 ? void 0 : _a.layers) ? this._appConfig.lookupLayers.layers : null;
+                                    if (!Array.isArray(parsedLayers) || !parsedLayers.length) {
+                                        parsedLayers = null;
+                                    }
+                                    return [4 /*yield*/, lookupLayerUtils_1.getLookupLayers({
+                                            view: this.view,
+                                            lookupLayers: parsedLayers,
+                                            hideFeaturesOnLoad: this._appConfig.hideLookupLayers
+                                        })];
+                                case 1:
+                                    lookupLayers = _b.sent();
+                                    this.lookupResults.lookupLayers = lookupLayers;
+                                    if (this._results)
+                                        this._displayResults(this._results);
+                                    _b.label = 2;
+                                case 2:
+                                    if (propertyName === "searchLayer" || propertyName === "enableSearchLayer") {
+                                        searchLayer_1 = lookupLayerUtils_1.getSearchLayer({
+                                            view: this.view,
+                                            searchLayer: this._appConfig.searchLayer,
+                                            hideFeaturesOnLoad: this._appConfig.hideLookupLayers
+                                        });
+                                        //}
+                                        this.lookupResults.searchLayer = this._appConfig.enableSearchLayer && searchLayer_1 ? searchLayer_1 : null;
+                                        if (this._results)
+                                            this._displayResults(this._results);
+                                    }
+                                    return [2 /*return*/];
                             }
                         });
-                    }
-                    _this.searchWidget.sources = value;
-                }
-            }), "configuration");
-            // If there's a find url param search for it
-            if (find) {
-                watchUtils_1.whenFalseOnce(this.view, "updating", function () {
-                    _this.searchWidget.viewModel.searchTerm = decodeURIComponent(find);
-                    if (findSource) {
-                        _this.searchWidget.activeSourceIndex = findSource;
-                    }
-                    _this.searchWidget.viewModel.search();
-                });
-            }
-            var handle = this.searchWidget.viewModel.watch('state', function (state) {
-                if (state === 'ready') {
-                    handle.remove();
-                    // conditionally hide on tablet
-                    if (!_this.view.container.classList.contains('tablet-show')) {
-                        _this.view.container.classList.add('tablet-hide');
-                    }
-                    // force search within map if nothing is configured
-                    if (!searchConfiguration) {
-                        _this.searchWidget.viewModel.allSources.forEach(function (source) {
-                            source.withinViewEnabled = true;
-                        });
-                    }
-                }
-            });
-            this.searchWidget.on('search-clear', function () {
-                _this._cleanUpResults();
-                // Remove find url param
-                _this._updateUrlParam();
-                _this.mapPanel.resetExtent();
-            });
-            this.searchWidget.on('search-complete', function (results) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
-                return tslib_1.__generator(this, function (_a) {
-                    this._displayResults(results);
+                    }); }), "configuration");
+                    // need to make sure layers are loaded before search
+                    this._addSearchWidget();
+                    this._cleanUpHandles();
                     return [2 /*return*/];
                 });
-            }); });
-            // We also want to search for locations when users click on the map
-            this.view.on('click', function (e) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+            });
+        };
+        LocationApp.prototype._addSearchWidget = function () {
+            var _a;
+            return tslib_1.__awaiter(this, void 0, void 0, function () {
+                var _b, searchConfiguration, extentSelector, extentSelectorConfig, sources, searchProperties, handle;
                 var _this = this;
-                var _a, _b;
                 return tslib_1.__generator(this, function (_c) {
-                    if ((_b = (_a = this.base) === null || _a === void 0 ? void 0 : _a.config) === null || _b === void 0 ? void 0 : _b.searchLayer) {
-                        this._cleanUpResults();
+                    _b = this._appConfig, searchConfiguration = _b.searchConfiguration, extentSelector = _b.extentSelector, extentSelectorConfig = _b.extentSelectorConfig;
+                    sources = searchConfiguration === null || searchConfiguration === void 0 ? void 0 : searchConfiguration.sources;
+                    if (sources) {
+                        sources.forEach(function (source) {
+                            var _a, _b, _c;
+                            var sourceLayer = null;
+                            if ((_a = source === null || source === void 0 ? void 0 : source.layer) === null || _a === void 0 ? void 0 : _a.id)
+                                sourceLayer = _this.view.map.findLayerById(source.layer.id);
+                            if (!sourceLayer && ((_b = source === null || source === void 0 ? void 0 : source.layer) === null || _b === void 0 ? void 0 : _b.url))
+                                sourceLayer = new FeatureLayer_1.default((_c = source === null || source === void 0 ? void 0 : source.layer) === null || _c === void 0 ? void 0 : _c.url);
+                            source.layer = sourceLayer;
+                        });
                     }
-                    this.searchWidget.search(e.mapPoint).then(function (response) {
-                        if (response && response.numResults < 1) {
-                            _this._displayNoResultsMessage(e.mapPoint);
-                        }
-                        if (response && response.numErrors && response.numErrors > 0) {
-                            _this._displayNoResultsMessage(e.mapPoint);
+                    searchProperties = tslib_1.__assign({
+                        view: this.view,
+                        resultGraphicEnabled: false,
+                        autoSelect: false,
+                        popupEnabled: false,
+                        container: "search"
+                    }, searchConfiguration);
+                    if (((_a = searchProperties === null || searchProperties === void 0 ? void 0 : searchProperties.sources) === null || _a === void 0 ? void 0 : _a.length) > 0) {
+                        searchProperties.includeDefaultSources = false;
+                    }
+                    this.searchWidget = new Search_1.default(searchProperties);
+                    handle = this.searchWidget.viewModel.watch('state', function (state) {
+                        if (state === 'ready') {
+                            _this._handles.add(watchUtils_1.init(_this._appConfig, ["searchConfiguration.sources", "searchConfiguration.activeSourceIndex", "searchConfiguration.searchAllEnabled"], function (value, oldValue, propertyName) {
+                                if (propertyName === "searchConfiguration.activeSourceIndex") {
+                                    _this.searchWidget.activeSourceIndex = value;
+                                }
+                                if (propertyName === "searchConfiguration.searchAllEnabled") {
+                                    _this.searchWidget.searchAllEnabled = value;
+                                }
+                                if (propertyName === "searchConfiguration.sources") {
+                                    if (value) {
+                                        value.forEach(function (source) {
+                                            var _a, _b;
+                                            if ((_a = source === null || source === void 0 ? void 0 : source.layer) === null || _a === void 0 ? void 0 : _a.url) {
+                                                source.layer = new FeatureLayer_1.default((_b = source === null || source === void 0 ? void 0 : source.layer) === null || _b === void 0 ? void 0 : _b.url);
+                                            }
+                                        });
+                                    }
+                                    _this.searchWidget.sources = value;
+                                }
+                            }), "configuration");
+                            // If there's a find url param search for it
+                            watchUtils_1.init(_this._appConfig, ["find", "findSource"], function () {
+                                var _a;
+                                var _b = _this._appConfig, find = _b.find, findSource = _b.findSource;
+                                if (find) {
+                                    if (!((_a = _this.searchWidget) === null || _a === void 0 ? void 0 : _a.viewModel))
+                                        return;
+                                    _this.searchWidget.viewModel.searchTerm = decodeURIComponent(find);
+                                    if (findSource) {
+                                        _this.searchWidget.activeSourceIndex = findSource;
+                                    }
+                                    _this.searchWidget.viewModel.search();
+                                }
+                            });
+                            _this.searchWidget.on('search-clear', function () {
+                                _this._cleanUpResults();
+                                // Remove find url param
+                                _this._updateUrlParam();
+                                _this.mapPanel.resetExtent();
+                            });
+                            _this.searchWidget.on('search-complete', function (results) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+                                return tslib_1.__generator(this, function (_a) {
+                                    this._displayResults(results);
+                                    return [2 /*return*/];
+                                });
+                            }); });
+                            // We also want to search for locations when users click on the map
+                            _this.view.on('click', function (e) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+                                var _a, _b;
+                                return tslib_1.__generator(this, function (_c) {
+                                    if ((_b = (_a = this.base) === null || _a === void 0 ? void 0 : _a.config) === null || _b === void 0 ? void 0 : _b.searchLayer) {
+                                        this._cleanUpResults();
+                                    }
+                                    this.searchWidget.search(e.mapPoint);
+                                    return [2 /*return*/];
+                                });
+                            }); });
+                            handle.remove();
+                            // conditionally hide on tablet
+                            if (!_this.view.container.classList.contains('tablet-show')) {
+                                _this.view.container.classList.add('tablet-hide');
+                            }
+                            // force search within map if nothing is configured
+                            if (extentSelector) {
+                                var geometry = (extentSelectorConfig === null || extentSelectorConfig === void 0 ? void 0 : extentSelectorConfig.geometry) || null;
+                                if (geometry) {
+                                    var extent_2 = jsonUtils_1.fromJSON(geometry);
+                                    if (extent_2 && ((extent_2 === null || extent_2 === void 0 ? void 0 : extent_2.type) === "extent" || (extent_2 === null || extent_2 === void 0 ? void 0 : extent_2.type) === "polygon")) {
+                                        _this.searchWidget.viewModel.allSources.forEach(function (source) {
+                                            source.filter = {
+                                                geometry: extent_2
+                                            };
+                                        });
+                                    }
+                                }
+                            }
+                            else if (!searchConfiguration) {
+                                _this.searchWidget.viewModel.allSources.forEach(function (source) {
+                                    source.withinViewEnabled = true;
+                                });
+                            }
                         }
                     });
                     return [2 /*return*/];
                 });
-            }); });
+            });
         };
-        LocationApp.prototype._displayNoResultsMessage = function (geometry) {
-            // display no results message
-            var g = new Graphic_1.default({ geometry: geometry });
-            this._generateSearchResults(g);
-            this.searchWidget.activeMenu = null;
+        LocationApp.prototype.createTelemetry = function () {
+            var _a;
+            return tslib_1.__awaiter(this, void 0, void 0, function () {
+                var portal, _b;
+                return tslib_1.__generator(this, function (_c) {
+                    switch (_c.label) {
+                        case 0:
+                            portal = this.base.portal;
+                            _b = this;
+                            return [4 /*yield*/, telemetry_1.default.init({ portal: portal, config: this._appConfig, appName: "config-demo" })];
+                        case 1:
+                            _b._telemetry = _c.sent();
+                            (_a = this._telemetry) === null || _a === void 0 ? void 0 : _a.logPageView();
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        LocationApp.prototype._handleTelemetry = function () {
+            var _this = this;
+            // Wait until both are defined 
+            promiseUtils_1.eachAlways([watchUtils_1.whenDefinedOnce(this._appConfig, "googleAnalytics"),
+                watchUtils_1.whenDefinedOnce(this._appConfig, "googleAnalyticsKey")]).then(function () {
+                _this.createTelemetry();
+                _this._handles.add([
+                    watchUtils_1.watch(_this._appConfig, ["googleAnalytics", "googleAnalyticsKey"], function (newValue, oldValue, propertyName) {
+                        _this.createTelemetry();
+                    }),
+                ], "configuration");
+            });
         };
         LocationApp.prototype._generateSearchResults = function (location) {
+            var _a, _b;
             return tslib_1.__awaiter(this, void 0, void 0, function () {
-                return tslib_1.__generator(this, function (_a) {
+                return tslib_1.__generator(this, function (_c) {
                     // collapse the detail panel when results are found
                     if (this._detailPanel) {
                         this._detailPanel.collapse();
+                    }
+                    if (((_a = location === null || location === void 0 ? void 0 : location.attributes) === null || _a === void 0 ? void 0 : _a.length) === 0 && ((_b = this === null || this === void 0 ? void 0 : this.searchWidget) === null || _b === void 0 ? void 0 : _b.searchTerm)) {
+                        location.attributes.Match_addr = this.searchWidget.searchTerm;
                     }
                     this.lookupResults && this.lookupResults.queryFeatures(location, 0);
                     return [2 /*return*/];
@@ -414,11 +475,11 @@ define(["require", "exports", "tslib", "./utilites/errorUtils", "./utilites/esri
             });
         };
         LocationApp.prototype._displayResults = function (results) {
-            var _a, _b;
+            var _a;
             return tslib_1.__awaiter(this, void 0, void 0, function () {
-                var index, searchLayer, feature;
-                return tslib_1.__generator(this, function (_c) {
-                    switch (_c.label) {
+                var index, feature;
+                return tslib_1.__generator(this, function (_b) {
+                    switch (_b.label) {
                         case 0:
                             this._results = results;
                             if (!((_a = this.base.config) === null || _a === void 0 ? void 0 : _a.searchLayer)) {
@@ -426,19 +487,23 @@ define(["require", "exports", "tslib", "./utilites/errorUtils", "./utilites/esri
                             }
                             if (!(results.numResults > 0)) return [3 /*break*/, 2];
                             this._results = results;
+                            // Add find url param
+                            if (this._appConfig.mapPin || this._appConfig.mapPinLabel) {
+                                this.lookupGraphics.updateGraphics("mapPin", this._appConfig.mapPin);
+                                this.lookupGraphics.updateGraphics("mapPinLabel", this._appConfig.mapPinLabel);
+                            }
                             index = results && results.activeSourceIndex ? results.activeSourceIndex : null;
                             this._updateUrlParam(encodeURIComponent(this.searchWidget.searchTerm), index);
-                            searchLayer = ((_b = this.lookupResults) === null || _b === void 0 ? void 0 : _b.searchLayer) || null;
                             return [4 /*yield*/, lookupLayerUtils_1.getSearchGeometry({
-                                    searchLayer: searchLayer,
+                                    searchLayer: this.lookupResults.searchLayer || null,
                                     config: this._appConfig,
                                     view: this.view,
                                     results: results
                                 })];
                         case 1:
-                            feature = _c.sent();
+                            feature = _b.sent();
                             this._generateSearchResults(feature);
-                            _c.label = 2;
+                            _b.label = 2;
                         case 2: return [2 /*return*/];
                     }
                 });
@@ -481,7 +546,7 @@ define(["require", "exports", "tslib", "./utilites/errorUtils", "./utilites/esri
             var styles = [];
             // Build and insert style
             if (header === null || header === void 0 ? void 0 : header.background)
-                styles.push(".shared-theme .app-header{\n\t\t\tbackground:" + header.background + ";\n\t\t}\n\t\t.shared-theme .text-fade:after {\n\t\t\tbackground: linear-gradient(to left, " + header.background + ", 40%, transparent 100%);\n\t\t  }\n\t\t  html[dir=\"rtl\"] .light .text-fade:after {\n\t\t\tbackground: linear-gradient(to right, " + header.background + ", 40%, transparent 100%);\n\t\t  }\n\t\t");
+                styles.push(".shared-theme .app-header{\n\t\t\tbackground:" + header.background + ";\n\t\t}\n\t\t.shared-theme .text-fade:after, .shared-theme .light .text-fade:after, .shared-theme .dark .text-fade:after {\n\t\t\tbackground: linear-gradient(to left, " + header.background + ", 40%, transparent 80%);\n\t\t  }\n\t\t  html[dir=\"rtl\"] .shared-theme .text-fade:before, .shared-theme .light .text-fade:before,  .shared-theme .dark .text-fade:after {\n\t\t\tbackground: linear-gradient(to right, " + header.background + ", 40%, transparent 80%);\n\t\t  }\n\t\t");
             if (header === null || header === void 0 ? void 0 : header.text)
                 styles.push(".shared-theme .app-header a{\n\t\t\tcolor:" + header.text + ";\n\t\t} \n\t\t.shared-theme .app-header{\n\t\t\tcolor:" + header.text + ";\n\t\t} \n\t\t.shared-theme .toolbar-buttons{color:" + header.text + "}");
             if (button === null || button === void 0 ? void 0 : button.background)
@@ -507,6 +572,18 @@ define(["require", "exports", "tslib", "./utilites/errorUtils", "./utilites/esri
                 document.body.classList.remove(theme === "light" ? "dark" : "light");
             }
             applySharedTheme ? document.body.classList.add("shared-theme") : document.body.classList.remove("shared-theme");
+        };
+        LocationApp.prototype._handleCustomCSS = function () {
+            var customCSSStyleSheet = document.getElementById("customCSS");
+            if (customCSSStyleSheet) {
+                customCSSStyleSheet.remove();
+            }
+            var styles = document.createElement("style");
+            styles.id = "customCSS";
+            styles.type = "text/css";
+            var styleTextNode = document.createTextNode(this._appConfig.customCSS);
+            styles.appendChild(styleTextNode);
+            document.head.appendChild(styles);
         };
         LocationApp.prototype._cleanUpHandles = function () {
             // if we aren't in the config experience remove all handlers after load

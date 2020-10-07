@@ -36,6 +36,7 @@
     "units",
     "relationship",
     "hideLookupLayers",
+    "hideMap",
     "displayUnmatchedResults",
     "oauthappid",
     "portalUrl",

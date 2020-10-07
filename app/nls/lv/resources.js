@@ -23,6 +23,8 @@ define({
     "infoTip": "Skatīt plašāku informāciju",
     "collapse": "Sakļaut visu",
     "open": "Atvērt visu",
-    "slider": "Meklēšanas attālums"
+    "slider": "Meklēšanas attālums",
+    "screenshotResults": "Iekļaut rezultātus",
+    "screenshot": "Ekrānuzņēmums"
   }
 });

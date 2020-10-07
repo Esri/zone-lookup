@@ -38,12 +38,29 @@ define(["require", "exports", "tslib", "./Accordion", "esri/core/accessorSupport
             //
             //--------------------------------------------------------------------------
             _this._handles = new Handles_1.default();
+            _this._screenshot = null;
             return _this;
         }
         FeatureAccordion.prototype.render = function () {
             var _this = this;
-            return (widget_1.tsx("div", { afterCreate: this.updateCalcite, class: this.classes(CSS.base, CSS.basejs, CSS.scrollable) }, this.features &&
+            return (widget_1.tsx("div", { afterCreate: this._accordionCreated, bind: this, class: this.classes(CSS.base, CSS.basejs, CSS.scrollable) }, this.features &&
                 this.features.map(function (graphic, i) { return _this._renderFeatureWidget(graphic, _this.features.length, i); })));
+        };
+        FeatureAccordion.prototype._accordionCreated = function (container) {
+            var _a;
+            this.updateCalcite();
+            // if screenshot is enabled set custom prop 
+            if (((_a = this.config) === null || _a === void 0 ? void 0 : _a.screenshot) && !this._screenshot) {
+                if (this === null || this === void 0 ? void 0 : this.view) {
+                    var expand = this.view.ui.find("screenshotExpand");
+                    if (expand) {
+                        this._screenshot = expand.content;
+                        if (this._screenshot) {
+                            this._screenshot.custom.element = container;
+                        }
+                    }
+                }
+            }
         };
         FeatureAccordion.prototype._renderFeatureWidget = function (graphic, count, index) {
             // Add active class to all sections if there are less than 2. If there are

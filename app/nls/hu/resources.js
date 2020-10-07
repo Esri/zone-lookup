@@ -23,6 +23,8 @@ define({
     "infoTip": "További információ megtekintése",
     "collapse": "Összes összecsukása",
     "open": "Összes megnyitása",
-    "slider": "Keresési távolság"
+    "slider": "Keresési távolság",
+    "screenshotResults": "Eredmények belefoglalása",
+    "screenshot": "Képernyőkép"
   }
 });

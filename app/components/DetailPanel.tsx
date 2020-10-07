@@ -10,6 +10,8 @@ import i18n = require('dojo/i18n!../nls/resources');
 
 import esri = __esri;
 import ConfigurationSettings = require('../ConfigurationSettings');
+import ShareItem = require('./Share/Share/ShareItem');
+
 
 type State = 'ready' | 'loading';
 
@@ -71,28 +73,27 @@ class DetailPanel extends (Widget) {
 		super(props);
 	}
 	initialize() {
-		const { socialSharing } = this.config;
-		if (socialSharing) {
-			const setupShare = 'setup-share';
-			this._handles.add(
-				whenOnce(this, 'view.ready', () => {
-					const shareFeatures = new ShareFeatures({
-						copyToClipboard: true,
-						embedMap: false
-					});
 
-					this.shareWidget = new Share({
-						view: this.view,
-						shareFeatures,
-						container: document.createElement('div'),
-						isDefault: true
-					});
+		const setupShare = 'setup-share';
+		this._handles.add(
+			whenOnce(this, 'view.ready', () => {
+				const shareFeatures = new ShareFeatures({
+					copyToClipboard: true,
+					embedMap: false,
+				});
 
-					this._handles.remove(setupShare);
-				}),
-				setupShare
-			);
-		}
+				this.shareWidget = new Share({
+					view: this.view,
+					shareFeatures,
+					container: document.createElement('div'),
+					isDefault: true
+				});
+
+
+				this._handles.remove(setupShare);
+			}),
+			setupShare
+		);
 	}
 	destroy() {
 		this._handles.removeAll();
@@ -100,11 +101,11 @@ class DetailPanel extends (Widget) {
 	}
 
 	render() {
-		const { socialSharing, introductionContent, introductionTitle } = this.config;
-		const show = socialSharing || introductionTitle || introductionContent ? "" : "hide";
+		const { share, introductionContent, introductionTitle } = this.config;
+		const show = share || introductionTitle || introductionContent ? "" : "hide";
 
 		const socialShare =
-			socialSharing && this.shareWidget ? (
+			share && this.shareWidget ? (
 				<div
 					bind={this.shareWidget.container}
 					afterCreate={this._attachToNode}

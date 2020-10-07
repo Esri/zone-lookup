@@ -1,8 +1,9 @@
-define(["require", "exports", "tslib", "esri/core/watchUtils", "esri/core/promiseUtils", "esri/core/Handles"], function (require, exports, tslib_1, watchUtils_1, promiseUtils_1, Handles_1) {
+define(["require", "exports", "tslib", "esri/core/watchUtils", "esri/core/promiseUtils", "esri/core/Handles", "esri/widgets/Expand", "dojo/i18n!../nls/resources", "ApplicationBase/support/widgetConfigUtils/basemapToggle"], function (require, exports, tslib_1, watchUtils_1, promiseUtils_1, Handles_1, Expand_1, i18n, basemapToggle_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.addScaleBar = exports.addLegend = exports.addHome = exports.addBasemap = exports.addZoom = exports.addMapComponents = void 0;
+    exports.addScaleBar = exports.addLegend = exports.addHome = exports.addBasemap = exports.addZoom = exports.addScreenshot = exports.addMapComponents = void 0;
     Handles_1 = tslib_1.__importDefault(Handles_1);
+    Expand_1 = tslib_1.__importDefault(Expand_1);
     function addMapComponents(props) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             var config;
@@ -17,9 +18,13 @@ define(["require", "exports", "tslib", "esri/core/watchUtils", "esri/core/promis
                         props.propertyName = propertyName;
                         addZoom(props);
                     }),
-                    watchUtils_1.init(config, ["legend", "legendPosition", "legendOpenAtStart"], function (newValue, oldValue, propertyName) {
+                    watchUtils_1.init(config, ["legend", "legendPosition", "legendOpenAtStart", "legendConfig"], function (newValue, oldValue, propertyName) {
                         props.propertyName = propertyName;
                         addLegend(props);
+                    }),
+                    watchUtils_1.init(config, ["screenshot", "screenshotPosition"], function (newValue, oldValue, propertyName) {
+                        props.propertyName = propertyName;
+                        addScreenshot(props);
                     }),
                     watchUtils_1.init(config, ["scalebar", "scalebarPosition"], function (newValue, oldValue, propertyName) {
                         props.propertyName = propertyName;
@@ -37,6 +42,56 @@ define(["require", "exports", "tslib", "esri/core/watchUtils", "esri/core/promis
         });
     }
     exports.addMapComponents = addMapComponents;
+    function addScreenshot(props) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var view, config, propertyName, screenshot, screenshotPosition, legend, Screenshot, node, content, screenshotExpand;
+            return tslib_1.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        view = props.view, config = props.config, propertyName = props.propertyName;
+                        screenshot = config.screenshot, screenshotPosition = config.screenshotPosition, legend = config.legend;
+                        return [4 /*yield*/, new Promise(function (resolve_1, reject_1) { require(["Components/Screenshot/Screenshot"], resolve_1, reject_1); }).then(tslib_1.__importStar)];
+                    case 1:
+                        Screenshot = _a.sent();
+                        node = view.ui.find("screenshotExpand");
+                        if (!screenshot) {
+                            if (node)
+                                view.ui.remove(node);
+                            return [2 /*return*/];
+                        }
+                        // move the node if it exists 
+                        if (propertyName === "screenshotPosition" && node) {
+                            view.ui.move(node, screenshotPosition);
+                        }
+                        else if (propertyName === "screenshot") {
+                            content = new Screenshot.default({
+                                view: view,
+                                enableLegendOption: legend ? true : false,
+                                enablePopupOption: false,
+                                includeLayoutOption: true,
+                                custom: {
+                                    label: i18n.tools.screenshotResults,
+                                    element: document.getElementById("resultsPanel")
+                                },
+                                includePopupInScreenshot: false,
+                                includeCustomInScreenshot: false,
+                                includeLegendInScreenshot: false
+                            });
+                            screenshotExpand = new Expand_1.default({
+                                id: "screenshotExpand",
+                                content: content,
+                                mode: "floating",
+                                expandTooltip: i18n.tools.screenshot,
+                                view: view
+                            });
+                            view.ui.add(screenshotExpand, screenshotPosition);
+                        }
+                        return [2 /*return*/];
+                }
+            });
+        });
+    }
+    exports.addScreenshot = addScreenshot;
     function addZoom(props) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             var view, config, propertyName, mapZoom, mapZoomPosition, Zoom, node;
@@ -45,7 +100,7 @@ define(["require", "exports", "tslib", "esri/core/watchUtils", "esri/core/promis
                     case 0:
                         view = props.view, config = props.config, propertyName = props.propertyName;
                         mapZoom = config.mapZoom, mapZoomPosition = config.mapZoomPosition;
-                        return [4 /*yield*/, new Promise(function (resolve_1, reject_1) { require(["esri/widgets/Zoom"], resolve_1, reject_1); }).then(tslib_1.__importStar)];
+                        return [4 /*yield*/, new Promise(function (resolve_2, reject_2) { require(["esri/widgets/Zoom"], resolve_2, reject_2); }).then(tslib_1.__importStar)];
                     case 1:
                         Zoom = _a.sent();
                         node = _findNode("esri-zoom");
@@ -70,44 +125,50 @@ define(["require", "exports", "tslib", "esri/core/watchUtils", "esri/core/promis
     exports.addZoom = addZoom;
     function addBasemap(props) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var view, config, propertyName, nextBasemap, basemapTogglePosition, basemapToggle, BasemapToggle, node, bmToggle, _a;
+            var view, config, propertyName, basemapTogglePosition, basemapToggle, node, _a, originalBasemap, nextBasemap, BasemapToggle, bmToggle;
             return tslib_1.__generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         view = props.view, config = props.config, propertyName = props.propertyName;
-                        nextBasemap = config.nextBasemap, basemapTogglePosition = config.basemapTogglePosition, basemapToggle = config.basemapToggle;
-                        return [4 /*yield*/, new Promise(function (resolve_2, reject_2) { require(["esri/widgets/BasemapToggle"], resolve_2, reject_2); }).then(tslib_1.__importStar)];
+                        basemapTogglePosition = config.basemapTogglePosition, basemapToggle = config.basemapToggle;
+                        node = view.ui.find("basemapWidget");
+                        return [4 /*yield*/, basemapToggle_1.getBasemaps(props)];
                     case 1:
+                        _a = _b.sent(), originalBasemap = _a.originalBasemap, nextBasemap = _a.nextBasemap;
+                        // If basemapToggle isn't enabled remove the widget if it exists and exit 
+                        if (!basemapToggle) {
+                            if (node) {
+                                view.ui.remove(node);
+                                node.destroy();
+                            }
+                            return [2 /*return*/];
+                        }
+                        return [4 /*yield*/, new Promise(function (resolve_3, reject_3) { require(["esri/widgets/BasemapToggle"], resolve_3, reject_3); }).then(tslib_1.__importStar)];
+                    case 2:
                         BasemapToggle = _b.sent();
                         if (!BasemapToggle)
                             return [2 /*return*/];
-                        node = _findNode("esri-basemap-toggle");
-                        // If basemapToggle isn't enabled remove the widget if it exists and exit 
-                        if (!basemapToggle) {
-                            if (node)
-                                view.ui.remove(node);
-                            return [2 /*return*/];
-                        }
                         // Move the basemap toggle widget if it exists 
                         if (propertyName === "basemapTogglePosition" && node) {
                             view.ui.move(node, basemapTogglePosition);
                         }
-                        if (!(propertyName === "basemapToggle" || (propertyName === "nextBasemap" && node))) return [3 /*break*/, 4];
-                        if (node)
-                            view.ui.remove(node);
-                        bmToggle = new BasemapToggle.default({
-                            view: view
-                        });
-                        if (!nextBasemap) return [3 /*break*/, 3];
-                        _a = bmToggle;
-                        return [4 /*yield*/, _getBasemap(nextBasemap)];
-                    case 2:
-                        _a.nextBasemap = (_b.sent());
-                        _b.label = 3;
-                    case 3:
-                        view.ui.add(bmToggle, basemapTogglePosition);
-                        _b.label = 4;
-                    case 4: return [2 /*return*/];
+                        // Add the basemap toggle widget if its enabled or if a different basemap was 
+                        // specified
+                        if (propertyName === "basemapToggle" && !node) {
+                            bmToggle = new BasemapToggle.default({
+                                view: view,
+                                nextBasemap: nextBasemap,
+                                id: "basemapWidget"
+                            });
+                            basemapToggle_1.resetBasemapsInToggle(bmToggle, originalBasemap, nextBasemap);
+                            view.ui.add(bmToggle, basemapTogglePosition);
+                        }
+                        else if (node && (propertyName === "nextBasemap" || propertyName === "basemapSelector")) {
+                            if (propertyName === "nextBasemap" || propertyName === "basemapSelector") {
+                                basemapToggle_1.resetBasemapsInToggle(node, originalBasemap, nextBasemap);
+                            }
+                        }
+                        return [2 /*return*/];
                 }
             });
         });
@@ -118,7 +179,7 @@ define(["require", "exports", "tslib", "esri/core/watchUtils", "esri/core/promis
             var Basemap, basemap;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, new Promise(function (resolve_3, reject_3) { require(["esri/Basemap"], resolve_3, reject_3); }).then(tslib_1.__importStar)];
+                    case 0: return [4 /*yield*/, new Promise(function (resolve_4, reject_4) { require(["esri/Basemap"], resolve_4, reject_4); }).then(tslib_1.__importStar)];
                     case 1:
                         Basemap = _a.sent();
                         if (!Basemap) {
@@ -147,7 +208,7 @@ define(["require", "exports", "tslib", "esri/core/watchUtils", "esri/core/promis
                     case 0:
                         view = props.view, config = props.config, propertyName = props.propertyName;
                         home = config.home, homePosition = config.homePosition;
-                        return [4 /*yield*/, new Promise(function (resolve_4, reject_4) { require(['esri/widgets/Home'], resolve_4, reject_4); }).then(tslib_1.__importStar)];
+                        return [4 /*yield*/, new Promise(function (resolve_5, reject_5) { require(['esri/widgets/Home'], resolve_5, reject_5); }).then(tslib_1.__importStar)];
                     case 1:
                         Home = _a.sent();
                         node = _findNode("esri-home");
@@ -172,13 +233,13 @@ define(["require", "exports", "tslib", "esri/core/watchUtils", "esri/core/promis
     exports.addHome = addHome;
     function addLegend(props) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var view, config, propertyName, legend, legendPosition, legendOpenAtStart, modules, _a, Legend, Expand, node, content, legendExpand;
+            var view, config, propertyName, legend, legendPosition, legendOpenAtStart, legendConfig, modules, _a, Legend, Expand, node, content, legendExpand, l;
             return tslib_1.__generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         view = props.view, config = props.config, propertyName = props.propertyName;
-                        legend = config.legend, legendPosition = config.legendPosition, legendOpenAtStart = config.legendOpenAtStart;
-                        return [4 /*yield*/, promiseUtils_1.eachAlways([new Promise(function (resolve_5, reject_5) { require(["esri/widgets/Legend"], resolve_5, reject_5); }).then(tslib_1.__importStar), new Promise(function (resolve_6, reject_6) { require(["esri/widgets/Expand"], resolve_6, reject_6); }).then(tslib_1.__importStar)])];
+                        legend = config.legend, legendPosition = config.legendPosition, legendOpenAtStart = config.legendOpenAtStart, legendConfig = config.legendConfig;
+                        return [4 /*yield*/, promiseUtils_1.eachAlways([new Promise(function (resolve_6, reject_6) { require(["esri/widgets/Legend"], resolve_6, reject_6); }).then(tslib_1.__importStar), new Promise(function (resolve_7, reject_7) { require(["esri/widgets/Expand"], resolve_7, reject_7); }).then(tslib_1.__importStar)])];
                     case 1:
                         modules = _b.sent();
                         _a = modules.map(function (module) { return module.value; }), Legend = _a[0], Expand = _a[1];
@@ -194,9 +255,7 @@ define(["require", "exports", "tslib", "esri/core/watchUtils", "esri/core/promis
                         }
                         else if (propertyName === "legend") {
                             content = new Legend.default({
-                                style: {
-                                    type: 'card'
-                                },
+                                style: legendConfig.style,
                                 view: view
                             });
                             legendExpand = new Expand.default({
@@ -210,6 +269,12 @@ define(["require", "exports", "tslib", "esri/core/watchUtils", "esri/core/promis
                         }
                         else if (propertyName === "legendOpenAtStart" && node) {
                             node.expanded = legendOpenAtStart;
+                        }
+                        else if (propertyName === "legendConfig" && node) {
+                            l = node.content;
+                            if (legendConfig === null || legendConfig === void 0 ? void 0 : legendConfig.style) {
+                                l.style = legendConfig.style;
+                            }
                         }
                         return [2 /*return*/];
                 }
@@ -225,7 +290,7 @@ define(["require", "exports", "tslib", "esri/core/watchUtils", "esri/core/promis
                     case 0:
                         view = props.view, portal = props.portal, config = props.config, propertyName = props.propertyName;
                         scalebar = config.scalebar, scalebarPosition = config.scalebarPosition;
-                        return [4 /*yield*/, new Promise(function (resolve_7, reject_7) { require(["esri/widgets/ScaleBar"], resolve_7, reject_7); }).then(tslib_1.__importStar)];
+                        return [4 /*yield*/, new Promise(function (resolve_8, reject_8) { require(["esri/widgets/ScaleBar"], resolve_8, reject_8); }).then(tslib_1.__importStar)];
                     case 1:
                         ScaleBar = _a.sent();
                         node = _findNode("esri-scale-bar");

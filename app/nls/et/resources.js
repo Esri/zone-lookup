@@ -23,6 +23,8 @@ define({
     "infoTip": "Kuva lisateave",
     "collapse": "Ahenda kõik",
     "open": "Ava kõik",
-    "slider": "Otsitav vahemaa"
+    "slider": "Otsitav vahemaa",
+    "screenshotResults": "Kaasa tulemused",
+    "screenshot": "Ekraanipilt"
   }
 });

@@ -23,6 +23,8 @@ define({
     "infoTip": "Pregledaj još rezultata",
     "collapse": "Skupi sve",
     "open": "Otvori sve",
-    "slider": "Rastojanje pretrage"
+    "slider": "Rastojanje pretrage",
+    "screenshotResults": "Uključi rezultate",
+    "screenshot": "Snimak ekrana"
   }
 });

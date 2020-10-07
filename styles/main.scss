@@ -10,14 +10,11 @@
   See the License for the specific language governing permissions and
   limitations under the License.​
 */
-
-$font-path: "../app/calcite-web/dist/fonts";
-$image-path: "../app/calcite-web/dist/img";
 $calcite-white: #fff;
 $calcite-black:#323232;
 $header-light: #4a4a4a;
 $calcite-light-gray:#a9a9a9;
-$calcite-blue: #0079c1;
+$calcite-blue: #56a5d8;
 $default-app-background: #fff;
 $detail-panel-color: #595959;
 $body-background: #f8f8f8;
@@ -25,8 +22,11 @@ $vw-ratio: 1;
 $container-width: 2000px;
 $scrollable-container-height: calc(100vh - 160px);
 $scrollable-container-height-mobile: calc(100% - 160px);
-@import "./app/calcite-web/dist/sass/calcite-web.scss";
-@import "./app/components/Share/Share/css/Share.scss";
+$font-path: "../app/calcite-web/dist/fonts";
+$image-path: "../app/calcite-web/dist/img";
+@import "../app/calcite-web/dist/sass/calcite-web.scss";
+@import "../app/components/Share/Share/css/Share.scss";
+@import "../node_modules/@esri/configurable-app-components/Screenshot/Screenshot/css/Screenshot.scss";
 
 /* overwrite calcite styles that mess with the map height on ios */
 body {
@@ -309,7 +309,7 @@ ul.accordion-content {
 .accordion-title:hover,
 #detailPanel button.detail:focus {
 
-  outline: auto 5px #0079c1;
+  outline: auto 5px $calcite-blue;
 }
 
 p:empty {
@@ -317,13 +317,13 @@ p:empty {
 }
 
 .esri-feature a {
-  color: #0079c1;
+  color: $calcite-blue;
   text-decoration: underline;
 }
 
 .esri-feature a:hover,
 .esri-feature a:focus {
-  color: #0079c1;
+  color: $calcite-blue;
 }
 
 
@@ -428,7 +428,7 @@ p:empty {
 }
 
 .toggle-content-tools .btn-transparent {
-  color: #0079c1;
+  color: $calcite-blue;
 }
 
 .top-nav .btn-transparent,
@@ -506,7 +506,7 @@ p:empty {
   .btn-transparent {
     font-size: 1.6rem;
     line-height: 1.6rem;
-    color: #0079c1;
+    color: $calcite-blue;
     cursor: pointer;
     margin: 1%;
     width: 98%;
@@ -850,30 +850,45 @@ input[type=range]:focus::-ms-fill-upper {
 .text-fade {
   white-space: nowrap;
   overflow: hidden;
-  max-width: 96%;
 
   &:after {
     content: '';
     position: absolute;
     top: 0;
     right: 0;
-    width: 30%;
+    width: 45px;
     height: 100%;
     background: linear-gradient(to left, #151515 40%, transparent 90%);
+  }
 
+  &:before {
+    content: none;
+  }
+
+}
+
+html[dir="rtl"] .text-fade {
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 45px;
+    height: 100%;
+    background: linear-gradient(to right, #151515 40%, transparent 90%);
+  }
+
+  &:after {
+    content: none;
   }
 }
 
-html[dir="rtl"] .text-fade:after {
-  right: initial;
-  left: 40px;
-}
 
 .dark .text-fade:after {
   background: linear-gradient(to left, #323232 40%, transparent 90%);
 }
 
-html[dir="rtl"] .dark .text-fade:after {
+html[dir="rtl"] .dark .text-fade:before {
   background: linear-gradient(to right, #323232 40%, transparent 90%);
 }
 
@@ -882,7 +897,7 @@ html[dir="rtl"] .dark .text-fade:after {
   background: linear-gradient(to left, #4a4a4a 40%, transparent 90%);
 }
 
-html[dir="rtl"] .light .text-fade:after {
+html[dir="rtl"] .light .text-fade:before {
   background: linear-gradient(to right, #4a4a4a 40%, transparent 90%);
 }
 
@@ -906,4 +921,13 @@ html[dir="rtl"] .top-nav-title {
   transform: translate(-50%, -50%);
   text-align: center;
   width: 65%;
+}
+
+.dark a {
+  color: $calcite-blue;
+}
+
+html[dir="rtl"] .top-nav-title {
+  padding-right: 7px;
+  margin-right: 0;
 }

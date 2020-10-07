@@ -31,8 +31,12 @@
             { name: 'Application', location: distPath + "/app", main: 'Main' },
             {
                 name: 'ApplicationBase',
-                location: distPath + "/app/application-base-js",
+                location: distPath + "/node_modules/@esri/application-base-js",
                 main: 'ApplicationBase'
+            }, {
+                name: 'Components',
+                location: distPath + "/node_modules/@esri/configurable-app-components",
+                main: "Screenshot"
             },
             {
                 name: 'telemetry',

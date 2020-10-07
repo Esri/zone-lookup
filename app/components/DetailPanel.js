@@ -48,32 +48,29 @@ define(["require", "exports", "tslib", "esri/core/accessorSupport/decorators", "
         });
         DetailPanel.prototype.initialize = function () {
             var _this = this;
-            var socialSharing = this.config.socialSharing;
-            if (socialSharing) {
-                var setupShare_1 = 'setup-share';
-                this._handles.add(watchUtils_1.whenOnce(this, 'view.ready', function () {
-                    var shareFeatures = new ShareFeatures_1.default({
-                        copyToClipboard: true,
-                        embedMap: false
-                    });
-                    _this.shareWidget = new Share_1.default({
-                        view: _this.view,
-                        shareFeatures: shareFeatures,
-                        container: document.createElement('div'),
-                        isDefault: true
-                    });
-                    _this._handles.remove(setupShare_1);
-                }), setupShare_1);
-            }
+            var setupShare = 'setup-share';
+            this._handles.add(watchUtils_1.whenOnce(this, 'view.ready', function () {
+                var shareFeatures = new ShareFeatures_1.default({
+                    copyToClipboard: true,
+                    embedMap: false,
+                });
+                _this.shareWidget = new Share_1.default({
+                    view: _this.view,
+                    shareFeatures: shareFeatures,
+                    container: document.createElement('div'),
+                    isDefault: true
+                });
+                _this._handles.remove(setupShare);
+            }), setupShare);
         };
         DetailPanel.prototype.destroy = function () {
             this._handles.removeAll();
             this._handles = null;
         };
         DetailPanel.prototype.render = function () {
-            var _a = this.config, socialSharing = _a.socialSharing, introductionContent = _a.introductionContent, introductionTitle = _a.introductionTitle;
-            var show = socialSharing || introductionTitle || introductionContent ? "" : "hide";
-            var socialShare = socialSharing && this.shareWidget ? (widget_1.tsx("div", { bind: this.shareWidget.container, afterCreate: this._attachToNode, class: this.classes(CSS.calciteStyles.phoneHide) })) : null;
+            var _a = this.config, share = _a.share, introductionContent = _a.introductionContent, introductionTitle = _a.introductionTitle;
+            var show = share || introductionTitle || introductionContent ? "" : "hide";
+            var socialShare = share && this.shareWidget ? (widget_1.tsx("div", { bind: this.shareWidget.container, afterCreate: this._attachToNode, class: this.classes(CSS.calciteStyles.phoneHide) })) : null;
             return (widget_1.tsx("div", { bind: this, class: this.classes(show, CSS.calciteStyles.panel, CSS.calciteStyles.panelNoPadding) },
                 widget_1.tsx("button", { bind: this, "aria-label": i18n.tools.info, title: i18n.tools.close, onclick: this._hidePanel, class: this.classes(CSS.details, CSS.calciteStyles.btnFill, CSS.calciteStyles.btn, CSS.calciteStyles.btnTransparent) },
                     widget_1.tsx("svg", { class: this.classes(CSS.svgIcon), xmlns: "http://www.w3.org/2000/svg", width: "32", height: "32", viewBox: "0 0 32 32" },

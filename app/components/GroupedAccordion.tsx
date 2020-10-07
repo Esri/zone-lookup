@@ -1,6 +1,6 @@
 
 import { subclass, property } from 'esri/core/accessorSupport/decorators';
-import { tsx } from 'esri/widgets/support/widget';
+import { tsx, renderable } from 'esri/widgets/support/widget';
 import Feature from 'esri/widgets/Feature';
 import Handles from 'esri/core/Handles';
 import esri = __esri;
@@ -58,6 +58,7 @@ class GroupedAccordion extends (Accordion) {
     _calciteLoaded: boolean = false;
     _handles: Handles = new Handles();
     _featureCount: number = 0;
+    _screenshot: any = null;
     //--------------------------------------------------------------------------
     //
     //  Public Methods
@@ -65,9 +66,7 @@ class GroupedAccordion extends (Accordion) {
     //--------------------------------------------------------------------------
     constructor(props: GroupedAccordionProps) {
         super(props);
-        console.log("Create Grouped Accordion")
         if (props.featureResults) {
-            console.log("Create", props.featureResults)
             props.featureResults.forEach((result) => {
                 this._featureCount += result.features && result.features.length;
             });
@@ -76,13 +75,24 @@ class GroupedAccordion extends (Accordion) {
     render() {
         return (<div key="feature-container"
             afterCreate={this.updateCalcite}>
-            <div class={this.classes(CSS.base, CSS.basejs, CSS.scrollable)}>
+            <div bind={this} afterCreate={this._accordionCreated} class={this.classes(CSS.base, CSS.basejs, CSS.scrollable)}>
                 {this.featureResults &&
                     this.featureResults.map((result, i) => this._createSections(result, i))}
             </div>
         </div >);
     }
-
+    _accordionCreated(container) {
+        // if screenshot is enabled set custom prop 
+        if (this.config?.screenshot && !this._screenshot) {
+            if (this?.view) {
+                const expand = this.view.ui.find("screenshotExpand") as __esri.Expand;
+                if (expand) {
+                    this._screenshot = expand.content as any;
+                    if (this._screenshot) { this._screenshot.custom.element = container; }
+                }
+            }
+        }
+    }
     _createSections(result: FeatureResults, key) {
         const count = result.features && result.features.length;
         const classes = count === 1 ? [CSS.section, CSS.single, CSS.groupSection] : [CSS.section, CSS.groupSection];
@@ -161,6 +171,7 @@ class GroupedAccordion extends (Accordion) {
     }
     clear() {
         this.featureResults = null;
+        this._featureCount = 0;
     }
     showToggle(): boolean {
         // show toggle buttons if we have more than 2 sections? 

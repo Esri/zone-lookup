@@ -23,6 +23,8 @@ define({
     "infoTip": "Visualitza més informació",
     "collapse": "Redueix-ho tot",
     "open": "Obre-ho tot",
-    "slider": "Distància de cerca"
+    "slider": "Distància de cerca",
+    "screenshotResults": "Inclou els resultats",
+    "screenshot": "Captura de pantalla"
   }
 });

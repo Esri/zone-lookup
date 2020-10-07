@@ -23,6 +23,8 @@ define({
     "infoTip": "Vizualizați mai multe informații",
     "collapse": "Restrângere toate",
     "open": "Deschidere toate",
-    "slider": "Căutare distanță"
+    "slider": "Căutare distanță",
+    "screenshotResults": "Includeți rezultate",
+    "screenshot": "Captură de ecran"
   }
 });

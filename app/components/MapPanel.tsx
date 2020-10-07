@@ -105,6 +105,7 @@ class MapPanel extends (Widget) {
 			? this.classes(...allClasses, ...miniMapClasses)
 			: this.classes(...mainMapClasses, ...allClasses);
 		const mapTabletClass = this.isMobileView ? this.classes(CSS.tabletShow) : null;
+
 		const mapButton = this.isMobileView ? (
 			<button
 				bind={this}
@@ -175,7 +176,6 @@ class MapPanel extends (Widget) {
 		const mapContainer = {
 			container
 		};
-
 		const viewProperties = {
 			...defaultViewProperties,
 			ui: { components },
@@ -189,7 +189,7 @@ class MapPanel extends (Widget) {
 
 			const handler = this.view.watch('extent', () => {
 				handler.remove();
-				this._initialExtent = this.view.extent.clone();
+				this._initialExtent = this.view?.extent.clone();
 			});
 
 			document.getElementById('mapDescription').innerHTML = i18n.map.description;
@@ -219,7 +219,9 @@ class MapPanel extends (Widget) {
 		this.message = null;
 	}
 	public resetExtent() {
-		this.view.goTo(this._initialExtent);
+		if (this._initialExtent) {
+			this.view?.goTo(this._initialExtent);
+		}
 	}
 }
 export = MapPanel;

@@ -23,6 +23,8 @@ define({
     "infoTip": "查看详细信息",
     "collapse": "全部折叠",
     "open": "全部打开",
-    "slider": "搜索距离"
+    "slider": "搜索距离",
+    "screenshotResults": "包含结果",
+    "screenshot": "屏幕截图"
   }
 });

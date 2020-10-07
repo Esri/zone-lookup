@@ -23,6 +23,8 @@ define({
     "infoTip": "Vis mer informasjon",
     "collapse": "Skjul alle",
     "open": "Åpne alle",
-    "slider": "Søkeavstand"
+    "slider": "Søkeavstand",
+    "screenshotResults": "Inkluder resultater",
+    "screenshot": "Skjermbilde"
   }
 });

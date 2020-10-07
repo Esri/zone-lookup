@@ -23,6 +23,8 @@ define({
     "infoTip": "Ogled dodatnih informacij",
     "collapse": "Strni vse",
     "open": "Odpri vse",
-    "slider": "Iskalna razdalja"
+    "slider": "Iskalna razdalja",
+    "screenshotResults": "Vključi rezultate",
+    "screenshot": "Posnetek zaslona"
   }
 });

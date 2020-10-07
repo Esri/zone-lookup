@@ -23,6 +23,8 @@ define({
     "infoTip": "Ver mais informações",
     "collapse": "Recolher tudo",
     "open": "Abrir tudo",
-    "slider": "Distância de pesquisa"
+    "slider": "Distância de pesquisa",
+    "screenshotResults": "Incluir resultados",
+    "screenshot": "Captura de ecrã."
   }
 });

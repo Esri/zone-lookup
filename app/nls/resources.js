@@ -24,7 +24,9 @@ define({
       "infoTip": "View more information",
       "collapse": "Collapse all",
       "open": "Open all",
-      "slider": "Search distance"
+      "slider": "Search distance",
+      "screenshotResults": "Include results",
+      "screenshot": "Screenshot"
     }
   }),
   "ar": 1,

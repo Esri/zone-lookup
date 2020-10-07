@@ -23,6 +23,8 @@ define({
     "infoTip": "Peržiūrėti daugiau informacijos",
     "collapse": "Sutraukti viską",
     "open": "Atverti viską",
-    "slider": "Paieškos atstumas"
+    "slider": "Paieškos atstumas",
+    "screenshotResults": "Įtraukti rezultatus",
+    "screenshot": "Ekrano vaizdas"
   }
 });

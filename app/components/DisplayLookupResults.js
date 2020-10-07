@@ -111,7 +111,6 @@ define(["require", "exports", "tslib", "esri/core/accessorSupport/decorators", "
                 });
             }
             if (this.config.groupResultsByLayer) {
-                console.log("Grouped");
                 this._accordion = new GroupedAccordion_1.default({
                     actionBarItems: actionItems,
                     featureResults: _featureResults,
@@ -123,7 +122,6 @@ define(["require", "exports", "tslib", "esri/core/accessorSupport/decorators", "
             else if (this._featureResults && this._featureResults.length && this._featureResults.length > 0) {
                 var featureResults = _featureResults[0];
                 var features = featureResults.features ? featureResults.features : null;
-                console.log("Not Grouped");
                 this._accordion = new FeatureAccordion_1.default({
                     actionBarItems: actionItems,
                     features: features,
@@ -205,7 +203,6 @@ define(["require", "exports", "tslib", "esri/core/accessorSupport/decorators", "
                         promises.push(promiseUtils_1.resolve({ features: [location], title: layer && layer.title ? layer.title : null, id: layer && layer.id ? layer.id : null }));
                     }
                     else {
-                        _this._applyLayerEffectAndFilter(layer, query);
                         promises.push(layer.queryFeatures(query).then(function (results) {
                             return promiseUtils_1.resolve({
                                 features: results.features,
@@ -216,6 +213,7 @@ define(["require", "exports", "tslib", "esri/core/accessorSupport/decorators", "
                             console.log("Error loading layer", error);
                             return promiseUtils_1.resolve();
                         }));
+                        _this._applyLayerEffectAndFilter(layer, query);
                     }
                 });
             }
@@ -275,7 +273,7 @@ define(["require", "exports", "tslib", "esri/core/accessorSupport/decorators", "
                 query.units = units;
             }
             else if (lookupType === 'geometry') {
-                query.spatialRelationship = layerGeometryType === "point" || layerGeometryType === "polygon" ? "contains" : "intersects";
+                query.spatialRelationship = layerGeometryType === "polygon" ? "contains" : "intersects";
             }
             return query;
         };
@@ -315,8 +313,9 @@ define(["require", "exports", "tslib", "esri/core/accessorSupport/decorators", "
         };
         DisplayLookupResults.prototype._searchHighlight = function (graphic) {
             var _this = this;
+            var _a, _b, _c;
             var lookupType = this.config.lookupType;
-            if (this.searchLayer && lookupType === 'geometry') {
+            if ((this === null || this === void 0 ? void 0 : this.searchLayer) && lookupType === 'geometry') {
                 var key_2 = 'search-layer-handle';
                 this._handles.remove(key_2);
                 this.view.whenLayerView(this.searchLayer).then(function (layerView) {
@@ -332,17 +331,15 @@ define(["require", "exports", "tslib", "esri/core/accessorSupport/decorators", "
                 if (
                 //	hideLookupLayers &&
                 graphic.layer &&
-                    graphic.layer.id &&
-                    this.searchLayer &&
-                    this.searchLayer.id &&
+                    graphic.layer.id && ((_a = this === null || this === void 0 ? void 0 : this.searchLayer) === null || _a === void 0 ? void 0 : _a.id) &&
                     graphic.layer.id === this.searchLayer.id) {
-                    queryFilter.where = this.searchLayer.objectIdField + " = " + graphic.attributes[this.searchLayer.objectIdField];
+                    queryFilter.where = ((_b = this.searchLayer) === null || _b === void 0 ? void 0 : _b.objectIdField) + " = " + graphic.attributes[(_c = this.searchLayer) === null || _c === void 0 ? void 0 : _c.objectIdField];
                 }
                 else {
                     queryFilter.geometry =
                         graphic.geometry.type === 'polygon' ? graphic.geometry.extent.center : graphic.geometry;
                 }
-                this._applyLayerEffectAndFilter(this.searchLayer, queryFilter);
+                this._applyLayerEffectAndFilter(this === null || this === void 0 ? void 0 : this.searchLayer, queryFilter);
             }
         };
         DisplayLookupResults.prototype._sortFeatures = function (features) {
@@ -485,7 +482,7 @@ define(["require", "exports", "tslib", "esri/core/accessorSupport/decorators", "
         ], DisplayLookupResults.prototype, "searchLayer", void 0);
         tslib_1.__decorate([
             decorators_1.property(),
-            widget_1.renderable()
+            decorators_1.property()
         ], DisplayLookupResults.prototype, "lookupLayers", void 0);
         tslib_1.__decorate([
             decorators_1.property(),

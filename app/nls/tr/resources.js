@@ -23,6 +23,8 @@ define({
     "infoTip": "Daha fazla bilgi",
     "collapse": "Tümünü daralt",
     "open": "Tümünü aç",
-    "slider": "Arama mesafesi"
+    "slider": "Arama mesafesi",
+    "screenshotResults": "Sonuçları dahil et",
+    "screenshot": "Ekran Görüntüsü"
   }
 });

@@ -7,7 +7,7 @@
 
   You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
 
@@ -29,6 +29,7 @@ import { resolve } from 'esri/core/promiseUtils';
 
 import esri = __esri;
 import FeatureEffect = require('esri/views/layers/support/FeatureEffect');
+import { search } from 'dojo/text!*';
 
 interface ConfigureLayerProperties {
 	id: string;
@@ -38,8 +39,8 @@ interface ConfigureLayerProperties {
 }
 interface LookupLayerProps {
 	view: esri.MapView;
-	lookupLayers: esri.Collection<esri.FeatureLayer>;
-	searchLayer: any;
+	lookupLayers?: ConfigureLayerProperties[];
+	searchLayer?: any;
 	hideFeaturesOnLoad: boolean;
 }
 
@@ -49,80 +50,127 @@ interface SearchGeometryProps {
 	searchLayer: esri.FeatureLayer;
 	results?: any;
 }
-export async function getSearchLayer(props: LookupLayerProps): Promise<esri.FeatureLayer | null> {
+export function getSearchLayer(props: LookupLayerProps) {
 	const { view, searchLayer } = props;
 	const layers = searchLayer?.layers;
-	let layer = layers?.length && layers[0] || null;
-	if (layer && layer?.id) {
-		layer = view.map.findLayerById(layer.id);
-		if (layer?.type === 'feature') {
-			if (props.hideFeaturesOnLoad) hideLookuplayers([layer as esri.FeatureLayer], props.view);
-			layer = layer as esri.FeatureLayer;
-		} else {
-			layer = null;
+	let layer = layers?.length > 0 ? layers[0] : null;
+	let returnLayer = null;
+	if (layer && layer.id) {
+		returnLayer = view.map.findLayerById(layer.id);
+		if (returnLayer.type === "feature") {
+			if (props.hideFeaturesOnLoad) hideLookuplayers([returnLayer as esri.FeatureLayer], props.view);
 		}
 	}
-	return layer;
+	return returnLayer;
 }
-export function getLookupLayers(lookupLayers: esri.Collection<esri.Layer>) {
-	const returnLayers: Collection<__esri.FeatureLayer> = new Collection();
+export function getLookupLayers(props: LookupLayerProps): Promise<__esri.FeatureLayer[]> {
+	const { view, hideFeaturesOnLoad, lookupLayers } = props;
+	const hasLookupLayers = lookupLayers && lookupLayers?.length > 0 ? true : false;
 
-	lookupLayers.forEach(layerItem => {
-		// Add feature layers to the collection 
-		if (layerItem?.type === "feature") {
-			const featureLayer = layerItem as esri.FeatureLayer;
-			if (featureLayer.popupEnabled) {
-				returnLayers.add(featureLayer);
+	const searchableLayers: Collection<esri.Layer> = !hasLookupLayers ? view.map.layers : new Collection();
+
+	const returnLayers = [];
+	// Get all the map layers
+	if (hasLookupLayers) {
+		// get any predefined layers otherwise we'll use all map layers
+		lookupLayers.forEach((layerItem) => {
+			if (layerItem.id) {
+				if (layerItem.type === 'DynamicLayer') {
+					const sublayerId = layerItem.id.lastIndexOf('.');
+					if (sublayerId !== -1) {
+						const id = layerItem.id.slice(0, sublayerId);
+						const layer = view.map.findLayerById(id) as esri.MapImageLayer;
+						if (layer && searchableLayers.indexOf(layer) === -1) {
+							searchableLayers.add(layer);
+						}
+					}
+				} else {
+					// feature layer
+					let layer = view.map.findLayerById(layerItem.id) as esri.FeatureLayer;
+
+					if (!layer) {
+						//maybe its a feature collection
+						const sublayerId = layerItem.id.lastIndexOf('_');
+						if (sublayerId !== -1) {
+							const id = layerItem.id.slice(0, sublayerId);
+							layer = view.map.findLayerById(id) as esri.FeatureLayer;
+						}
+					}
+					// disable clustering 
+					if (layer && layer.get("featureReduction")) {
+						layer.set("featureReduction", null);
+					}
+					layer && searchableLayers.add(layer);
+				}
+			}
+		});
+	}
+	// Include the search layer in the lookup layers if specified
+	searchableLayers.forEach((layer: esri.FeatureLayer | esri.MapImageLayer | __esri.GroupLayer) => {
+
+		if (layer && layer.type) {
+			if (layer.type === 'feature') {
+				const flayer = layer as esri.FeatureLayer;
+				if (flayer.popupEnabled) {
+					flayer.outFields = ["*"];
+					returnLayers.push(flayer);
+				}
+				// disable clustering 
+				if (flayer && flayer.get("featureReduction")) {
+					flayer.set("featureReduction", null);
+				}
+			} else if (layer.type === "group") {
+				const flattendGroup = _getLayersFromGroupLayer(layer);
+				if (flattendGroup?.length > 0) {
+					flattendGroup.forEach(b => {
+						searchableLayers.add(b);
+					});
+				}
+			} else if (layer.type === 'map-image') {
+				// if sub layers have been enabled during config
+				// only add those. Otherwise add all dynamic sub layers
+
+				const mapLayer = layer as esri.MapImageLayer;
+				const checkSubLayer = lookupLayers && lookupLayers.length && lookupLayers.length > 0 ? true : false;
+				mapLayer.sublayers &&
+					mapLayer.sublayers.forEach((sublayer) => {
+						if (checkSubLayer) {
+							const configId = `${sublayer.layer.id}.${sublayer.id}`;
+							lookupLayers.forEach((l) => {
+								if (l.id && l.id === configId) {
+									sublayer.createFeatureLayer().then((l: esri.FeatureLayer) => {
+										view.map.add(l);
+										returnLayers.push(l);
+									});
+									sublayer.visible = false;
+								}
+							});
+						} else {
+							sublayer.createFeatureLayer().then((l: esri.FeatureLayer) => {
+								view.map.add(l);
+								returnLayers.push(l);
+							});
+							sublayer.visible = false;
+						}
+					});
 			}
 		}
 	});
-	return returnLayers;
+
+	if (hideFeaturesOnLoad) hideLookuplayers(returnLayers, props.view);
+
+	return resolve(returnLayers);
 }
-export async function findConfiguredLookupLayers(view: esri.MapView, config: ApplicationConfig): Promise<Collection> {
-	// Find any configured layers or return all layers in the map 
-	let lookupLayers: Collection<esri.Layer> = new Collection();
-	const configuredLayers = config.lookupLayers?.layers ? config.lookupLayers.layers : null;
-
-	if (configuredLayers) {
-		// find the layers and add to the collection 
-		configuredLayers.forEach(layerItem => {
-
-			const layer = view.map.findLayerById(layerItem.id);
-			//await view.whenLayerView(layer);
-			// Get the sub layer 
-			if (layerItem.sublayerId) {
-				const dynamicLayer = layer as __esri.MapImageLayer;
-				const createdFeatureLayer = new FeatureLayer({
-					url: dynamicLayer.url + "/" + layerItem.sublayerId
-				});
-				createdFeatureLayer.visible = false;
-				view.map.add(createdFeatureLayer)
-				lookupLayers.add(createdFeatureLayer);
-			} else {
-				lookupLayers.add(layer);
-			}
-		});
-	} else {
-		lookupLayers = view.map.layers;
-	}
-	return resolve(lookupLayers);
-}
-
 export async function getSearchGeometry(props: SearchGeometryProps): Promise<esri.Graphic> {
-	const { results, view, config, searchLayer } = props;
+	const { results, config, searchLayer, view } = props;
 	const { lookupType } = config;
 	const graphic = _getResultGeometries(results);
-	// add marker to map
-	//_addLocationGraphics(graphic, config, view);
-	// If it's not a geometry search or it is geometry
-	// but we don't have a search layer defined
-
+	let displayGraphic = graphic;
 	if (lookupType !== 'geometry' || !searchLayer) {
-		let returnGraphic = graphic;
 		if (graphic.geometry && graphic.geometry.type && graphic.geometry.type === 'polygon') {
-			returnGraphic = new Graphic({ geometry: graphic.geometry.extent.center, attributes: graphic.attributes });
+			displayGraphic = new Graphic({ geometry: graphic.geometry.extent.center, attributes: graphic.attributes });
 		}
-		return resolve(returnGraphic);
+		return resolve(displayGraphic);
 	} else {
 		// Is the source layer of the graphic equal to the search layer?
 		const sourceLayerGraphic: any = graphic && graphic.hasOwnProperty('sourceLayer') ? graphic.clone() : null;
@@ -130,11 +178,10 @@ export async function getSearchGeometry(props: SearchGeometryProps): Promise<esr
 		if (sourceLayerGraphic.sourceLayer && sourceLayerGraphic.sourceLayer.id) {
 			if (sourceLayerGraphic.sourceLayer.id === searchLayer.id) {
 				// Is the search geometry from the search layer? If so use it
-				return resolve(graphic);
+				displayGraphic = graphic;
 			}
 		}
-
-		const searchGeometry = graphic.geometry;
+		const searchGeometry = displayGraphic.geometry;
 		const query = searchLayer.createQuery();
 		query.geometry = searchGeometry;
 		if (searchGeometry && searchGeometry.type === 'point') {
@@ -142,8 +189,10 @@ export async function getSearchGeometry(props: SearchGeometryProps): Promise<esr
 		} else {
 			query.spatialRelationship = 'intersects';
 		}
+		query.outFields = ["*"]
 
 		const results = await searchLayer.queryFeatures(query);
+
 		return resolve(
 			results && results.features && results.features.length && results.features.length > 0
 				? results.features[0]
@@ -151,65 +200,7 @@ export async function getSearchGeometry(props: SearchGeometryProps): Promise<esr
 		);
 	}
 }
-/*function _addLocationGraphics(graphic, config, view) {
-	const { includeAddressText, addressGraphicColor, includeAddressGraphic, addMarker } = config;
-	// add a custom graphic at geocoded location if we have something to display
-	if (graphic && graphic.geometry) {
-		const geometry =
-			graphic.geometry && graphic.geometry.type === 'point' ? graphic.geometry : graphic.geometry.extent.center;
-		let displayText = null;
-		if (graphic && includeAddressText) {
 
-			if (graphic?.attributes?.Match_addr) {
-				// replace first comma with a new line character
-				displayText = graphic.attributes.Match_addr.replace(',', '\n');
-			} else if (graphic?.attributes?.name) {
-				displayText = graphic.attributes.name;
-			} else if (graphic?.layer?.displayField !== '') {
-				displayText = graphic.attributes[graphic.layer.displayField] || null;
-			} else if (graphic?.layer?.fields) {
-				// get the first string field?
-				graphic.layer.fields.some((field) => {
-					if (field.type === 'string') {
-						displayText = graphic.attributes[field.name];
-						return true;
-					}
-				});
-			}
-		}
-		if (displayText && addMarker) {
-			view.graphics.add(
-				new Graphic({
-					geometry,
-					symbol: new TextSymbol({
-						font: {
-							size: 10
-						},
-						text: displayText,
-						color: addressGraphicColor,
-						horizontalAlignment: 'center'
-					})
-				})
-			);
-		}
-		if (includeAddressGraphic && addMarker) {
-			view.graphics.add(
-				new Graphic({
-					geometry,
-					symbol: new TextSymbol({
-						color: addressGraphicColor,
-						text: '\ue61d', // esri-icon-map-pin
-						yoffset: 10,
-						font: {
-							size: 20,
-							family: 'calcite-web-icons'
-						}
-					})
-				})
-			);
-		}
-	}
-}*/
 function _getResultGeometries(results): esri.Graphic {
 	let feature = null;
 	results.results.some((searchResults) => {
@@ -226,6 +217,18 @@ function _getResultGeometries(results): esri.Graphic {
 		});
 	});
 	return feature;
+}
+function _getLayersFromGroupLayer(group): __esri.Layer[] {
+	let layers = [];
+	group.layers.filter(layer => {
+		if (layer.group) {
+			const innerGroup = this._getLayersFromGroupLayer(layer.group);
+			layers = [...layers, innerGroup];
+		} else {
+			layers.push(layer);
+		}
+	});
+	return layers;
 }
 export function hideLookuplayers(layers: esri.FeatureLayer[], view: esri.MapView) {
 	const noMap = document.body.classList.contains('no-map');

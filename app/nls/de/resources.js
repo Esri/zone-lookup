@@ -12,7 +12,7 @@ define({
     "miniMapDescription": "Karte mit der Position des ausgewählten Features"
   },
   "noFeatures": "Keine Features gefunden, die den Suchkriterien entsprechen",
-  "error": "Error",
+  "error": "Fehler",
   "licenseError": {
     "message": "Ihr Konto ist nicht für die Verwendung von nicht öffentlichen konfigurierbaren Apps lizenziert. Bitten Sie den Administrator der Organisation, Ihnen einen Benutzertyp mit Essential Apps oder eine Add-On-Lizenz für Essential Apps zuzuweisen.",
     "title": "Nicht lizenziert"
@@ -23,6 +23,8 @@ define({
     "infoTip": "Weitere Informationen anzeigen",
     "collapse": "Alle ausblenden",
     "open": "Alle öffnen",
-    "slider": "Suchentfernung"
+    "slider": "Suchentfernung",
+    "screenshotResults": "Ergebnisse einbeziehen",
+    "screenshot": "Screenshot"
   }
 });

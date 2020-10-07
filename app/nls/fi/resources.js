@@ -23,6 +23,8 @@ define({
     "infoTip": "Näytä enemmän tietoja",
     "collapse": "Tiivistä kaikki",
     "open": "Avaa kaikki",
-    "slider": "Hakuetäisyys"
+    "slider": "Hakuetäisyys",
+    "screenshotResults": "Sisällytä tulokset",
+    "screenshot": "Näyttökuva"
   }
 });

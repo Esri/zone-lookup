@@ -23,6 +23,8 @@ define({
     "infoTip": "Meer informatie bekijken",
     "collapse": "Alles samenvouwen",
     "open": "Alles openen",
-    "slider": "Zoekafstand"
+    "slider": "Zoekafstand",
+    "screenshotResults": "Resultaten opnemen",
+    "screenshot": "Schermafbeelding"
   }
 });

@@ -1,4 +1,4 @@
-define(["require", "exports", "tslib", "esri/core/accessorSupport/decorators", "esri/widgets/Widget", "../application-base-js/support/domHelper", "esri/widgets/support/widget", "esri/core/watchUtils"], function (require, exports, tslib_1, decorators_1, Widget_1, domHelper_1, widget_1, watchUtils_1) {
+define(["require", "exports", "tslib", "esri/core/accessorSupport/decorators", "esri/widgets/Widget", "ApplicationBase/support/domHelper", "esri/widgets/support/widget", "esri/core/watchUtils"], function (require, exports, tslib_1, decorators_1, Widget_1, domHelper_1, widget_1, watchUtils_1) {
     "use strict";
     Widget_1 = tslib_1.__importDefault(Widget_1);
     var CSS = {
@@ -55,7 +55,10 @@ define(["require", "exports", "tslib", "esri/core/accessorSupport/decorators", "
                             widget_1.tsx("h1", { title: title, class: this.classes(CSS.calciteStyles.topNavTitle, CSS.calciteStyles.ellipsis) }, titleDiv))))));
         };
         Header.prototype._onTitleUpdate = function () {
-            domHelper_1.setPageTitle(this.config.title);
+            var _a;
+            if ((_a = this === null || this === void 0 ? void 0 : this.config) === null || _a === void 0 ? void 0 : _a.title) {
+                domHelper_1.setPageTitle(this.config.title);
+            }
         };
         ;
         tslib_1.__decorate([

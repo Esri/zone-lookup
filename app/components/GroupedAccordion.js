@@ -45,9 +45,8 @@ define(["require", "exports", "tslib", "esri/core/accessorSupport/decorators", "
             _this._calciteLoaded = false;
             _this._handles = new Handles_1.default();
             _this._featureCount = 0;
-            console.log("Create Grouped Accordion");
+            _this._screenshot = null;
             if (props.featureResults) {
-                console.log("Create", props.featureResults);
                 props.featureResults.forEach(function (result) {
                     _this._featureCount += result.features && result.features.length;
                 });
@@ -57,8 +56,23 @@ define(["require", "exports", "tslib", "esri/core/accessorSupport/decorators", "
         GroupedAccordion.prototype.render = function () {
             var _this = this;
             return (widget_1.tsx("div", { key: "feature-container", afterCreate: this.updateCalcite },
-                widget_1.tsx("div", { class: this.classes(CSS.base, CSS.basejs, CSS.scrollable) }, this.featureResults &&
+                widget_1.tsx("div", { bind: this, afterCreate: this._accordionCreated, class: this.classes(CSS.base, CSS.basejs, CSS.scrollable) }, this.featureResults &&
                     this.featureResults.map(function (result, i) { return _this._createSections(result, i); }))));
+        };
+        GroupedAccordion.prototype._accordionCreated = function (container) {
+            var _a;
+            // if screenshot is enabled set custom prop 
+            if (((_a = this.config) === null || _a === void 0 ? void 0 : _a.screenshot) && !this._screenshot) {
+                if (this === null || this === void 0 ? void 0 : this.view) {
+                    var expand = this.view.ui.find("screenshotExpand");
+                    if (expand) {
+                        this._screenshot = expand.content;
+                        if (this._screenshot) {
+                            this._screenshot.custom.element = container;
+                        }
+                    }
+                }
+            }
         };
         GroupedAccordion.prototype._createSections = function (result, key) {
             var _this = this;
@@ -114,6 +128,7 @@ define(["require", "exports", "tslib", "esri/core/accessorSupport/decorators", "
         };
         GroupedAccordion.prototype.clear = function () {
             this.featureResults = null;
+            this._featureCount = 0;
         };
         GroupedAccordion.prototype.showToggle = function () {
             // show toggle buttons if we have more than 2 sections? 

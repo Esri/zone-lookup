@@ -23,6 +23,8 @@ define({
     "infoTip": "Lihat informasi selengkapnya",
     "collapse": "Tutup semua",
     "open": "Buka semua",
-    "slider": "Jarak pencarian"
+    "slider": "Jarak pencarian",
+    "screenshotResults": "Sertakan hasil",
+    "screenshot": "Tangkapan Layar"
   }
 });

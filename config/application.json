@@ -3,22 +3,32 @@
   "webmap": "default",
   "portalUrl": "https://www.arcgis.com",
   "oauthappid": null,
+  "googleAnalytics": false,
+  "googleAnalyticsKey": null,
+  "extentSelectorConfig": null,
+  "extentSelector": false,
   "proxyUrl": "",
   "title": null,
   "titleLink": null,
   "introductionTitle": null,
   "introductionContent": null,
-  "socialSharing": true,
+  "customCSS": null,
   "mapZoom": true,
   "mapZoomPosition": "top-right",
   "home": true,
   "basemapToggle": false,
   "basemapTogglePosition": "bottom-right",
-  "nextBasemap": null,
+  "basemapSelector": "streets",
   "homePosition": "top-right",
   "legend": false,
   "legendPosition": "top-right",
   "legendOpenAtStart": false,
+  "legendConfig": {
+    "style": {
+      "type": "card",
+      "layout": "auto"
+    }
+  },
   "scalebar": false,
   "scalebarPosition": "bottom-right",
   "enableSearchLayer": false,
@@ -40,6 +50,7 @@
   "maxDistance": 10,
   "includeDistance": false,
   "showDirections": false,
+  "share": false,
   "relationship": "intersects",
   "resultsPanelPreText": null,
   "resultsPanelPostText": null,
@@ -47,40 +58,32 @@
   "groupResultsByLayer": false,
   "hideMap": false,
   "header": true,
+  "screenshot": false,
+  "screenshotPosition": "top-left",
   "telemetry": {
+    "name": "minimalist",
+    "version": "1.0",
     "prod": {
-      "debug": false,
-      "disabled": false,
       "amazon": {
-        "userPoolID": "us-east-1:7345bcf2-bffa-4849-a379-a83178f63eef",
+        "userPoolID": "us-east-1:8c41b2dc-7563-403d-ba64-673b103debce",
         "app": {
-          "name": "ConfigurableApp:Demo",
-          "id": "eadf587070d04c86b747a938cc655e76",
-          "version": "1.0"
+          "id": "977e9b0602bb446d8f2fa5a50489d053"
         }
       }
     },
-    "devext": {
-      "debug": true,
-      "disabled": false,
+    "dev": {
       "amazon": {
         "userPoolID": "us-east-1:7345bcf2-bffa-4849-a379-a83178f63eef",
         "app": {
-          "name": "DemoApp",
-          "id": "eadf587070d04c86b747a938cc655e76",
-          "version": "1.0"
+          "id": "eadf587070d04c86b747a938cc655e76"
         }
       }
     },
-    "qaext": {
-      "debug": true,
-      "disabled": false,
+    "qa": {
       "amazon": {
         "userPoolID": "us-east-1:7345bcf2-bffa-4849-a379-a83178f63eef",
         "app": {
-          "name": "DemoApp",
-          "id": "74ec952cdae444389057fbae08043476",
-          "version": "1.0"
+          "id": "74ec952cdae444389057fbae08043476"
         }
       }
     }

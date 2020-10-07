@@ -16,7 +16,6 @@ type UIPosition =
     | "bottom-leading"
     | "bottom-trailing";
 
-type PanelType = "details" | "legend" | "popup";
 @subclass("app.ConfigurationSettings")
 class ConfigurationSettings extends (Accessor) {
     @property()
@@ -24,6 +23,10 @@ class ConfigurationSettings extends (Accessor) {
 
     @property()
     hideMap: boolean;
+    @property()
+    extentSelectorConfig: __esri.MapViewConstraints;
+    @property()
+    extentSelector: boolean;
 
     @property()
     header: boolean;
@@ -71,6 +74,9 @@ class ConfigurationSettings extends (Accessor) {
     legendOpenAtStart: boolean;
 
     @property()
+    legendConfig: __esri.LegendProperties;
+
+    @property()
     scalebar: boolean;
 
     @property()
@@ -84,6 +90,9 @@ class ConfigurationSettings extends (Accessor) {
 
     @property()
     nextBasemap: string;
+
+    @property()
+    basemapSelector: string;
 
     @property()
     searchConfiguration: any;
@@ -136,6 +145,21 @@ class ConfigurationSettings extends (Accessor) {
 
     @property()
     mapPinLabel: boolean;
+
+    @property()
+    share: boolean;
+
+    @property()
+    customCSS: string;
+
+    @property()
+    googleAnalytics: boolean;
+    @property()
+    googleAnalyticsKey: string;
+    @property()
+    screenshot: boolean;
+    @property()
+    screenshotPosition: UIPosition;
 
     @property()
     withinConfigurationExperience: boolean =

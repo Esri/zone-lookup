@@ -1,7 +1,7 @@
 
 import { subclass, property } from 'esri/core/accessorSupport/decorators';
 import Widget from 'esri/widgets/Widget';
-import { setPageTitle } from '../application-base-js/support/domHelper';
+import { setPageTitle } from 'ApplicationBase/support/domHelper';
 
 import { tsx, renderable } from 'esri/widgets/support/widget';
 import { init } from "esri/core/watchUtils";
@@ -93,7 +93,9 @@ class Header extends (Widget) {
 	}
 
 	private _onTitleUpdate() {
-		setPageTitle(this.config.title);
+		if (this?.config?.title) {
+			setPageTitle(this.config.title);
+		}
 	};
 
 }

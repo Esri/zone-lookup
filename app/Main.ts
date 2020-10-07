@@ -3,7 +3,7 @@
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -13,10 +13,10 @@
 
 import { displayError } from './utilites/errorUtils';
 import { addMapComponents } from './utilites/esriWidgetUtils';
-import { findConfiguredLookupLayers, getLookupLayers, getSearchLayer, getSearchGeometry } from './utilites/lookupLayerUtils';
-import { init, watch, whenFalseOnce } from "esri/core/watchUtils";
+import { getLookupLayers, getSearchLayer, getSearchGeometry } from './utilites/lookupLayerUtils';
+import { init, whenDefinedOnce, watch } from "esri/core/watchUtils";
 
-import { setPageDirection, setPageLocale } from './application-base-js/support/domHelper';
+import { setPageDirection, setPageLocale } from 'ApplicationBase/support/domHelper';
 import ConfigurationSettings from "./ConfigurationSettings";
 import ApplicationBase from 'ApplicationBase/ApplicationBase';
 import DetailPanel from './components/DetailPanel';
@@ -27,15 +27,17 @@ import Header from './components/Header';
 import Footer from "./components/Footer";
 import MapPanel from './components/MapPanel';
 import Search from 'esri/widgets/Search';
-import Telemetry from 'telemetry/telemetry.dojo';
+
 import LookupGraphics = require('./components/LookupGraphics');
 import FeatureLayer from 'esri/layers/FeatureLayer';
+import Telemetry, { TelemetryInstance } from "./telemetry/telemetry";
 
 import i18n = require('dojo/i18n!./nls/resources');
 
 import esri = __esri;
-import { apply } from 'dojo/behavior';
-import { search } from 'dojo/text!*';
+import { eachAlways } from 'esri/core/promiseUtils';
+import { fromJSON } from "esri/geometry/support/jsonUtils";
+
 const CSS = {
 	loading: 'configurable-application--loading'
 };
@@ -47,7 +49,7 @@ class LocationApp {
 	//
 	//--------------------------------------------------------------------------
 	_appConfig: ConfigurationSettings = null;
-	telemetry: Telemetry = null;
+	_telemetry: TelemetryInstance = null;
 	searchWidget: Search = null;
 	view: esri.MapView;
 	mapPanel: MapPanel = null;
@@ -56,6 +58,7 @@ class LocationApp {
 	// DisplayLookupResults is the component that handles displaying the popup content
 	// using the Feature widget for the features that match the lookup search requirements
 	lookupResults: DisplayLookupResults;
+	lookupGraphics: LookupGraphics = null;
 	//----------------------------------
 	//  ApplicationBase
 	//----------------------------------
@@ -87,28 +90,12 @@ class LocationApp {
 		this._createSharedTheme();
 		this._appConfig = new ConfigurationSettings(config);
 
+		this._handleTelemetry();
 		this._handles.add(init(this._appConfig, ["theme", "applySharedTheme"], () => {
 			this.handleThemeUpdates();
 		}), "configuration");
 
-		// Setup Telemetry
-		if (config.telemetry) {
-			let options = config.telemetry.prod;
-			if (portal.customBaseUrl.indexOf('mapsdevext') !== -1) {
-				// use devext credentials
-				options = config.telemetry.devext;
-			} else if (portal.customBaseUrl.indexOf('mapsqa') !== -1) {
-				// or qa
-				options = config.telemetry.qaext;
-			}
-			this.telemetry = new Telemetry({
-				portal,
-				disabled: options.disabled,
-				debug: options.debug,
-				amazon: options.amazon
-			});
-			this.telemetry.logPageView();
-		}
+
 
 		// Get web map
 		const allItems = webMapItems.map((item) => {
@@ -129,9 +116,6 @@ class LocationApp {
 				title: 'Error',
 				message: error
 			});
-			this.telemetry.logError({
-				error
-			});
 			return;
 		}
 		this.mapPanel = new MapPanel({
@@ -143,6 +127,7 @@ class LocationApp {
 		const panelHandle = this.mapPanel.watch('view', () => {
 			panelHandle.remove();
 			this.view = this.mapPanel.view;
+
 			// Watch and update properties that affect the 
 			// way results are displayed
 			this._handles.add(init(this._appConfig, ["displayUnmatchedResults", "groupResultsByLayer"], () => {
@@ -151,17 +136,21 @@ class LocationApp {
 				}
 			}), "configuration");
 
-			this._addHeader(item);
+			this.view.when(() => {
+				this._addHeader(item);
+				this._addDetails();
 
-			this._addDetails();
+				this._addFooter();
+				this.view.popup = null;
+			});
 
-			this._addFooter();
-
-			this.view.popup = null;
 			document.body.classList.remove(CSS.loading);
+
+			this._handles.add(init(this._appConfig, "customCSS", (newValue, oldValue, propertyName) => {
+				this._handleCustomCSS();
+			}));
+
 			this._addWidgets();
-
-
 		});
 	}
 	_addFooter() {
@@ -215,7 +204,7 @@ class LocationApp {
 	}
 	_addHeader(item) {
 
-		this._appConfig.title = this._appConfig.title || item.title;
+		this._appConfig.title = this._appConfig.title || item.title || null;
 		const headerComponent = new Header({
 			config: this._appConfig,
 			container: document.createElement("div")
@@ -225,12 +214,47 @@ class LocationApp {
 		sidePanel.insertBefore(headerComponent.container as HTMLElement, sidePanel.firstChild);
 	}
 	async _addWidgets() {
+		await this.view.when();
 		// Add esri widgets to the app (legend, home etc)
 		addMapComponents({
 			view: this.view,
 			config: this._appConfig,
 			portal: this.base.portal
 		});
+		this._handles.add(
+			init(this._appConfig, "extentSelector, extentSelectorConfig", (value, oldValue, propertyName) => {
+				if (this._appConfig?.extentSelector && this._appConfig?.extentSelectorConfig) {
+					let constraints = this._appConfig?.extentSelectorConfig || null;
+					const geometry = constraints?.geometry;
+					if (geometry) {
+						const extent = fromJSON(geometry);
+						if (extent && (extent?.type === "extent" || extent?.type === "polygon")) {
+							constraints.geometry = extent;
+							this.view.goTo(extent, false).catch(() => { });
+							this.searchWidget?.viewModel?.allSources?.forEach((source) => {
+								source.filter = {
+									geometry: extent
+								}
+							});
+						}
+					} else {
+						constraints.geometry = null;
+						this.searchWidget?.viewModel?.allSources?.forEach((source) => {
+							source.filter = null;
+						});
+					}
+					this.view.constraints = constraints;
+				} else {
+					this.view.constraints.geometry = null;
+					this.view.constraints.minZoom = -1;
+					this.view.constraints.maxZoom = -1;
+					this.view.constraints.minScale = 0;
+					this.view.constraints.maxScale = 0;
+
+					this?.mapPanel?.resetExtent();
+
+				}
+			}), "configuration");
 
 		this._setupFeatureSearchType();
 	}
@@ -240,29 +264,26 @@ class LocationApp {
 		if (!config.enableSearchLayer) {
 			this.base.config.searchLayer = null;
 		}
-		const lookupGraphics = new LookupGraphics({
+		this.lookupGraphics = new LookupGraphics({
 			view: this.view,
 			config: this._appConfig
 		});
+
 		this._handles.add(init(this._appConfig, ["drawBuffer", "mapPinLabel", "mapPin"], (value, oldValue, propertyName) => {
-			lookupGraphics.updateGraphics(propertyName, value);
+			this.lookupGraphics.updateGraphics(propertyName, value);
 		}), "configuration");
 		// Get configured search layers or if none are configured get
 		// all the feature layers in the map
 
-		const configuredLayers = await findConfiguredLookupLayers(this.view, config);
-		const lookupLayers: esri.Collection<esri.FeatureLayer> = getLookupLayers(configuredLayers)
 		const lookupProps = {
 			config,
 			view: this.view,
-			lookupLayers,
 			searchLayer: this._appConfig.enableSearchLayer && this._appConfig.searchLayer ? this._appConfig.searchLayer : null,
 			hideFeaturesOnLoad: this._appConfig.hideLookupLayers
 		};
-		const searchLayer: __esri.FeatureLayer = await getSearchLayer(lookupProps);
+		const searchLayer = getSearchLayer(lookupProps);
 		this.lookupResults = new DisplayLookupResults({
-			lookupLayers,
-			lookupGraphics,
+			lookupGraphics: this.lookupGraphics,
 			searchLayer,
 			config: this._appConfig,
 			view: this.view,
@@ -270,31 +291,43 @@ class LocationApp {
 			container: 'resultsPanel'
 		});
 
-		this._handles.add(watch(this._appConfig, ["lookupLayers", "enableSearchLayer", "searchLayer"], async (value, oldValue, propertyName) => {
+		this._handles.add(init(this._appConfig, ["lookupLayers", "enableSearchLayer", "searchLayer"], async (value, oldValue, propertyName) => {
 			if (propertyName === "lookupLayers") {
 				// Lookup layers have been modified. Update results to 
 				// only show included layers 
 				config.lookupLayers = value;
-				const configuredLayers = await findConfiguredLookupLayers(this.view, config);
+				//const configuredLayers = await findConfiguredLookupLayers(this.view, config);
+				let parsedLayers = this._appConfig.lookupLayers?.layers ? this._appConfig.lookupLayers.layers : null;
 
-				this.lookupResults.lookupLayers = await getLookupLayers(configuredLayers);
+				if (!Array.isArray(parsedLayers) || !parsedLayers.length) {
+					parsedLayers = null;
+				}
+
+				const lookupLayers = await getLookupLayers({
+					view: this.view,
+					lookupLayers: parsedLayers,
+					hideFeaturesOnLoad: this._appConfig.hideLookupLayers
+				});
+				this.lookupResults.lookupLayers = lookupLayers;
+
 				if (this._results) this._displayResults(this._results);
 			}
 			if (propertyName === "searchLayer" || propertyName === "enableSearchLayer") {
-				let searchLayer: __esri.FeatureLayer = null;
-				if (propertyName === "enableSearchLayer") {
-					searchLayer = await getSearchLayer({
-						view: this.view,
-						lookupLayers,
-						searchLayer: value,
-						hideFeaturesOnLoad: this._appConfig.hideLookupLayers
-					});
-				}
-				this.lookupResults.searchLayer = searchLayer;
+				//let searchLayer = null;
+				//if (propertyName === "enableSearchLayer") {
+				const searchLayer = getSearchLayer({
+					view: this.view,
+					searchLayer: this._appConfig.searchLayer,
+					hideFeaturesOnLoad: this._appConfig.hideLookupLayers
+				});
+				//}
+
+				this.lookupResults.searchLayer = this._appConfig.enableSearchLayer && searchLayer ? searchLayer : null;
 				if (this._results) this._displayResults(this._results);
 			}
 
 		}), "configuration");
+		// need to make sure layers are loaded before search
 
 		this._addSearchWidget();
 
@@ -302,16 +335,19 @@ class LocationApp {
 		this._cleanUpHandles();
 	}
 
-	_addSearchWidget() {
-		const { searchConfiguration, find, findSource } = this._appConfig;
+	async _addSearchWidget() {
+		const { searchConfiguration, extentSelector, extentSelectorConfig } = this._appConfig;
 		let sources = searchConfiguration?.sources;
+
 		if (sources) {
 			sources.forEach((source) => {
-				if (source?.layer?.url) {
-					source.layer = new FeatureLayer(source?.layer?.url);
-				}
+				let sourceLayer = null;
+				if (source?.layer?.id) sourceLayer = this.view.map.findLayerById(source.layer.id);
+				if (!sourceLayer && source?.layer?.url) sourceLayer = new FeatureLayer(source?.layer?.url);
+				source.layer = sourceLayer;
 			});
 		}
+
 		const searchProperties: esri.widgetsSearchProperties = {
 			...{
 				view: this.view,
@@ -323,52 +359,92 @@ class LocationApp {
 		};
 
 		if (searchProperties?.sources?.length > 0) {
+
 			searchProperties.includeDefaultSources = false;
 		}
 
 		this.searchWidget = new Search(searchProperties);
 
-		this._handles.add(init(this._appConfig, ["searchConfiguration.sources", "searchConfiguration.activeSourceIndex", "searchConfiguration.searchAllEnabled"], (value, oldValue, propertyName) => {
-			if (propertyName === "searchConfiguration.activeSourceIndex") {
-				this.searchWidget.activeSourceIndex = value;
-			}
-			if (propertyName === "searchConfiguration.searchAllEnabled") {
-				this.searchWidget.searchAllEnabled = value;
-			}
-			if (propertyName === "searchConfiguration.sources") {
-				if (value) {
-					value.forEach((source) => {
-						if (source?.layer?.url) {
-							source.layer = new FeatureLayer(source?.layer?.url);
-						}
-					});
-				}
-				this.searchWidget.sources = value;
-			}
-
-		}), "configuration");
-
-		// If there's a find url param search for it
-		if (find) {
-			whenFalseOnce(this.view, "updating", () => {
-				this.searchWidget.viewModel.searchTerm = decodeURIComponent(find);
-				if (findSource) {
-					this.searchWidget.activeSourceIndex = findSource;
-				}
-				this.searchWidget.viewModel.search();
-			});
-		}
 
 		const handle = this.searchWidget.viewModel.watch('state', (state) => {
 
 			if (state === 'ready') {
+				this._handles.add(init(this._appConfig, ["searchConfiguration.sources", "searchConfiguration.activeSourceIndex", "searchConfiguration.searchAllEnabled"], (value, oldValue, propertyName) => {
+					if (propertyName === "searchConfiguration.activeSourceIndex") {
+						this.searchWidget.activeSourceIndex = value;
+					}
+					if (propertyName === "searchConfiguration.searchAllEnabled") {
+						this.searchWidget.searchAllEnabled = value;
+					}
+					if (propertyName === "searchConfiguration.sources") {
+						if (value) {
+							value.forEach((source) => {
+								if (source?.layer?.url) {
+									source.layer = new FeatureLayer(source?.layer?.url);
+								}
+							});
+						}
+						this.searchWidget.sources = value;
+					}
+
+				}), "configuration");
+
+				// If there's a find url param search for it
+				init(this._appConfig, ["find", "findSource"], () => {
+
+					const { find, findSource } = this._appConfig;
+					if (find) {
+
+						if (!this.searchWidget?.viewModel) return;
+
+
+						this.searchWidget.viewModel.searchTerm = decodeURIComponent(find);
+						if (findSource) {
+							this.searchWidget.activeSourceIndex = findSource;
+						}
+						this.searchWidget.viewModel.search();
+
+					}
+				});
+				this.searchWidget.on('search-clear', () => {
+					this._cleanUpResults();
+					// Remove find url param
+					this._updateUrlParam();
+					this.mapPanel.resetExtent();
+				});
+
+				this.searchWidget.on('search-complete', async (results) => {
+
+					this._displayResults(results)
+				});
+				// We also want to search for locations when users click on the map
+				this.view.on('click', async (e) => {
+					if (this.base?.config?.searchLayer) {
+						this._cleanUpResults();
+					}
+
+					this.searchWidget.search(e.mapPoint);
+				});
+
 				handle.remove();
 				// conditionally hide on tablet
 				if (!this.view.container.classList.contains('tablet-show')) {
 					this.view.container.classList.add('tablet-hide');
 				}
 				// force search within map if nothing is configured
-				if (!searchConfiguration) {
+				if (extentSelector) {
+					const geometry = extentSelectorConfig?.geometry || null;
+					if (geometry) {
+						const extent = fromJSON(geometry);
+						if (extent && (extent?.type === "extent" || extent?.type === "polygon")) {
+							this.searchWidget.viewModel.allSources.forEach((source) => {
+								source.filter = {
+									geometry: extent
+								}
+							});
+						}
+					}
+				} else if (!searchConfiguration) {
 					this.searchWidget.viewModel.allSources.forEach((source) => {
 						source.withinViewEnabled = true;
 					});
@@ -376,60 +452,62 @@ class LocationApp {
 			}
 		});
 
-		this.searchWidget.on('search-clear', () => {
-			this._cleanUpResults();
-			// Remove find url param
-			this._updateUrlParam();
-			this.mapPanel.resetExtent();
-		});
 
-		this.searchWidget.on('search-complete', async (results) => {
-			this._displayResults(results)
-		});
-		// We also want to search for locations when users click on the map
-		this.view.on('click', async (e) => {
-			if (this.base?.config?.searchLayer) {
-				this._cleanUpResults();
-			}
+	} async createTelemetry() {
+		const { portal } = this.base;
+		this._telemetry = await Telemetry.init({ portal, config: this._appConfig, appName: "config-demo" });
+		this._telemetry?.logPageView();
 
-			this.searchWidget.search(e.mapPoint).then((response: any) => {
-				if (response && response.numResults < 1) {
-					this._displayNoResultsMessage(e.mapPoint);
-				}
-				if (response && response.numErrors && response.numErrors > 0) {
-					this._displayNoResultsMessage(e.mapPoint);
-				}
-			});
+
+	}
+	private _handleTelemetry() {
+		// Wait until both are defined 
+		eachAlways([whenDefinedOnce(this._appConfig, "googleAnalytics"),
+		whenDefinedOnce(this._appConfig, "googleAnalyticsKey")]
+
+		).then(() => {
+			this.createTelemetry();
+			this._handles.add([
+				watch(this._appConfig, ["googleAnalytics", "googleAnalyticsKey"], (newValue, oldValue, propertyName) => {
+					this.createTelemetry();
+				}),
+			], "configuration");
+
 		});
 	}
-	_displayNoResultsMessage(geometry: esri.Geometry) {
-		// display no results message
-		const g = new Graphic({ geometry });
-		this._generateSearchResults(g);
-		this.searchWidget.activeMenu = null;
-	}
+
 	async _generateSearchResults(location: esri.Graphic) {
 		// collapse the detail panel when results are found
 		if (this._detailPanel) {
 			this._detailPanel.collapse();
 		}
 
+		if (location?.attributes?.length === 0 && this?.searchWidget?.searchTerm) {
+			location.attributes.Match_addr = this.searchWidget.searchTerm;
+		}
+
 		this.lookupResults && this.lookupResults.queryFeatures(location, 0);
 	}
 	async _displayResults(results) {
 		this._results = results;
+
 		if (!this.base.config?.searchLayer) {
 			this._cleanUpResults();
 		}
+
 		if (results.numResults > 0) {
 			this._results = results;
 			// Add find url param
+			if (this._appConfig.mapPin || this._appConfig.mapPinLabel) {
+				this.lookupGraphics.updateGraphics("mapPin", this._appConfig.mapPin)
+				this.lookupGraphics.updateGraphics("mapPinLabel", this._appConfig.mapPinLabel);
+			}
 			const index = results && results.activeSourceIndex ? results.activeSourceIndex : null;
 			this._updateUrlParam(encodeURIComponent(this.searchWidget.searchTerm), index);
-			const searchLayer = (this.lookupResults?.searchLayer) || null;
+
 			// Get search geometry and add address location to the map
 			const feature = await getSearchGeometry({
-				searchLayer,
+				searchLayer: this.lookupResults.searchLayer || null,
 				config: this._appConfig,
 				view: this.view,
 				results
@@ -474,11 +552,11 @@ class LocationApp {
 		if (header?.background) styles.push(`.shared-theme .app-header{
 			background:${header.background};
 		}
-		.shared-theme .text-fade:after {
-			background: linear-gradient(to left, ${header.background}, 40%, transparent 100%);
+		.shared-theme .text-fade:after, .shared-theme .light .text-fade:after, .shared-theme .dark .text-fade:after {
+			background: linear-gradient(to left, ${header.background}, 40%, transparent 80%);
 		  }
-		  html[dir="rtl"] .light .text-fade:after {
-			background: linear-gradient(to right, ${header.background}, 40%, transparent 100%);
+		  html[dir="rtl"] .shared-theme .text-fade:before, .shared-theme .light .text-fade:before,  .shared-theme .dark .text-fade:after {
+			background: linear-gradient(to right, ${header.background}, 40%, transparent 80%);
 		  }
 		`);
 
@@ -532,7 +610,22 @@ class LocationApp {
 		}
 		applySharedTheme ? document.body.classList.add("shared-theme") : document.body.classList.remove("shared-theme");
 	}
+	private _handleCustomCSS(): void {
+		const customCSSStyleSheet = document.getElementById("customCSS");
 
+		if (customCSSStyleSheet) {
+			customCSSStyleSheet.remove();
+		}
+
+		const styles = document.createElement("style");
+		styles.id = "customCSS";
+		styles.type = "text/css";
+		const styleTextNode = document.createTextNode(
+			this._appConfig.customCSS
+		);
+		styles.appendChild(styleTextNode);
+		document.head.appendChild(styles);
+	}
 	_cleanUpHandles() {
 		// if we aren't in the config experience remove all handlers after load
 		if (!this._appConfig.withinConfigurationExperience) {

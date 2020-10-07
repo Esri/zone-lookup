@@ -56,6 +56,7 @@ class FeatureAccordion extends (Accordion) {
 	//--------------------------------------------------------------------------
 
 	_handles: Handles = new Handles();
+	_screenshot: any = null;
 	//--------------------------------------------------------------------------
 	//
 	//  Public Methods
@@ -66,11 +67,25 @@ class FeatureAccordion extends (Accordion) {
 	}
 	render() {
 		return (
-			<div afterCreate={this.updateCalcite} class={this.classes(CSS.base, CSS.basejs, CSS.scrollable)}>
+			<div afterCreate={this._accordionCreated} bind={this} class={this.classes(CSS.base, CSS.basejs, CSS.scrollable)}>
 				{this.features &&
 					this.features.map((graphic, i) => this._renderFeatureWidget(graphic, this.features.length, i))}
 			</div>
 		);
+	}
+
+	_accordionCreated(container) {
+		this.updateCalcite();
+		// if screenshot is enabled set custom prop 
+		if (this.config?.screenshot && !this._screenshot) {
+			if (this?.view) {
+				const expand = this.view.ui.find("screenshotExpand") as __esri.Expand;
+				if (expand) {
+					this._screenshot = expand.content as any;
+					if (this._screenshot) { this._screenshot.custom.element = container; }
+				}
+			}
+		}
 	}
 	_renderFeatureWidget(graphic: esri.Graphic, count: number, index: number) {
 		// Add active class to all sections if there are less than 2. If there are

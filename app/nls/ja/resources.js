@@ -23,6 +23,8 @@ define({
     "infoTip": "詳細情報の表示",
     "collapse": "すべて折りたたむ",
     "open": "すべて開く",
-    "slider": "検索距離"
+    "slider": "検索距離",
+    "screenshotResults": "結果を含める",
+    "screenshot": "スクリーンショット"
   }
 });

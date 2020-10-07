@@ -23,6 +23,8 @@ define({
     "infoTip": "檢視更多資訊",
     "collapse": "全部折疊",
     "open": "全部開啟",
-    "slider": "搜尋距離"
+    "slider": "搜尋距離",
+    "screenshotResults": "包含結果",
+    "screenshot": "螢幕截圖"
   }
 });

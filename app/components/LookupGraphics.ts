@@ -19,6 +19,7 @@ import Handles from "esri/core/Handles";
 import { TextSymbol } from 'esri/symbols';
 import { getBasemapTheme } from '../utilites/geometryUtils';
 import Color from 'esri/Color';
+import FeatureLayer from "esri/layers/FeatureLayer";
 import ConfigurationSettings = require('../ConfigurationSettings');
 interface LookupGraphicsProps {
     config: ConfigurationSettings;
@@ -53,7 +54,6 @@ class LookupGraphics extends (Accessor) {
     }
     public updateGraphics(propName: string, enabled: boolean) {
         if (this.graphic) {
-
             if (propName === "mapPinLabel") {
                 this._createGraphicLabel();
             }
@@ -62,31 +62,30 @@ class LookupGraphics extends (Accessor) {
             }
         }
     }
-
-
     private async _createGraphicMarker() {
         if (this._graphicMarker) {
             // remove the existing graphic
             this.view.graphics.remove(this._graphicMarker);
         }
         if (!this.config.mapPin) return;
+        if (this.graphic?.geometry) {
+            // create the graphic 
+            this._graphicMarker = new Graphic({
+                geometry: this.graphic?.geometry,
+                symbol: new TextSymbol({
+                    color: this._theme,
+                    haloColor: this._theme,
 
-        // create the graphic 
-        this._graphicMarker = new Graphic({
-            geometry: this.graphic.geometry,
-            symbol: new TextSymbol({
-                color: this._theme,
-                haloColor: this._theme,
-
-                text: '\ue61d',// esri-icon-map-pin
-                yoffset: 10,
-                font: {
-                    size: 20,
-                    family: 'calcite-web-icons'
-                }
-            })
-        });
-        this.view.graphics.add(this._graphicMarker);
+                    text: '\ue61d',// esri-icon-map-pin
+                    yoffset: 10,
+                    font: {
+                        size: 20,
+                        family: 'calcite-web-icons'
+                    }
+                })
+            });
+            this.view.graphics.add(this._graphicMarker);
+        }
     }
 
     private async _createGraphicLabel() {
@@ -95,9 +94,7 @@ class LookupGraphics extends (Accessor) {
             this.view.graphics.remove(this._graphicLabel);
         }
         if (!this.config.mapPinLabel) return;
-
         const address = this._getAddressText();
-
         // create the graphic 
         this._graphicLabel = new Graphic({
             geometry: this.graphic.geometry,
@@ -106,7 +103,7 @@ class LookupGraphics extends (Accessor) {
                     size: 12
                 },
                 text: address,
-                haloColor: this._theme.toHex() === this._lightColor ? this._darkColor : this._lightColor,
+                haloColor: this._theme?.toHex() === this._lightColor ? this._darkColor : this._lightColor,
                 haloSize: "1px",
                 color: this._theme,
                 horizontalAlignment: 'center'
@@ -126,10 +123,11 @@ class LookupGraphics extends (Accessor) {
             address = this.graphic.attributes.Match_addr.replace(',', '\n');
         } else if (this.graphic?.attributes?.name) {
             address = this.graphic.attributes.name;
-        } else if (this.graphic?.layer instanceof __esri.FeatureLayer) {
-            if (this.graphic.layer.displayField !== null) {
+        } else if (this.graphic?.layer instanceof FeatureLayer) {
+            if (this.graphic.layer.displayField !== null && this.graphic.layer.displayField !== "") {
                 address = this.graphic.attributes[this.graphic.layer.displayField] || null;
             } else {
+
                 // get the first string field
                 this.graphic.layer.fields.some((field) => {
                     if (field.type === 'string') {
@@ -143,7 +141,7 @@ class LookupGraphics extends (Accessor) {
 
     }
 
-    private async  _updateTheme() {
+    private async _updateTheme() {
         const theme = await getBasemapTheme(this.view);
         this._theme = (theme === "light") ? new Color(this._lightColor) : new Color(this._darkColor);
     }

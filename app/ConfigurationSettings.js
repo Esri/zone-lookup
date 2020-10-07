@@ -40,6 +40,12 @@ define(["require", "exports", "tslib", "esri/core/accessorSupport/decorators", "
         ], ConfigurationSettings.prototype, "hideMap", void 0);
         tslib_1.__decorate([
             decorators_1.property()
+        ], ConfigurationSettings.prototype, "extentSelectorConfig", void 0);
+        tslib_1.__decorate([
+            decorators_1.property()
+        ], ConfigurationSettings.prototype, "extentSelector", void 0);
+        tslib_1.__decorate([
+            decorators_1.property()
         ], ConfigurationSettings.prototype, "header", void 0);
         tslib_1.__decorate([
             decorators_1.property()
@@ -85,6 +91,9 @@ define(["require", "exports", "tslib", "esri/core/accessorSupport/decorators", "
         ], ConfigurationSettings.prototype, "legendOpenAtStart", void 0);
         tslib_1.__decorate([
             decorators_1.property()
+        ], ConfigurationSettings.prototype, "legendConfig", void 0);
+        tslib_1.__decorate([
+            decorators_1.property()
         ], ConfigurationSettings.prototype, "scalebar", void 0);
         tslib_1.__decorate([
             decorators_1.property()
@@ -98,6 +107,9 @@ define(["require", "exports", "tslib", "esri/core/accessorSupport/decorators", "
         tslib_1.__decorate([
             decorators_1.property()
         ], ConfigurationSettings.prototype, "nextBasemap", void 0);
+        tslib_1.__decorate([
+            decorators_1.property()
+        ], ConfigurationSettings.prototype, "basemapSelector", void 0);
         tslib_1.__decorate([
             decorators_1.property()
         ], ConfigurationSettings.prototype, "searchConfiguration", void 0);
@@ -152,6 +164,24 @@ define(["require", "exports", "tslib", "esri/core/accessorSupport/decorators", "
         tslib_1.__decorate([
             decorators_1.property()
         ], ConfigurationSettings.prototype, "mapPinLabel", void 0);
+        tslib_1.__decorate([
+            decorators_1.property()
+        ], ConfigurationSettings.prototype, "share", void 0);
+        tslib_1.__decorate([
+            decorators_1.property()
+        ], ConfigurationSettings.prototype, "customCSS", void 0);
+        tslib_1.__decorate([
+            decorators_1.property()
+        ], ConfigurationSettings.prototype, "googleAnalytics", void 0);
+        tslib_1.__decorate([
+            decorators_1.property()
+        ], ConfigurationSettings.prototype, "googleAnalyticsKey", void 0);
+        tslib_1.__decorate([
+            decorators_1.property()
+        ], ConfigurationSettings.prototype, "screenshot", void 0);
+        tslib_1.__decorate([
+            decorators_1.property()
+        ], ConfigurationSettings.prototype, "screenshotPosition", void 0);
         tslib_1.__decorate([
             decorators_1.property()
         ], ConfigurationSettings.prototype, "withinConfigurationExperience", void 0);

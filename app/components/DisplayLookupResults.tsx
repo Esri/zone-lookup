@@ -26,9 +26,9 @@ type State = 'init' | 'loading' | 'ready';
 
 interface DisplayLookupResultsProps extends esri.WidgetProperties {
 	view: esri.MapView;
-	lookupLayers: esri.Collection<esri.FeatureLayer>;
+	lookupLayers?: esri.FeatureLayer[];
 	lookupGraphics?: LookupGraphics;
-	searchLayer: esri.FeatureLayer;
+	searchLayer?: esri.FeatureLayer;
 	config: ConfigurationSettings;
 	mapPanel: MapPanel;
 }
@@ -73,8 +73,7 @@ class DisplayLookupResults extends (Widget) {
 	@renderable()
 	searchLayer: esri.FeatureLayer = null;
 	@property()
-	@renderable()
-	lookupLayers: __esri.Collection<__esri.FeatureLayer> = null;
+	@property() lookupLayers: esri.FeatureLayer[] = null;
 
 	@property()
 	@renderable()
@@ -171,7 +170,6 @@ class DisplayLookupResults extends (Widget) {
 			});
 		}
 		if (this.config.groupResultsByLayer) {
-			console.log("Grouped")
 			this._accordion = new GroupedAccordion({
 				actionBarItems: actionItems,
 				featureResults: _featureResults,
@@ -182,7 +180,6 @@ class DisplayLookupResults extends (Widget) {
 		} else if (this._featureResults && this._featureResults.length && this._featureResults.length > 0) {
 			const featureResults = _featureResults[0];
 			const features = featureResults.features ? featureResults.features : null;
-			console.log("Not Grouped")
 			this._accordion = new FeatureAccordion({
 				actionBarItems: actionItems,
 				features,
@@ -268,9 +265,7 @@ class DisplayLookupResults extends (Widget) {
 				if (!performQuery) {
 					promises.push(resolve({ features: [location], title: layer && layer.title ? layer.title : null, id: layer && layer.id ? layer.id : null }));
 				} else {
-					this._applyLayerEffectAndFilter(layer, query);
 					promises.push(layer.queryFeatures(query).then(results => {
-
 						return resolve({
 							features: results.features,
 							title: layer && layer.title ? layer.title : null,
@@ -280,6 +275,7 @@ class DisplayLookupResults extends (Widget) {
 						console.log("Error loading layer", error);
 						return resolve();
 					}));
+					this._applyLayerEffectAndFilter(layer, query);
 				}
 			});
 		}
@@ -349,7 +345,8 @@ class DisplayLookupResults extends (Widget) {
 			query.distance = this.distance;
 			query.units = units;
 		} else if (lookupType === 'geometry') {
-			query.spatialRelationship = layerGeometryType === "point" || layerGeometryType === "polygon" ? "contains" : "intersects";
+			query.spatialRelationship = layerGeometryType === "polygon" ? "contains" : "intersects";
+
 		}
 		return query;
 	}
@@ -392,7 +389,7 @@ class DisplayLookupResults extends (Widget) {
 
 	private _searchHighlight(graphic) {
 		const { lookupType } = this.config;
-		if (this.searchLayer && lookupType === 'geometry') {
+		if (this?.searchLayer && lookupType === 'geometry') {
 			const key = 'search-layer-handle';
 			this._handles.remove(key);
 			this.view.whenLayerView(this.searchLayer).then((layerView) => {
@@ -411,19 +408,18 @@ class DisplayLookupResults extends (Widget) {
 				//	hideLookupLayers &&
 				graphic.layer &&
 				graphic.layer.id &&
-				this.searchLayer &&
-				this.searchLayer.id &&
+				this?.searchLayer?.id &&
 				graphic.layer.id === this.searchLayer.id
 			) {
-				queryFilter.where = `${this.searchLayer.objectIdField} = ${graphic.attributes[
-					this.searchLayer.objectIdField
+				queryFilter.where = `${this.searchLayer?.objectIdField} = ${graphic.attributes[
+					this.searchLayer?.objectIdField
 				]}`;
 			} else {
 				queryFilter.geometry =
 					graphic.geometry.type === 'polygon' ? graphic.geometry.extent.center : graphic.geometry;
 			}
 
-			this._applyLayerEffectAndFilter(this.searchLayer, queryFilter);
+			this._applyLayerEffectAndFilter(this?.searchLayer, queryFilter);
 		}
 	}
 

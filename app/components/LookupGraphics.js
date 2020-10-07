@@ -10,11 +10,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.​
 */
-define(["require", "exports", "tslib", "esri/core/accessorSupport/decorators", "esri/core/Accessor", "esri/Graphic", "esri/core/Handles", "esri/symbols", "../utilites/geometryUtils", "esri/Color"], function (require, exports, tslib_1, decorators_1, Accessor, Graphic_1, Handles_1, symbols_1, geometryUtils_1, Color_1) {
+define(["require", "exports", "tslib", "esri/core/accessorSupport/decorators", "esri/core/Accessor", "esri/Graphic", "esri/core/Handles", "esri/symbols", "../utilites/geometryUtils", "esri/Color", "esri/layers/FeatureLayer"], function (require, exports, tslib_1, decorators_1, Accessor, Graphic_1, Handles_1, symbols_1, geometryUtils_1, Color_1, FeatureLayer_1) {
     "use strict";
     Graphic_1 = tslib_1.__importDefault(Graphic_1);
     Handles_1 = tslib_1.__importDefault(Handles_1);
     Color_1 = tslib_1.__importDefault(Color_1);
+    FeatureLayer_1 = tslib_1.__importDefault(FeatureLayer_1);
     var LookupGraphics = /** @class */ (function (_super) {
         tslib_1.__extends(LookupGraphics, _super);
         function LookupGraphics(props) {
@@ -47,37 +48,41 @@ define(["require", "exports", "tslib", "esri/core/accessorSupport/decorators", "
             }
         };
         LookupGraphics.prototype._createGraphicMarker = function () {
+            var _a, _b;
             return tslib_1.__awaiter(this, void 0, void 0, function () {
-                return tslib_1.__generator(this, function (_a) {
+                return tslib_1.__generator(this, function (_c) {
                     if (this._graphicMarker) {
                         // remove the existing graphic
                         this.view.graphics.remove(this._graphicMarker);
                     }
                     if (!this.config.mapPin)
                         return [2 /*return*/];
-                    // create the graphic 
-                    this._graphicMarker = new Graphic_1.default({
-                        geometry: this.graphic.geometry,
-                        symbol: new symbols_1.TextSymbol({
-                            color: this._theme,
-                            haloColor: this._theme,
-                            text: '\ue61d',
-                            yoffset: 10,
-                            font: {
-                                size: 20,
-                                family: 'calcite-web-icons'
-                            }
-                        })
-                    });
-                    this.view.graphics.add(this._graphicMarker);
+                    if ((_a = this.graphic) === null || _a === void 0 ? void 0 : _a.geometry) {
+                        // create the graphic 
+                        this._graphicMarker = new Graphic_1.default({
+                            geometry: (_b = this.graphic) === null || _b === void 0 ? void 0 : _b.geometry,
+                            symbol: new symbols_1.TextSymbol({
+                                color: this._theme,
+                                haloColor: this._theme,
+                                text: '\ue61d',
+                                yoffset: 10,
+                                font: {
+                                    size: 20,
+                                    family: 'calcite-web-icons'
+                                }
+                            })
+                        });
+                        this.view.graphics.add(this._graphicMarker);
+                    }
                     return [2 /*return*/];
                 });
             });
         };
         LookupGraphics.prototype._createGraphicLabel = function () {
+            var _a;
             return tslib_1.__awaiter(this, void 0, void 0, function () {
                 var address;
-                return tslib_1.__generator(this, function (_a) {
+                return tslib_1.__generator(this, function (_b) {
                     if (this._graphicLabel) {
                         // remove existing then create new
                         this.view.graphics.remove(this._graphicLabel);
@@ -93,7 +98,7 @@ define(["require", "exports", "tslib", "esri/core/accessorSupport/decorators", "
                                 size: 12
                             },
                             text: address,
-                            haloColor: this._theme.toHex() === this._lightColor ? this._darkColor : this._lightColor,
+                            haloColor: ((_a = this._theme) === null || _a === void 0 ? void 0 : _a.toHex()) === this._lightColor ? this._darkColor : this._lightColor,
                             haloSize: "1px",
                             color: this._theme,
                             horizontalAlignment: 'center'
@@ -117,8 +122,8 @@ define(["require", "exports", "tslib", "esri/core/accessorSupport/decorators", "
             else if ((_d = (_c = this.graphic) === null || _c === void 0 ? void 0 : _c.attributes) === null || _d === void 0 ? void 0 : _d.name) {
                 address = this.graphic.attributes.name;
             }
-            else if (((_e = this.graphic) === null || _e === void 0 ? void 0 : _e.layer) instanceof __esri.FeatureLayer) {
-                if (this.graphic.layer.displayField !== null) {
+            else if (((_e = this.graphic) === null || _e === void 0 ? void 0 : _e.layer) instanceof FeatureLayer_1.default) {
+                if (this.graphic.layer.displayField !== null && this.graphic.layer.displayField !== "") {
                     address = this.graphic.attributes[this.graphic.layer.displayField] || null;
                 }
                 else {

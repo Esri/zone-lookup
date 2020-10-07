@@ -23,6 +23,8 @@ define({
     "infoTip": "הצג מידע נוסף",
     "collapse": "כווץ הכל",
     "open": "פתח הכל",
-    "slider": "מרחק חיפוש"
+    "slider": "מרחק חיפוש",
+    "screenshotResults": "כלול תוצאות",
+    "screenshot": "צילום מסך"
   }
 });

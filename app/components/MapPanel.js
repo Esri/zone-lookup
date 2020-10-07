@@ -112,8 +112,9 @@ define(["require", "exports", "tslib", "esri/core/accessorSupport/decorators", "
                             _a.view = (_b.sent());
                             this.view.highlightOptions.fillOpacity = 0;
                             handler_1 = this.view.watch('extent', function () {
+                                var _a;
                                 handler_1.remove();
-                                _this._initialExtent = _this.view.extent.clone();
+                                _this._initialExtent = (_a = _this.view) === null || _a === void 0 ? void 0 : _a.extent.clone();
                             });
                             document.getElementById('mapDescription').innerHTML = i18n.map.description;
                             rootNode = document.getElementsByClassName('esri-view-surface');
@@ -145,7 +146,10 @@ define(["require", "exports", "tslib", "esri/core/accessorSupport/decorators", "
             this.message = null;
         };
         MapPanel.prototype.resetExtent = function () {
-            this.view.goTo(this._initialExtent);
+            var _a;
+            if (this._initialExtent) {
+                (_a = this.view) === null || _a === void 0 ? void 0 : _a.goTo(this._initialExtent);
+            }
         };
         tslib_1.__decorate([
             decorators_1.property()

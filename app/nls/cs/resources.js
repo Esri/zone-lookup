@@ -23,6 +23,8 @@ define({
     "infoTip": "Zobrazit další informace",
     "collapse": "Sbalit vše",
     "open": "Otevřít vše",
-    "slider": "Vzdálenost vyhledávání"
+    "slider": "Vzdálenost vyhledávání",
+    "screenshotResults": "Zahrnout výsledky",
+    "screenshot": "Snímek obrazovky"
   }
 });

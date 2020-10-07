@@ -23,6 +23,8 @@ define({
     "infoTip": "추가 정보 보기",
     "collapse": "모두 축소",
     "open": "모두 열기",
-    "slider": "검색 거리"
+    "slider": "검색 거리",
+    "screenshotResults": "결과 포함",
+    "screenshot": "스크린샷"
   }
 });

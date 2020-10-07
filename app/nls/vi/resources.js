@@ -23,6 +23,8 @@ define({
     "infoTip": "Xem thêm thông tin",
     "collapse": "Thu gọn tất cả",
     "open": "Mở tất cả",
-    "slider": "Khoảng cách tìm kiếm"
+    "slider": "Khoảng cách tìm kiếm",
+    "screenshotResults": "Gồm các kết quả",
+    "screenshot": "Ảnh chụp màn hình"
   }
 });
