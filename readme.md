@@ -1,5 +1,13 @@
 
 
+ # Installation 
+ Prerequisites: The webserver needs npm and node installed. 
+ * Fork and then clone the repo.
+ * Run npm install
+ * Host on local web server.
+ * Open web browser
+ * Append your configured appid to the url with ?appid= 
+
 # Configuration Options
 Test apps
 * Congressional districts:521fa0defa054c389097e685328d4bc3
