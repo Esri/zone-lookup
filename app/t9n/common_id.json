@@ -1,0 +1,60 @@
+{
+  "cancel": "Batalkan",
+  "toggle": "Alihkan",
+  "load": {
+    "label": "Memuat"
+  },
+  "onboarding": {
+    "title": "Selamat Datang!",
+    "content": "Cari alamat untuk mempelajari selengkapnya tentang lokasi dan area sekitarnya.</br>Jika Anda tidak tahu alamatnya, gunakan salah satu dari metode pencarian berikut: <ul><li>Klik kotak pencarian dan ketikkan alamat atau pilih <b>Gunakan lokasi saat ini </b></li><li>Klik di dalam peta <div></div></li></ul></br> Hasil akan mencakup informasi tentang fitur yang diinginkan."
+  },
+  "map": {
+    "label": "Peta",
+    "description": "Navigasikan peta dengan menggunakan tombol panah untuk menggerakkan ke kanan, kiri, atas, atau bawah. Gunakan tombol plus dan minus untuk memperbesar dan memperkecil. Gunakan kotak pencarian untuk menjelajahi konten peta",
+    "miniMapDescription": "Peta yang menampilkan lokasi fitur yang dipilih"
+  },
+  "count": "Total",
+  "noFeatures": "Tidak ditemukan fitur yang memenuhi kriteria pencarian",
+  "error": "Kesalahan",
+  "licenseError": {
+    "message": "Akun Anda tidak memiliki lisensi untuk menggunakan Configurable Apps yang tidak bersifat publik. Harap minta administrator organisasi Anda untuk menetapkan jenis pengguna yang menyertakan Essential App atau add-on Essential App kepada Anda",
+    "title": "Tidak Berlisensi"
+  },
+  "tools": {
+    "clearLocation": "Hapus lokasi pencarian",
+    "searchThisLocation": "Cari area ini",
+    "filter": "Filter",
+    "selectFilter": "Pilih Filter",
+    "info": "Info",
+    "sketch": "Gambar batas pencarian",
+    "sketchInstructions": "Klik peta untuk menentukan batas pencarian. Klik dua kali begitu batas selesai. Klik batal atau tekan tombol esc untuk membatalkan gambar.",
+    "collapse": "Tutup Semua",
+    "open": "Bentangkan Semua",
+    "slider": "Jarak pencarian",
+    "results": "Hasil",
+    "screenshotResults": "Sertakan hasil",
+    "elevation": "Elevasi"
+  },
+  "units": {
+    "kilometers": {
+      "singular": "kilometer",
+      "plural": "kilometer",
+      "abbr": "km"
+    },
+    "feet": {
+      "singular": "kaki",
+      "plural": "kaki",
+      "abbr": "ft"
+    },
+    "miles": {
+      "singular": "mil",
+      "plural": "mil",
+      "abbr": "mil"
+    },
+    "meters": {
+      "singular": "meter",
+      "plural": "meter",
+      "abbr": "mnt"
+    }
+  }
+}

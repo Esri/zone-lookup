@@ -1,0 +1,60 @@
+{
+  "cancel": "Peruuta",
+  "toggle": "Vaihda",
+  "load": {
+    "label": "Ladataan"
+  },
+  "onboarding": {
+    "title": "Tervetuloa!",
+    "content": "Tutustu sijaintiin ja sitä ympäröivään alueeseen etsimällä osoitetta.</br>Jos et tiedä osoitetta, käytä jotakin seuraavista hakutavoista: <ul><li>Napsauta hakuruutua ja kirjoita osoite tai valitse <b>Käytän nykyistä sijaintia </b></li><li>Napsauta kartassa <div></div></li></ul></br> Tulokset sisältävät tietoja kiinnostavista kohteista."
+  },
+  "map": {
+    "label": "Kartta",
+    "description": "Navigoi kartassa käyttämällä nuolinäppäimiä oikealle, vasemmalle, ylös tai alas siirtymiseen. Voit lähentää ja loitontaa asteittain käyttämällä plus- ja miinus-näppäimiä. Voit selata kartan sisältöä käyttämällä hakuruutua",
+    "miniMapDescription": "Kartta, jossa näkyy valitun kohteen sijainti"
+  },
+  "count": "Yhteensä",
+  "noFeatures": "Yhtään hakuehdot täyttävää kohdetta ei löytynyt",
+  "error": "Virhe",
+  "licenseError": {
+    "message": "Tiliäsi ei ole lisensoitu käyttämään muunneltavissa olevia sovelluksia, jotka eivät ole julkisia. Pyydä organisaatiosi järjestelmänvalvojaa määrittämään sinulle käyttäjätyyppi, joka sisältää keskeiset sovellukset tai keskeisten sovellusten lisäosan lisenssin.",
+    "title": "Ei lisenssiä"
+  },
+  "tools": {
+    "clearLocation": "Tyhjennä sijainnin etsintä",
+    "searchThisLocation": "Hae tältä alueelta",
+    "filter": "Suodata",
+    "selectFilter": "Valitse suodatin",
+    "info": "Tiedot",
+    "sketch": "Piirrä hakuraja",
+    "sketchInstructions": "Määritä hakuraja napsauttamalla karttaa. Kun raja on valmis, suorita loppuun kaksoisnapsauttamalla. Peruuta piirros napsauttamalla Peruuta tai paina Esc-näppäintä.",
+    "collapse": "Tiivistä kaikki",
+    "open": "Laajenna kaikki",
+    "slider": "Hakuetäisyys",
+    "results": "Tulokset",
+    "screenshotResults": "Sisällytä tulokset",
+    "elevation": "Korkeustaso"
+  },
+  "units": {
+    "kilometers": {
+      "singular": "kilometri",
+      "plural": "kilometriä",
+      "abbr": "km"
+    },
+    "feet": {
+      "singular": "jalka",
+      "plural": "jalkaa",
+      "abbr": "ft"
+    },
+    "miles": {
+      "singular": "maili",
+      "plural": "mailia",
+      "abbr": "mailia"
+    },
+    "meters": {
+      "singular": "metri",
+      "plural": "metriä",
+      "abbr": "m"
+    }
+  }
+}

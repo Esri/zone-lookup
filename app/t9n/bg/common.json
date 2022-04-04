@@ -1,0 +1,60 @@
+{
+  "cancel": "й_Cancel_____________й",
+  "toggle": "й_Toggle_____________й",
+  "load": {
+    "label": "й_Loading_______________й"
+  },
+  "onboarding": {
+    "title": "й_Welcome_________________й!",
+    "content": "й_Search for an address to learn more about the location and its surrounding area.</br>If you don't know the address, use one of these search methods: <ul><li>Click the search box and type in an address or choose <b>Use current location </b></li><li>Click within the map <div></div></li></ul></br> Results will include information about features of interest___________________________________________________________________________________________________________________________________________________________________________________й."
+  },
+  "map": {
+    "label": "й_Map_______й",
+    "description": "й_Navigate the map using the arrow keys to move right, left, up or down. Use the plus and minus keys to incrementally zoom in and out. Use the search box to browse map content________________________________________________________________________________________й",
+    "miniMapDescription": "й_Map showing the location of the selected feature_________________________й"
+  },
+  "count": "й_Total___________й",
+  "noFeatures": "й_No features found that meet the search criteria_________________________й",
+  "error": "й_Error___________й",
+  "licenseError": {
+    "message": "й_Your account is not licensed to use Configurable Apps that are not public. Please ask your organization administrator to assign you a user type that includes Essential Apps or an add-on Essential Apps license_________________________________________________________________________________________________________й",
+    "title": "й_Not Licensed_____________й"
+  },
+  "tools": {
+    "clearLocation": "й_Clear search location______________________й",
+    "searchThisLocation": "й_Search this area_________________й",
+    "filter": "й_Filter_____________й",
+    "selectFilter": "й_Select Filter______________й",
+    "info": "й_Info_________й",
+    "sketch": "й_Draw search boundary_____________________й",
+    "sketchInstructions": "й_Click on the map to define the search boundary. Double-click when boundary is complete. Click cancel or press the esc key to cancel drawing_______________________________________________________________________й.",
+    "collapse": "й_Collapse All_____________й",
+    "open": "й_Expand All_____________________й",
+    "slider": "й_Search distance________________й",
+    "results": "й_Results_______________й",
+    "screenshotResults": "й_Include results________________й",
+    "elevation": "й_Elevation___________________й"
+  },
+  "units": {
+    "kilometers": {
+      "singular": "й_kilometer___________________й",
+      "plural": "й_kilometers_____________________й",
+      "abbr": "й_km_____й"
+    },
+    "feet": {
+      "singular": "й_foot_________й",
+      "plural": "й_feet_________й",
+      "abbr": "й_ft_____й"
+    },
+    "miles": {
+      "singular": "й_mile_________й",
+      "plural": "й_miles___________й",
+      "abbr": "й_mi_____й"
+    },
+    "meters": {
+      "singular": "й_meter___________й",
+      "plural": "й_meters_____________й",
+      "abbr": "й_m___й"
+    }
+  }
+}

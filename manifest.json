@@ -1,14 +1,11 @@
 {
-  "short_name": "lookup",
   "name": "Zone Lookup",
-  "icons": [
-    {
-      "src": "./assets/Add_to_Home.png",
-      "sizes": "512x512"
-    }
-  ],
-  "scope": "/",
-  "start_url": "index.html",
+  "short_name": "lookup",
+  "icons": [{
+    "src": "./assets/Add_to_Home.png",
+    "sizes": "512x512"
+  }],
+  "start_url": ".",
   "background_color": "#fff",
   "display": "standalone",
   "theme_color": "#0079c1"

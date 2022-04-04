@@ -1,0 +1,395 @@
+/*
+ *   Copyright (c) 2022 Esri
+ *   All rights reserved.
+
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+
+ *   http://www.apache.org/licenses/LICENSE-2.0
+
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
+
+.column-6,
+.column-10,
+.column-12,
+.column-14,
+.column-18,
+.column-24 {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 2000px;
+  max-width: 100%;
+  padding: 0;
+  float: left;
+}
+
+html[dir="rtl"] .column-6,
+html[dir="rtl"] .column-10,
+html[dir="rtl"] .column-12,
+html[dir="rtl"] .column-14,
+html[dir="rtl"] .column-18,
+html[dir="rtl"] .column-24 {
+  float: right;
+}
+
+html:not([dir="rtl"]) [class*="column-"] [class*="column-"]:first-of-type {
+  margin-left: -0.5rem;
+}
+
+html[dir="rtl"] [class*="column-"] [class*="column-"]:first-of-type {
+  margin-right: -0.5rem;
+}
+
+html:not([dir="rtl"]) [class*="column-"] [class*="column-"]:last-of-type {
+  margin-right: -0.5rem;
+}
+
+html[dir="rtl"] [class*="column-"] [class*="column-"]:last-of-type {
+  margin-left: -0.5rem;
+}
+
+[class*="column-"]:last-of-type:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+@media screen {
+  .grid-container {
+    width: 100%;
+    max-width: 100vw;
+    padding-right: 0;
+    padding-left: 0;
+    margin-right: auto;
+    margin-left: auto;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+  .grid-container:after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+
+@media screen {
+  html:not([dir="rtl"]) .first-column {
+    margin-left: -0.5rem;
+  }
+
+  html[dir="rtl"] .first-column {
+    margin-right: -0.5rem;
+  }
+
+  html:not([dir="rtl"]) .last-column {
+    margin-right: -0.5rem;
+  }
+
+  html[dir="rtl"] .last-column {
+    margin-left: -0.5rem;
+  }
+}
+
+.column-6 {
+  width: 500px;
+  max-width: 25vw;
+}
+
+.column-6>.column-6 {
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+}
+
+.column-18 {
+  width: 100%;
+  max-width: 75vw;
+}
+
+.column-18>.column-18 {
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+}
+
+.column-10 {
+  width: 833.33333px;
+  max-width: 41.66667vw;
+}
+
+.column-10>.column-10 {
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+}
+
+
+.column-12 {
+  width: 1000px;
+  max-width: 50vw;
+}
+
+.column-12>.column-12 {
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+}
+
+.column-14 {
+  width: 1166.66667px;
+  max-width: 58.33333vw;
+}
+
+.column-14>.column-14 {
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+}
+
+.column-24 {
+  width: 2000px;
+  max-width: 100vw;
+}
+
+.column-24>.column-24 {
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+}
+
+@media screen and (max-width: 859px) {
+
+
+  .column-6 {
+    width: 1000px;
+    max-width: 50vw;
+  }
+
+
+  .column-10 {
+    width: 1666.66667px;
+    max-width: 83.33333vw;
+  }
+
+  .column-12 {
+    width: 2000px;
+    max-width: 100vw;
+  }
+
+  .column-14 {
+    width: 2000px;
+    max-width: 100vw;
+  }
+
+  .column-24 {
+    width: 2000px;
+    max-width: 100vw;
+  }
+
+  .tablet-column-12 {
+    width: 2000px;
+    max-width: 100vw;
+  }
+
+}
+
+@media screen and (max-width: 479px) {
+  .column-6 {
+    width: 2000px;
+    max-width: 100vw;
+  }
+
+  .column-8 {
+    width: 2000px;
+    max-width: 100vw;
+  }
+
+
+  .column-10 {
+    width: 2000px;
+    max-width: 100vw;
+  }
+
+
+  .column-12 {
+    width: 2000px;
+    max-width: 100vw;
+  }
+
+  .column-24 {
+    width: 2000px;
+    max-width: 100vw;
+  }
+
+  .tablet-column-12 {
+    width: 2000px;
+    max-width: 100vw;
+  }
+
+  .phone-column-6 {
+    width: 2000px;
+    max-width: 100vw;
+  }
+
+}
+
+@media screen and (min-width: 1440px) {
+  .phone-show {
+    display: none !important;
+  }
+
+  .tablet-show {
+    display: none !important;
+  }
+
+  .tablet-only {
+    display: none !important;
+  }
+
+  .large-hide {
+    display: none !important;
+  }
+}
+
+@media screen and (max-width: 1439px) and (min-width: 860px) {
+  .phone-show {
+    display: none !important;
+  }
+
+  .tablet-show {
+    display: none !important;
+  }
+
+  .tablet-only {
+    display: none !important;
+  }
+
+  .large-only {
+    display: none !important;
+  }
+
+  .large-show {
+    display: none !important;
+  }
+}
+
+@media screen and (max-width: 859px) and (min-width: 480px) {
+  .tablet-hide {
+    display: none !important;
+  }
+
+  .phone-show {
+    display: none !important;
+  }
+
+  .large-only {
+    display: none !important;
+  }
+
+  .large-show {
+    display: none !important;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  .phone-hide {
+    display: none !important;
+  }
+
+  .tablet-hide {
+    display: none !important;
+  }
+
+  .tablet-only {
+    display: none !important;
+  }
+
+  .large-only {
+    display: none !important;
+  }
+
+  .large-show {
+    display: none !important;
+  }
+}
+
+
+.left {
+  float: left;
+}
+
+html[dir="rtl"] .left {
+  float: right;
+}
+
+.right {
+  float: right;
+}
+
+html[dir="rtl"] .right {
+  float: left;
+}
+
+@media screen and (min-width: 1440px) {
+  .large-left {
+    float: left;
+  }
+
+  html[dir="rtl"] .large-left {
+    float: right;
+  }
+
+  .large-right {
+    float: right;
+  }
+
+  html[dir="rtl"] .large-right {
+    float: left;
+  }
+}
+
+
+[class*="icon-social-"] {
+  background-color: rgba(0, 0, 0, 0.45);
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  -webkit-transition: background-color 200ms linear;
+  transition: background-color 200ms linear;
+}
+
+[class*="icon-social-"]:hover {
+  -webkit-transition: background-color 200ms linear;
+  transition: background-color 200ms linear;
+  opacity: .60;
+}
+
+
+.icon-social-contact {
+  background-image: url("../img/icons/social/contact.svg");
+}
+
+.icon-social-facebook {
+  background-image: url("../img/icons/social/facebook.svg");
+}
+
+.icon-social-instagram {
+  background-image: url("../img/icons/social/instagram.svg");
+}
+
+.icon-social-linkedin {
+  background-image: url("../img/icons/social/linkedin.svg");
+}
+
+.icon-social-share {
+  background-image: url("../img/icons/social/share.svg");
+}
+
+.icon-social-twitter {
+  background-image: url("../img/icons/social/twitter.svg");
+}

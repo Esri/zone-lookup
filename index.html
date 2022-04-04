@@ -10,59 +10,92 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title></title>
   <link rel="manifest" href="./manifest.json">
-  <link rel="icon" href="assets/favicon.ico" sizes="32x32" type="image/vnd.microsoft.icon">
-  <meta name="description" content="Zone Lookup">
+  <link rel="shortcut icon" href="./favicon.png" type="image/ico">
+  <meta name="description" content="Lookup">
   <meta name="theme-color" content="#0079c1" />
   <noscript>
     <p>Please enable JavaScript to use this site.</p>
   </noscript>
+  <link rel="stylesheet" type="text/css" href="../node_modules/@esri/calcite-components/dist/calcite/calcite.css" />
+
+  <link id="esri-stylesheet" rel="stylesheet" href="https://js.arcgis.com/4.23/esri/themes/light/main.css" />
+
+  <link rel="stylesheet" media="screen" href="styles/main.css">
+  <link rel="stylesheet" media="print" href="styles/print.css">
   <script>
+
+    if (navigator && navigator.userAgent) {
+      var match = /\b(MSIE |Trident.*?rv:|Edge\/)(\d+)/.exec(navigator.userAgent);
+      if (match && match.length && match.length === 3) {
+        const version = parseInt(match[2]);
+        if (version <= 19) {
+          document.location = "../../shared/unsupported/index.html";
+        }
+      }
+    }
+
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./serviceworker.js', {
-        scope: './sw-test/'
-      })
-        .then(function (reg) {
-          // registration worked
-          console.log('Registration succeeded. Scope is ' + reg.scope);
-        }).catch(function (error) {
-          // registration failed
-          console.log('Registration failed with ' + error);
-        });
+      navigator.serviceWorker.register('/service-worker.js').then(function (registration) {
+        console.log('ServiceWorker registration successful!');
+      }).catch(function (err) {
+        console.log('ServiceWorker registration failed: ', err);
+      });
     }
 
   </script>
-  <link id="esri-stylesheet" rel="stylesheet" href="https://js.arcgis.com/4.17/esri/themes/light/main.css" />
-  <link rel="stylesheet" href="styles/main.css">
-  <link rel="stylesheet" type="text/css" href="https://unpkg.com/@esri/calcite-components/dist/calcite/calcite.css" />
-  <script type="module" src="https://unpkg.com/@esri/calcite-components/dist/calcite/calcite.esm.js"></script>
-  <script nomodule="" src="https://unpkg.com/@esri/calcite-components/dist/calcite/calcite.js"></script>
-  <script src="./app/es6-promise.auto.min.js"></script>
-
+  <script type="module" src="../node_modules/@esri/calcite-components/dist/calcite/calcite.esm.js"></script>
+  <script nomodule="" src="../node_modules/@esri/calcite-components/dist/calcite/calcite.js"></script>
   <script src="./app/dojo.js"></script>
-  <script src="https://js.arcgis.com/4.17/"></script>
+  <script src="https://js.arcgis.com/4.23/"></script>
   <script>
     require(["Application/init"]);
 
   </script>
 </head>
 
-<body class="configurable-application--loading no-map">
-
+<body class="configurable-application--loading no-results">
   <!-- content of page -->
   <div id="appMain" class="grid-container leader-0 trailer-0 padding-left-0 padding-right-0">
-    <div id="mapDescription" aria-live="polite" class="hide"></div>
-    <div id="sidePanel" class="side-panel phone-column-6 tablet-column-12 column-10 padding-left-0 padding-right-0">
-      <div id="search"></div>
-      <div id="infoPanel" role="main" class="panel main-map-content  panel-no-border scrollable-content">
-        <div id="detailPanel" role="complementary"></div>
-        <div id="distanceOptions" class="main-map-content"></div>
-        <div id="resultsPanel"></div>
-      </div>
-      <!-- <div id="bottomNav"></div>-->
-    </div>
-    <div id="mapPanel" tabindex="0"></div>
-  </div>
+    <div id="mapDescription" class="sr-only"></div>
 
+    <div id="sidePanel"
+      class="size-panel side-panel phone-column-6 tablet-column-12 column-10 padding-left-0 padding-right-0">
+      <div class="wrapper">
+        <!-- header -->
+        <header role="heading" class="panel panel-no-padding panel-no-border app-header">
+          <div id="header"></div>
+        </header>
+        <div id="printPanel" class="size-panel print-panel panel hide phone-column-6 tablet-column-12 column-10">
+        </div>
+        <div id="refinePanel"
+          class="panel panel-no-border panel-no-padding leader-0 trailer-0 padding-leader-0 trailing-leader-0 main-map-content">
+          <div id="searchPanel" class="search-panel"></div>
+          <div class="hide" id="filterOptions"></div>
+        </div>
+        <div id="detailPanel"
+          class="panel hide size-panel  phone-column-6 tablet-column-12 column-10 detail-panel  padding-left-0 padding-right-0">
+        </div>
+        <div id="filterPanel"
+          class="hide size-panel panel phone-column-6 tablet-column-12 column-10 detail-panel filter-panel">
+        </div>
+        <div id="resultsPanel" class="main-map-content"></div>
+
+      </div> <!-- end of wrapper -->
+    </div>
+    <div id="noResults"></div>
+    <div id="mapPanel"></div>
+  </div>
+  <div id="offscreenResults" aria-hidden=true></div>
+  <div class="calcite-theme-light" theme="light" class="print-only" id="printPage">
+    <div id="printTitle" class="print-title"></div>
+    <div class="print-map-area">
+      <div id="printMapContainer" class="print-map"></div>
+      <div id="printScalebar"></div>
+      <div id="printLegend" class="print-legend"></div>
+    </div>
+    <div id="printPopupInfo" class="print-popup">
+    </div>
+  </div>
 </body>
 
 </html>

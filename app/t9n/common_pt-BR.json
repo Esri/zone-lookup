@@ -1,0 +1,60 @@
+{
+  "cancel": "Cancelar",
+  "toggle": "Ativar/Desativar",
+  "load": {
+    "label": "Carregando"
+  },
+  "onboarding": {
+    "title": "Bem-Vindo!",
+    "content": "Procure um endereço para saber mais sobre a localização e seu arredor.</br>Se você não souber o endereço, utilize um destes métodos de pesquisa: <ul><li>Clique na caixa de pesquisa e digite um endereço ou escolha <b>Utilizar localização atual </b></li><li>Clique dentro do mapa <div></div></li></ul></br> Os resultados incluirão informações sobre feições de interesse."
+  },
+  "map": {
+    "label": "Mapa",
+    "description": "Navegue no mapa utilizando as teclas de seta para mover à direita, esquerda, para cima ou para baixo. Utilize as teclas de mais e menos para aumentar e diminuir o zoom. Utilize a caixa de pesquisa para procurar o conteúdo do mapa",
+    "miniMapDescription": "Mapa mostrando a localização da feição selecionada"
+  },
+  "count": "Total",
+  "noFeatures": "Nenhuma feição localizada que atende aos critérios de pesquisa",
+  "error": "Erro",
+  "licenseError": {
+    "message": "Sua conta não está licenciada para utilizar Configurable Apps que não sejam públicos. Peça a seu administrador da organização para atribuir um tipo de usuário a você que inclua Aplicativos Essenciais ou um complemento da licença dos Aplicativos Essenciais.",
+    "title": "Não Licenciado"
+  },
+  "tools": {
+    "clearLocation": "Limpar local da pesquisa",
+    "searchThisLocation": "Pesquisar esta área",
+    "filter": "Filtrar",
+    "selectFilter": "Selecionar Filtro",
+    "info": "Info",
+    "sketch": "Desenhar limite de pesquisa",
+    "sketchInstructions": "Clique no mapa para definir o limite de pesquisa. Clique duas vezes quando o limite estiver concluído. Clique em cancelar ou pressione a tecla esc para cancelar o desenho.",
+    "collapse": "Fechar Tudo",
+    "open": "Expandir Tudo",
+    "slider": "Distância de pesquisa",
+    "results": "Resultados",
+    "screenshotResults": "Incluir resultados",
+    "elevation": "Elevação"
+  },
+  "units": {
+    "kilometers": {
+      "singular": "quilômetro",
+      "plural": "quilômetros",
+      "abbr": "km"
+    },
+    "feet": {
+      "singular": "pé",
+      "plural": "pés",
+      "abbr": "pés"
+    },
+    "miles": {
+      "singular": "milha",
+      "plural": "milhas",
+      "abbr": "mi"
+    },
+    "meters": {
+      "singular": "metrô",
+      "plural": "metros",
+      "abbr": "m"
+    }
+  }
+}

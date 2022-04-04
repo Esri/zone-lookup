@@ -1,0 +1,60 @@
+{
+  "cancel": "Cancelar",
+  "toggle": "Toggle",
+  "load": {
+    "label": "A Carregar"
+  },
+  "onboarding": {
+    "title": "Bem-Vindo!",
+    "content": "Pesquise um endereço para saber mais sobre a localização e a respetiva área circundante.</br>Caso desconheça o endereço, utilize um destes métodos de pesquisa: <ul><li>Clique na caixa de pesquisa e introduza um endereço ou escolha <b>Utilizar localização atual </b></li><li>Clique no mapa <div></div></li></ul></br> Os resultados irão incluir informações sobre elementos de interesse."
+  },
+  "map": {
+    "label": "Mapa",
+    "description": "Navegue no mapa utilizando as teclas de seta para se movimentar para a direita, esquerda, cima ou baixo. Utilize as teclas mais e menos para aumentar e diminuir o zoom de forma incremental. Utilize a caixa de pesquisa para explorar conteúdo do mapa",
+    "miniMapDescription": "Mapa que apresenta a localização do elemento selecionado"
+  },
+  "count": "Total",
+  "noFeatures": "Não foram encontrados elementos que correspondam aos critérios de pesquisa",
+  "error": "Erro",
+  "licenseError": {
+    "message": "Não tem licença para usar Configurable Apps que não sejam públicas. Peça ao administrador da sua organização para lhe atribuir um tipo de utilizador que inclua a licença para aplicações essenciais ou aplicações essenciais suplementares.",
+    "title": "Não licenciado"
+  },
+  "tools": {
+    "clearLocation": "Limpar localização de pesquisa",
+    "searchThisLocation": "Pesquisar nesta área",
+    "filter": "Filtrar",
+    "selectFilter": "Selecionar Filtro",
+    "info": "Informação",
+    "sketch": "Desenhar limite de pesquisa",
+    "sketchInstructions": "Clique no mapa para definir o limite de pesquisa. Clique duas vezes quando o limite estiver concluído. Clique em Cancelar ou prima a tecla Esc para cancelar o desenho.",
+    "collapse": "Fechar Tudo",
+    "open": "Expandir Tudo",
+    "slider": "Distância de pesquisa",
+    "results": "Resultados",
+    "screenshotResults": "Incluir resultados",
+    "elevation": "Elevação"
+  },
+  "units": {
+    "kilometers": {
+      "singular": "quilómetro",
+      "plural": "quilómetros",
+      "abbr": "km"
+    },
+    "feet": {
+      "singular": "pé",
+      "plural": "pés",
+      "abbr": "ft"
+    },
+    "miles": {
+      "singular": "milha",
+      "plural": "milhas",
+      "abbr": "mi"
+    },
+    "meters": {
+      "singular": "metro",
+      "plural": "metros",
+      "abbr": "m"
+    }
+  }
+}

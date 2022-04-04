@@ -1,0 +1,60 @@
+{
+  "cancel": "Zrušiť",
+  "toggle": "Prepínať",
+  "load": {
+    "label": "Načítava sa"
+  },
+  "onboarding": {
+    "title": "Vitajte!",
+    "content": "Vyhľadajte adresu, aby ste sa dozvedeli viac o lokalite a jej okolí.</br> Ak adresu nepoznáte, použite jednu z týchto metód vyhľadávania: <ul><li>Kliknite na vyhľadávacie pole a zadajte adresu alebo vyberte <b>Použiť aktuálnu lokalitu </b></li><li>Kliknite do mapy <div></div></li></ul></br>Výsledky budú obsahovať informácie o prvkoch záujmu."
+  },
+  "map": {
+    "label": "Mapa",
+    "description": "Navigujte v mape pomocou klávesov so šípkami, aby ste sa pohybovali doprava, doľava, nahor alebo nadol. Použite tlačidlá plus a mínus na postupné priblíženie a oddialenie. Na vyhľadávanie v obsahu mapy použite vyhľadávacie políčko",
+    "miniMapDescription": "Mapa ukazuje polohu vybratého prvku"
+  },
+  "count": "Celkom",
+  "noFeatures": "Žiadne z nájdených prvkov nespĺňajú kritériá vyhľadávania",
+  "error": "Chyba",
+  "licenseError": {
+    "message": "Váš účet nezahŕňa licenciu na použitie Konfigurovateľných aplikácií, ktoré nie sú verejné. Požiadajte správcu Vašej organizácie, aby Vám priradil typ používateľa, ktorý zahŕňa Essential Apps alebo doplnkovú licenciu Essential Apps",
+    "title": "Nelicencované"
+  },
+  "tools": {
+    "clearLocation": "Vymazať oblasť vyhľadávania",
+    "searchThisLocation": "Hľadať v tejto oblasti",
+    "filter": "Filter",
+    "selectFilter": "Vybrať filter",
+    "info": "Informácie",
+    "sketch": "Nakresiť hranicu vyhľadávania",
+    "sketchInstructions": "Kliknite do mapy pre nakreslenie hranice vyhľadávania. Dvakrát kliknite keď je hranica dokončená. Pre zrušenie kreslenia kliknite na zrušenie alebo stlačte tlačidlo Esc.",
+    "collapse": "Zbaliť všetko",
+    "open": "Rozbaliť všetko",
+    "slider": "Vyhľadávacia vzdialenosť",
+    "results": "Výsledky",
+    "screenshotResults": "Zahrnúť výsledky",
+    "elevation": "Výška"
+  },
+  "units": {
+    "kilometers": {
+      "singular": "kilometer",
+      "plural": "kilometre",
+      "abbr": "km"
+    },
+    "feet": {
+      "singular": "stopa",
+      "plural": "stopy",
+      "abbr": "ft"
+    },
+    "miles": {
+      "singular": "míľa",
+      "plural": "míle",
+      "abbr": "mi"
+    },
+    "meters": {
+      "singular": "meter",
+      "plural": "metre",
+      "abbr": "m"
+    }
+  }
+}

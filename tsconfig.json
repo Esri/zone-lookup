@@ -10,7 +10,7 @@
     "module": "amd",
     "moduleResolution": "node",
     "noImplicitAny": false,
-    "sourceMap": true,
+    "sourceMap": false,
     "jsx": "react",
     "jsxFactory": "tsx",
     "target": "es5",
@@ -19,7 +19,8 @@
     "preserveConstEnums": true,
     "suppressImplicitAnyIndexErrors": true,
     "types": ["arcgis-js-api"],
-    "importHelpers": true
+    "importHelpers": true,
+    "resolveJsonModule": true
   },
   "include": [
     "./**/*"
@@ -30,15 +31,7 @@
   ],
   "files": [
     "./app/interfaces/updates.d.ts",
-    "./node_modules/@types/arcgis-js-api/index.d.ts",
-    "./node_modules/@esri/application-base-js/index.d.ts",
-    "./node_modules/@esri/configurable-app-components/index.d.ts",
-    "./node_modules/dojo-typings/dojo/1.11/loader.d.ts",
-    "./node_modules/dojo-typings/dojo/1.11/index.d.ts",
-    "./node_modules/dojo-typings/dojo/1.11/modules.d.ts",
-    "./node_modules/dojo-typings/dijit/1.11/index.d.ts",
-    "./node_modules/dojo-typings/dijit/1.11/modules.d.ts",
-    "./node_modules/dojo-typings/dojox/1.11/index.d.ts",
-    "./node_modules/dojo-typings/dojox/1.11/modules.d.ts"
+    "../node_modules/templates-common-library/index.d.ts",
+    "../node_modules/@esri/configurable-app-components/index.d.ts"
   ]
 }

@@ -1,0 +1,60 @@
+{
+  "cancel": "Cancelar",
+  "toggle": "Alternar",
+  "load": {
+    "label": "Cargando"
+  },
+  "onboarding": {
+    "title": "Iniciar Insights",
+    "content": "Busque una dirección para obtener más información sobre la ubicación y el área circundante.</br>Si no conoce la dirección, utilice uno de estos métodos de búsqueda: <ul><li>Haga clic en el cuadro de búsqueda y escriba una dirección o elija <b>Usar ubicación actual </b></li><li>Haga clic dentro del mapa <div></div></li></ul></br> Los resultados contendrán información sobre entidades de interés."
+  },
+  "map": {
+    "label": "Mapa",
+    "description": "Navegue por el mapa con las teclas de flecha para moverse hacia la derecha, la izquierda, arriba o abajo. Use las teclas de signo más o menos para acercarse o alejarse. Use el cuadro de búsqueda para examinar el contenido del mapa.",
+    "miniMapDescription": "Un mapa que muestra la ubicación de la entidad seleccionada"
+  },
+  "count": "Total",
+  "noFeatures": "No se ha encontrado ninguna entidad que responda a los criterios de búsqueda",
+  "error": "Error",
+  "licenseError": {
+    "message": "Su cuenta no tiene licencia para utilizar aplicaciones configurables que no son públicas. Pídale al administrador de su organización que le asigne un tipo de usuario que incluya aplicaciones esenciales o una licencia complementaria de aplicaciones esenciales",
+    "title": "Sin Licencia"
+  },
+  "tools": {
+    "clearLocation": "Borrar ubicación buscada",
+    "searchThisLocation": "Buscar en esta área",
+    "filter": "Filtrar",
+    "selectFilter": "Seleccionar filtro",
+    "info": "Información",
+    "sketch": "Dibujar límite de búsqueda",
+    "sketchInstructions": "Haga clic en el mapa para definir el límite de búsqueda. Haga doble clic cuando el límite esté completo. Haga clic en cancelar o pulse la tecla esc para cancelar el dibujo.",
+    "collapse": "Contraer todo",
+    "open": "Expandir todo",
+    "slider": "Distancia de búsqueda",
+    "results": "Resultados",
+    "screenshotResults": "Incluir resultados",
+    "elevation": "Elevación"
+  },
+  "units": {
+    "kilometers": {
+      "singular": "kilómetro",
+      "plural": "kilómetros",
+      "abbr": "km"
+    },
+    "feet": {
+      "singular": "pie",
+      "plural": "pies",
+      "abbr": "ft"
+    },
+    "miles": {
+      "singular": "milla",
+      "plural": "millas",
+      "abbr": "mi"
+    },
+    "meters": {
+      "singular": "metro",
+      "plural": "metros",
+      "abbr": "m"
+    }
+  }
+}

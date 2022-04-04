@@ -1,0 +1,60 @@
+{
+  "cancel": "취소",
+  "toggle": "토글",
+  "load": {
+    "label": "불러오는 중"
+  },
+  "onboarding": {
+    "title": "시작",
+    "content": "위치와 주변 지역에 대해 자세히 알아보려면 주소를 검색하세요.</br>주소를 모르는 경우 다음 검색 방법 중 하나를 사용합니다. <ul><li>검색 상자를 클릭하여 주소를 입력하거나 <b>현재 위치 사용</b>을 선택합니다.</li><li>맵 내부를 클릭하면 <div></div></li></ul></br> 결과에 관심 피처 정보가 포함됩니다."
+  },
+  "map": {
+    "label": "맵",
+    "description": "상하좌우로 이동하는 화살표 키를 사용하여 맵을 탐색합니다. 점진적으로 확대/축소하려면 더하기 및 빼기 키를 사용합니다. 검색 상자를 사용하여 맵 콘텐츠 찾아보기",
+    "miniMapDescription": "선택한 피처의 위치를 표시하는 맵"
+  },
+  "count": "전체",
+  "noFeatures": "검색 조건을 충족하는 피처가 없음",
+  "error": "오류",
+  "licenseError": {
+    "message": "귀하의 계정에는 공개 상태가 아닌 구성 설정 앱을 사용할 수 있는 라이선스가 없습니다. 필수 앱 또는 애드-온 필수 앱 라이선스가 포함된 사용자 유형 할당을 기관 관리자에게 요청하세요.",
+    "title": "라이선스가 없음"
+  },
+  "tools": {
+    "clearLocation": "검색 위치 지우기",
+    "searchThisLocation": "이 영역 검색",
+    "filter": "필터",
+    "selectFilter": "필터 선택",
+    "info": "정보",
+    "sketch": "검색 경계 그리기",
+    "sketchInstructions": "맵을 클릭하여 검색 경계를 정의합니다. 경계가 완료되면 더블 클릭합니다. 그리기를 취소하려면 취소를 클릭하거나 Esc 키를 누릅니다.",
+    "collapse": "모두 축소",
+    "open": "모두 확장",
+    "slider": "검색 거리",
+    "results": "결과",
+    "screenshotResults": "결과 포함",
+    "elevation": "고도"
+  },
+  "units": {
+    "kilometers": {
+      "singular": "킬로미터",
+      "plural": "킬로미터",
+      "abbr": "km"
+    },
+    "feet": {
+      "singular": "피트",
+      "plural": "피트",
+      "abbr": "ft"
+    },
+    "miles": {
+      "singular": "마일",
+      "plural": "마일",
+      "abbr": "mi"
+    },
+    "meters": {
+      "singular": "미터",
+      "plural": "미터",
+      "abbr": "m"
+    }
+  }
+}

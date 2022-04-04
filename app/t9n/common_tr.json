@@ -1,0 +1,60 @@
+{
+  "cancel": "İptal",
+  "toggle": "Aç/Kapa",
+  "load": {
+    "label": "Yükleniyor"
+  },
+  "onboarding": {
+    "title": "Hoş Geldiniz!",
+    "content": "Konum ve çevresi hakkında daha fazla bilgi edinmek için bir adres arayın.</br>Adresi bilmiyorsanız, aşağıdaki arama yöntemlerinden birini kullanın: <ul><li>Arama kutusuna tıklayın ve bir adres yazın veya <b>Mevcut konumu kullan seçeneğini seçin </b></li><li> Haritaya tıklayın <div></div></li></ul></br> Sonuçlar ilgili detaylar hakkında bilgiler içerecektir."
+  },
+  "map": {
+    "label": "Harita",
+    "description": "Haritada gezinirken sağa, sola, yukarı veya aşağı hareket etmek için ok tuşlarını kullanın. Kademeli olarak yakınlaştırma ve uzaklaştırmak için artı ve eksi tuşlarını kullanın. Harita içeriğini taramak için arama kutusunu kullanın",
+    "miniMapDescription": "Harita seçilen detayın konumunu gösterir"
+  },
+  "count": "Toplam",
+  "noFeatures": "Arama kriterlerinizi karşılayan detay bulunamadı",
+  "error": "Hata",
+  "licenseError": {
+    "message": "Hesabınız herkese açık olmayan Yapılandırılabilir Uygulamaları kullanmak için lisanslandırılmamış. Lütfen kuruluş yöneticinizden Temel Uygulamalar veya eklenti Temel Uygulamalar lisansı içeren bir kullanıcı türü atamasını isteyin",
+    "title": "Lisanslı Değil"
+  },
+  "tools": {
+    "clearLocation": "Arama konumunu temizle",
+    "searchThisLocation": "Bu alanı ara",
+    "filter": "Filtrele",
+    "selectFilter": "Filtre Seç",
+    "info": "Bilgi",
+    "sketch": "Çizgi arama sınırı",
+    "sketchInstructions": "Arama sınırını tanımlamak için haritaya tıklayın. Sınır tamamlandığında çift tıklayın. Çizimi iptal etmek için iptal'e tıklayın veya esc tuşuna basın.",
+    "collapse": "Hiçbirini Gösterme",
+    "open": "Tümünü Genişlet",
+    "slider": "Arama mesafesi",
+    "results": "Sonuçlar",
+    "screenshotResults": "Sonuçları dahil et",
+    "elevation": "Yükselti"
+  },
+  "units": {
+    "kilometers": {
+      "singular": "kilometre",
+      "plural": "kilometre",
+      "abbr": "km"
+    },
+    "feet": {
+      "singular": "fit",
+      "plural": "fit",
+      "abbr": "ft"
+    },
+    "miles": {
+      "singular": "mil",
+      "plural": "mil",
+      "abbr": "mil"
+    },
+    "meters": {
+      "singular": "metre",
+      "plural": "metre",
+      "abbr": "m"
+    }
+  }
+}

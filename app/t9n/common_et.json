@@ -1,0 +1,60 @@
+{
+  "cancel": "Loobu",
+  "toggle": "Lüliti",
+  "load": {
+    "label": "Laadimine"
+  },
+  "onboarding": {
+    "title": "Tere tulemast!",
+    "content": "Otsige aadressi, et saada lisateavet asukoha ja selle ümbruse kohta.</br>Kui te ei tea aadressi, kasutage üht järgmistest otsingumeetoditest: <ul><li>Klõpsake otsinguruudul ja sisestage aadress või valige <b>Kasuta praegust asukohta </b></li><li>Klõpsake kaardil <div></div></li></ul></br> Tulemused sisaldavad teavet huviobjektide kohta."
+  },
+  "map": {
+    "label": "Kaardid",
+    "description": "Navigeerige kaardil, kasutades nooleklahve paremale, vasakule, üles või alla liikumiseks. Kasutage sisse ja välja suumimiseks pluss- ja miinusklahve. Kasutage kaardi sisu sirvimiseks otsinguruutu.",
+    "miniMapDescription": "Valitud objekti asukohta näitav kaart"
+  },
+  "count": "Kokku",
+  "noFeatures": "Otsingukriteeriumitele vastavaid kihte ei leitud.",
+  "error": "viga",
+  "licenseError": {
+    "message": "Teie kontol puudub litsents konfigureeritavate rakenduste kasutamiseks, mis ei ole avalikud. Paluge oma organisatsiooni administraatoril määrata teile kasutajatüüp, mis sisaldab olulisi rakendusi või täiendavat Essential Apps paketi litsentsi.",
+    "title": "Litsents puudub"
+  },
+  "tools": {
+    "clearLocation": "Tühista asukohaotsing",
+    "searchThisLocation": "Otsi sellelt alalt",
+    "filter": "Filtreeri",
+    "selectFilter": "Vali filter",
+    "info": "Teave",
+    "sketch": "Joonista otsingupiirid",
+    "sketchInstructions": "Otsingupiiride määratlemiseks klõpsake kaarti. Topeltklõpsake, kui piir on valmis. Joonistuse tühistamiseks valige Tühista või vajutage paoklahvi (Esc).",
+    "collapse": "Ahenda kõik",
+    "open": "Laienda kõik",
+    "slider": "Otsitav vahemaa",
+    "results": "Tulemused",
+    "screenshotResults": "Kaasa tulemused",
+    "elevation": "Kõrgusandmed"
+  },
+  "units": {
+    "kilometers": {
+      "singular": "km",
+      "plural": "km",
+      "abbr": "km"
+    },
+    "feet": {
+      "singular": "jalg",
+      "plural": "ft",
+      "abbr": "jl"
+    },
+    "miles": {
+      "singular": "miil",
+      "plural": "mi",
+      "abbr": "mi"
+    },
+    "meters": {
+      "singular": "meeter",
+      "plural": "m",
+      "abbr": "m"
+    }
+  }
+}

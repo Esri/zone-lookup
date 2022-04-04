@@ -1,0 +1,60 @@
+{
+  "cancel": "Anulare",
+  "toggle": "Comutare",
+  "load": {
+    "label": "Se încarcă"
+  },
+  "onboarding": {
+    "title": "Bine ați venit!",
+    "content": "Căutați o adresă pentru a afla mai multe despre localizare și zona înconjurătoare.</br>Dacă nu cunoașteți adresa, folosiți una dintre aceste metode de căutare: <ul><li>Faceți clic pe caseta de căutare și introduceți o adresă sau selectați <b>Utilizare localizare curentă </b></li><li>Faceți clic pe hartă <div></div></li></ul></br> Rezultatele vor include informații despre obiectele spațiale de interes."
+  },
+  "map": {
+    "label": "Hartă",
+    "description": "Navigați pe hartă folosind tastele cu săgeți pentru a vă deplasa în dreapta, în stânga, sus sau jos. Utilizați tastele plus și minus pentru a mări sau micșora imaginea. Utilizați caseta de căutare pentru a răsfoi conținutul hărții",
+    "miniMapDescription": "Hartă pe care este afișată locația obiectului spațial selectat"
+  },
+  "count": "Total",
+  "noFeatures": "Nu a fost găsit niciun obiect spațial care să corespundă criteriilor de căutare",
+  "error": "Eroare",
+  "licenseError": {
+    "message": "Contul dvs. nu este licențiat să utilizeze aplicații configurabile care nu sunt publice. Solicitați-i administratorului organizației să vă aloce un tip de utilizator care include aplicații esențiale sau o licență pentru aplicații esențiale de completare",
+    "title": "Nelicențiat"
+  },
+  "tools": {
+    "clearLocation": "Golire locație de căutare",
+    "searchThisLocation": "Căutați în această zonă",
+    "filter": "Filtrare",
+    "selectFilter": "Selectare filtru",
+    "info": "Informații",
+    "sketch": "Trasați granița de căutare",
+    "sketchInstructions": "Faceți clic pe hartă pentru a defini granița de căutare. Faceți dublu clic când granița este finalizată. Faceți clic pe anulare sau apăsați tasta esc pentru a anula trasarea.",
+    "collapse": "Restrângere toate",
+    "open": "Extindere toate",
+    "slider": "Căutare distanţă",
+    "results": "Rezultate",
+    "screenshotResults": "Includeți rezultate",
+    "elevation": "Elevaţie"
+  },
+  "units": {
+    "kilometers": {
+      "singular": "kilometru",
+      "plural": "kilometri",
+      "abbr": "km"
+    },
+    "feet": {
+      "singular": "picior",
+      "plural": "ft",
+      "abbr": "ft"
+    },
+    "miles": {
+      "singular": "milă",
+      "plural": "mile",
+      "abbr": "mi."
+    },
+    "meters": {
+      "singular": "metru",
+      "plural": "metri",
+      "abbr": "m"
+    }
+  }
+}

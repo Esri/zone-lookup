@@ -1,0 +1,60 @@
+{
+  "cancel": "Mégse",
+  "toggle": "Választókapcsoló",
+  "load": {
+    "label": "Betöltés"
+  },
+  "onboarding": {
+    "title": "Üdvözöljük!",
+    "content": "A hely és a környező terület jobb megismeréséhez keressen ki egy címet.</br>Ha nem ismeri a címet, akkor használja az alábbi keresési módok egyikét: <ul><li>Kattintson a keresési mezőbe és írja be a címet, vagy válassza az <b>Aktuális hely használata</b></li><li>Kattintson a térképre lehetőséget. <div></div></li></ul></br> A megjelenő eredmények tartalmazzák a vizsgált vektoros elemek információit."
+  },
+  "map": {
+    "label": "Térkép",
+    "description": "A térképen a nyílbillentyűkkel is navigálhat: jobbra, balra, fel vagy le irányban mozoghat velük. A fokozatos nagyításhoz vagy kicsinyítéshez használja a plusz és a mínusz billentyűket. Használja a keresőmezőt a térkép tartalmának böngészéséhez",
+    "miniMapDescription": "A kijelölt vektoros elem helyét megjelenítő térkép"
+  },
+  "count": "Összesen",
+  "noFeatures": "Nem található a keresési feltételeknek megfelelő vektoros réteg.",
+  "error": "Hiba",
+  "licenseError": {
+    "message": "Az Ön fiókjának licence nem terjed ki a nem publikus konfigurálható alkalmazásokra. Igényelje a szervezete adminisztrátorától, hogy rendeljen Önhöz olyan felhasználótípust, amely tartalmazza az alapvető alkalmazásokat, vagy a valamelyik kiegészítő alapvető alkalmazásra vonatkozó licencet.",
+    "title": "Nincs licencelve"
+  },
+  "tools": {
+    "clearLocation": "Keresési hely törlése",
+    "searchThisLocation": "Keresés ezen a területen",
+    "filter": "Szűrő",
+    "selectFilter": "Szűrő kiválasztása",
+    "info": "Információ",
+    "sketch": "Keresési határ rajzolása",
+    "sketchInstructions": "A keresési határ meghatározásához kattintson a téeképre. Kattintson duplán, ha a határ elkészült. A rajzolás megszakításához kattintson a mégse gombra vagy nyomja meg az Esc billentyűt.",
+    "collapse": "Mindent összecsuk",
+    "open": "Mindent kibont",
+    "slider": "Keresési távolság",
+    "results": "Eredmények",
+    "screenshotResults": "Eredmények belefoglalása",
+    "elevation": "Domborzat"
+  },
+  "units": {
+    "kilometers": {
+      "singular": "kilométer",
+      "plural": "kilométer",
+      "abbr": "km"
+    },
+    "feet": {
+      "singular": "láb",
+      "plural": "láb",
+      "abbr": "láb"
+    },
+    "miles": {
+      "singular": "mérföld",
+      "plural": "mérföld",
+      "abbr": "mérföld"
+    },
+    "meters": {
+      "singular": "méter",
+      "plural": "méter",
+      "abbr": "m"
+    }
+  }
+}

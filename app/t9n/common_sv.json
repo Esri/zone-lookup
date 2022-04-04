@@ -1,0 +1,60 @@
+{
+  "cancel": "Avbryt",
+  "toggle": "Växla",
+  "load": {
+    "label": "Laddar"
+  },
+  "onboarding": {
+    "title": "Välkommen!",
+    "content": "Sök efter en adress om du vill veta mer om platsen och dess omgivningar.</br>Om du inte vet adressen kan du använda någon av följande sökmetoder: <ul><li>Klicka i sökrutan och skriv en adress eller välj <b>Använd aktuell plats </b></li><li>Klicka i kartan <div></div></li></ul></br>Resultaten innehåller information om intressanta geoobjekt."
+  },
+  "map": {
+    "label": "Karta",
+    "description": "Navigera i kartan med piltangenterna för att gå åt höger, vänster, uppåt eller nedåt. Använd plus- och minustecknen för att stegvis zooma in och ut. Bläddra i kartinnehållet med sökrutan",
+    "miniMapDescription": "Karta som visar platsen för det valda geoobjektet"
+  },
+  "count": "Totalt",
+  "noFeatures": "Inga geoobjekt hittades som passar in på sökvillkoren",
+  "error": "Fel",
+  "licenseError": {
+    "message": "Ditt konto har ingen licens för att använda konfigurerbara appar som inte är tillgängliga för allmänheten. Be din organisations administratör att tilldela dig en användartyp som omfattar Essential Apps eller en tilläggslicens för Essential Apps",
+    "title": "Inte licensierad"
+  },
+  "tools": {
+    "clearLocation": "Rensa sökplats",
+    "searchThisLocation": "Sök i det här området",
+    "filter": "Filter",
+    "selectFilter": "Välj filter",
+    "info": "Info",
+    "sketch": "Rita en sökgräns",
+    "sketchInstructions": "Klicka på kartan för att definiera sökgränsen. Dubbelklicka när gränsen är klar. Klicka på Avbryt eller på knappen Esc för att avbryta ritandet.",
+    "collapse": "Dölj alla",
+    "open": "Visa alla",
+    "slider": "Sök avstånd",
+    "results": "Resultat",
+    "screenshotResults": "Inkludera resultat",
+    "elevation": "Höjd"
+  },
+  "units": {
+    "kilometers": {
+      "singular": "kilometer",
+      "plural": "kilometer",
+      "abbr": "km"
+    },
+    "feet": {
+      "singular": "fot",
+      "plural": "fot",
+      "abbr": "fot"
+    },
+    "miles": {
+      "singular": "engelsk mil",
+      "plural": "engelska miles",
+      "abbr": "mi"
+    },
+    "meters": {
+      "singular": "meter",
+      "plural": "meter",
+      "abbr": "m"
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "cancel": "Annuleren",
+  "toggle": "Wisselen",
+  "load": {
+    "label": "Laden"
+  },
+  "onboarding": {
+    "title": "Welkom!",
+    "content": "Zoek naar een adres voor meer over de locatie en de omgeving te leren.</br>Als u het adres niet weet, gebruik dan één van deze zoekmethoden: <ul><li>Klik op het zoekvak en typ een adres in of kies <b>Huidige locatie gebruiken </b></li><li>Klik op de kaart <div></div></li></ul></br> Resultaten bevatten informatie over interessante objecten."
+  },
+  "map": {
+    "label": "Kaart",
+    "description": "Navigeer over de kaart met de pijltjestoetsen om naar rechts, links, boven en onder te bewegen. Gebruik de plus- en mintoetsen om incrementeel in en uit te zoomen. Gebruik het zoekvak om door de inhoud van de kaart te kijken",
+    "miniMapDescription": "Kaart toont de locatie van het geselecteerde object"
+  },
+  "count": "Totaal",
+  "noFeatures": "Er zijn geen objecten gevonden die overeenkomen met de zoekcriteria",
+  "error": "Fout",
+  "licenseError": {
+    "message": "Uw account heeft geen licentie om configureerbare apps te gebruiken die niet openbaar zijn. Vraag uw organisatiebeheerder om u een gebruikerstype toe te wijzen dat Essential Apps of een add-on Essential Apps-licentie bevat",
+    "title": "Geen licentie"
+  },
+  "tools": {
+    "clearLocation": "Zoeklocatie wissen",
+    "searchThisLocation": "Dit gebied doorzoeken",
+    "filter": "Filter",
+    "selectFilter": "Filter selecteren",
+    "info": "Info",
+    "sketch": "Zoekgrens tekenen",
+    "sketchInstructions": "Klik op de kaart om de zoekgrens te bepalen. Dubbelklik wanneer de grens voltooid is. Klik op Annuleren of druk op de ESC-toets om te stoppen met tekenen.",
+    "collapse": "Alles samenvouwen",
+    "open": "Alles uitvouwen",
+    "slider": "Zoekafstand",
+    "results": "Resultaten",
+    "screenshotResults": "Resultaten opnemen",
+    "elevation": "Hoogte"
+  },
+  "units": {
+    "kilometers": {
+      "singular": "kilometer",
+      "plural": "kilometer",
+      "abbr": "km"
+    },
+    "feet": {
+      "singular": "voet",
+      "plural": "feet",
+      "abbr": "ft"
+    },
+    "miles": {
+      "singular": "mijl",
+      "plural": "mijl",
+      "abbr": "mi"
+    },
+    "meters": {
+      "singular": "meter",
+      "plural": "meter",
+      "abbr": "m"
+    }
+  }
+}

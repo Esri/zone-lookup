@@ -1,0 +1,154 @@
+/*
+ *   Copyright (c) 2022 Esri
+ *   All rights reserved.
+
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+
+ *   http://www.apache.org/licenses/LICENSE-2.0
+
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
+#appMain {
+  display: none;
+}
+
+/*
+ *   Copyright (c) 2022 Esri
+ *   All rights reserved.
+
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+
+ *   http://www.apache.org/licenses/LICENSE-2.0
+
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
+
+@page {
+  size: auto;
+}
+
+
+.calcite-shell-container,
+#offscreenResults,
+.esri-screenshot__offscreen-pop-up-container,
+.esri-screenshot__offscreen-legend-container,
+.esri-screenshot__screenshot-div,
+.screen-readers-only {
+  display: none;
+}
+
+.dark .feature-group {
+  border: solid 1px #ccc;
+}
+
+.dark .group-accordion-content,
+.dark .esri-feature,
+.dark .feature-group,
+.esri-attachments__item-button {
+  background-color: #fff;
+  color: #242424;
+}
+
+#printPage {
+  margin: 5px 10px;
+}
+
+.popup-content {
+  page-break-inside: avoid;
+}
+
+.printMap {
+  page-break-after: unset;
+}
+
+.printMap.map {
+  page-break-after: always;
+}
+
+.print-no-map {
+  .print-map-area {
+    display: none;
+  }
+
+  .printMap {
+    page-break-after: always;
+  }
+}
+
+.print-map-area {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  img {
+    margin: 0 auto;
+  }
+}
+
+
+#printScalebar {
+  width: fit-content;
+}
+
+.esri-scale-bar.esri-widget {
+  opacity: 1;
+  background: #fff;
+  border: solid 1px #877f7f;
+}
+
+.esri-scale-bar__label {
+  color: #232323;
+}
+
+.esri-scale-bar__line {
+  background: transparent;
+}
+
+.esri-widget__table {
+  color: #232323;
+}
+
+
+.esri-legend,
+.esri-widget__heading,
+.esri-legend--card {
+  color: #232323;
+  border: none;
+  background-color: #fff;
+}
+
+.esri-legend__service,
+.esri-legend--card__section,
+.esri-legend--card__service-caption-container {
+  border: none;
+}
+
+.print-results {
+  page-break-before: avoid;
+  color: #4a4a4a;
+  font-weight: 200;
+
+  >calcite-icon {
+    margin: 0 0.25em;
+  }
+}
+
+.esri-feature {
+  margin: 1.5em 0;
+}
+
+calcite-button {
+  display: none;
+}

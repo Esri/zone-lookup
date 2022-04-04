@@ -1,0 +1,60 @@
+{
+  "cancel": "Cancel",
+  "toggle": "Toggle",
+  "load": {
+    "label": "Loading"
+  },
+  "onboarding": {
+    "title": "Welcome!",
+    "content": "Search for an address to learn more about the location and its surrounding area.</br>If you don't know the address, use one of these search methods: <ul><li>Click the search box and type in an address or choose <b>Use current location </b></li><li>Click within the map <div></div></li></ul></br> Results will include information about features of interest."
+  },
+  "map": {
+    "label": "Map",
+    "description": "Navigate the map using the arrow keys to move right, left, up or down. Use the plus and minus keys to incrementally zoom in and out. Use the search box to browse map content",
+    "miniMapDescription": "Map showing the location of the selected feature"
+  },
+  "count": "Total",
+  "noFeatures": "No features found that meet the search criteria",
+  "error": "Error",
+  "licenseError": {
+    "message": "Your account is not licensed to use Configurable Apps that are not public. Please ask your organization administrator to assign you a user type that includes Essential Apps or an add-on Essential Apps license",
+    "title": "Not Licensed"
+  },
+  "tools": {
+    "clearLocation": "Clear search location",
+    "searchThisLocation": "Search this area",
+    "filter": "Filter",
+    "selectFilter": "Select Filter",
+    "info": "Info",
+    "sketch": "Draw search boundary",
+    "sketchInstructions": "Click on the map to define the search boundary. Double-click when boundary is complete. Click cancel or press the esc key to cancel drawing.",
+    "collapse": "Collapse All",
+    "open": "Expand All",
+    "slider": "Search distance",
+    "results": "Results",
+    "screenshotResults": "Include results",
+    "elevation": "Elevation"
+  },
+  "units": {
+    "kilometers": {
+      "singular": "kilometer",
+      "plural": "kilometers",
+      "abbr": "km"
+    },
+    "feet": {
+      "singular": "foot",
+      "plural": "feet",
+      "abbr": "ft"
+    },
+    "miles": {
+      "singular": "mile",
+      "plural": "miles",
+      "abbr": "mi"
+    },
+    "meters": {
+      "singular": "meter",
+      "plural": "meters",
+      "abbr": "m"
+    }
+  }
+}

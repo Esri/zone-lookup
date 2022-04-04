@@ -1,0 +1,60 @@
+{
+  "cancel": "Otkaži",
+  "toggle": "Uključi/isključi",
+  "load": {
+    "label": "Učitavanje"
+  },
+  "onboarding": {
+    "title": "Dobro došli!",
+    "content": "Pretražite adresu da biste saznali više o lokaciji i oblasti iz okruženja.</br>Ako ne znate adresu, upotrebite jednu od sledećih metoda: <ul><li>Kliknite na okvir za pretragu i unesite ili izaberite <b>Upotrebite trenutnu lokaciju </b></li><li>Kliknite u okviru mape <div></div></li></ul></br> Rezultati će uključivati informacije o oblastima interesovanja."
+  },
+  "map": {
+    "label": "Mapa",
+    "description": "Krećite se kroz mapu pomoću tastera sa strelicama za pomeranje desno, levo, gore ili dole. Koristite tastere plus i minus za postepeno uvećavanje i umanjivanje. Koristite polje za pretragu za pretraživanje sadržaja mape",
+    "miniMapDescription": "Mapa koja prikazuje lokaciju izabranog geoobjekta"
+  },
+  "count": "Zbir",
+  "noFeatures": "Nije pronađen nijedan geoobjekat koji ispunjava vaš kriterijum",
+  "error": "Greška",
+  "licenseError": {
+    "message": "Vaš nalog nema licencu za korišćenje aplikacija koje mogu da se konfigurišu i nisu javne. Zatražite od administratora organizacije da vam dodeli onaj tip korisnika koji uključuje osnovne aplikacije ili licencu za dodatne osnovne aplikacije",
+    "title": "Nema licencu"
+  },
+  "tools": {
+    "clearLocation": "Izbriši pretrage lokacije",
+    "searchThisLocation": "Pretraži ovu oblast",
+    "filter": "Filter",
+    "selectFilter": "Izaberite filter",
+    "info": "Informacije",
+    "sketch": "Nacrtajte granicu pretrage",
+    "sketchInstructions": "Kliknite na mapi da biste definisali granice pretrage. Dvaput kliknite kada je granica završena. Kliknite na dugme za otkazivanje ili pritisnite taster za izlaz da biste otkazali crtanje.",
+    "collapse": "Skupi sve",
+    "open": "Proširi sve",
+    "slider": "Rastojanje pretrage",
+    "results": "Rezultati",
+    "screenshotResults": "Uključi rezultate",
+    "elevation": "Elevacija"
+  },
+  "units": {
+    "kilometers": {
+      "singular": "kilometar",
+      "plural": "kilometri",
+      "abbr": "km"
+    },
+    "feet": {
+      "singular": "stopa",
+      "plural": "stope",
+      "abbr": "ft"
+    },
+    "miles": {
+      "singular": "milja",
+      "plural": "milje",
+      "abbr": "mi"
+    },
+    "meters": {
+      "singular": "metar",
+      "plural": "metri",
+      "abbr": "m"
+    }
+  }
+}

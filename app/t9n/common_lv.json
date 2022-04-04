@@ -1,0 +1,60 @@
+{
+  "cancel": "Atcelt",
+  "toggle": "Pārslēgt",
+  "load": {
+    "label": "Ielādē"
+  },
+  "onboarding": {
+    "title": "Laipni lūdzam!",
+    "content": "Meklējiet adresi, lai uzzinātu vairāk par tās atrašanās vietu un aptverošo teritoriju.</br>Ja nezināt adresi, izmantojiet kādu no šādiem meklēšanas paņēmieniem: <ul><li>Noklikšķiniet uz meklēšanas lodziņa un ierakstiet adresi vai izvēlieties iespēju <b>Lietot pašreizējo atrašanās vietu </b></li><li>Noklikšķiniet kartē <div></div></li></ul></br> Rezultātos tiks iekļauta informācija par interesējošiem elementiem."
+  },
+  "map": {
+    "label": "Karte",
+    "description": "Pārskatiet karti, lietojot bulttaustiņus, lai pārietu pa labi, pa kreisi, uz augšu vai uz leju. Izmantojot plusa vai mīnusa taustiņus, lai pakāpeniski tuvinātu un tālinātu. Kartes satura pārlūkošanai lietojiet meklēšanas lodziņu",
+    "miniMapDescription": "Karte, kurā redzama atlasītā elementa atrašanās vieta"
+  },
+  "count": "Kopskaits",
+  "noFeatures": "Nav atrasts neviens elements, kas atbilst meklēšanas kritērijiem",
+  "error": "Kļūda",
+  "licenseError": {
+    "message": "Jūsu kontam nav licences, lai izmantotu konfigurējamās lietotnes Configurable Apps, kas nav publiskas. Pieprasiet savas organizācijas administratoram piešķirt jums lietotāja veidu, kas ietver lietotņu komplektu Essential Apps vai papildinājumlietotņu Essential Apps licenci.",
+    "title": "Nav licences"
+  },
+  "tools": {
+    "clearLocation": "Notīrīt meklēšanas novietojumu",
+    "searchThisLocation": "Meklēt šajā teritorijā",
+    "filter": "Filtrs",
+    "selectFilter": "Atlasīt filtru",
+    "info": "Informācija",
+    "sketch": "Zīmēt meklēšanas robežu",
+    "sketchInstructions": "Noklikšķiniet uz kartes, lai norādītu meklēšanas robežu. Veiciet dubultklikšķi, kad robeža ir pabeigta. Noklikšķiniet uz Atcelt vai nospiediet taustiņu Esc, lai atceltu zīmēšanu.",
+    "collapse": "Sakļaut visu",
+    "open": "Izvērst visu",
+    "slider": "Meklēšanas attālums",
+    "results": "Rezultāti",
+    "screenshotResults": "Iekļaut rezultātus",
+    "elevation": "Augstums"
+  },
+  "units": {
+    "kilometers": {
+      "singular": "kilometrs",
+      "plural": "kilometri",
+      "abbr": "km"
+    },
+    "feet": {
+      "singular": "pēda",
+      "plural": "pēdas",
+      "abbr": "pēdas"
+    },
+    "miles": {
+      "singular": "jūdze",
+      "plural": "jūdzes",
+      "abbr": "jūdzes"
+    },
+    "meters": {
+      "singular": "metrs",
+      "plural": "metri",
+      "abbr": "m"
+    }
+  }
+}
